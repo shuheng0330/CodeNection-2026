@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ============================================================
+   PIKUL — "Linen & Clay"
+   Warm paper, never corporate. Two rules carry the whole tone:
+     1. The "too much" state is rust, never traffic-light red —
+        red imports the alarm register this product exists to avoid.
+     2. Dusk blue appears ONLY on rest / put-down moments.
+        Cool = relief, warm = weight.
+   ============================================================ */
+
+@theme {
+  /* -- surfaces -------------------------------------------- */
+  --color-linen: #fbf7f2;
+  --color-surface: #ffffff;
+  --color-raised: #f5eee6;
+  --color-hairline: #e7dcd1;
+
+  /* -- ink ------------------------------------------------- */
+  --color-ink: #2b211c;
+  --color-ink-muted: #7a6a60;
+  --color-ink-faint: #a6968b;
+
+  /* -- brand ----------------------------------------------- */
+  --color-clay-700: #8f3f24;
+  --color-clay-600: #b0512f;
+  --color-clay-500: #c2603f;
+  --color-clay-100: #f2e4d8;
+
+  /* -- load bands (never traffic-light) -------------------- */
+  --color-sage: #6e8f6b;
+  --color-ember: #e08d3c;
+  --color-amber: #d99b32;
+  --color-rust: #b4462f;
+
+  /* -- rest / counterweight -------------------------------- */
+  --color-dusk: #5b6c8c;
+  --color-dusk-100: #e3e7ef;
+
+  /* -- type ------------------------------------------------ */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: clamp(2.75rem, 7vw, 5.5rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: clamp(2rem, 4.5vw, 3.25rem);
+  --text-h1--line-height: 1.08;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.5rem, 3vw, 2.25rem);
+  --text-h2--line-height: 1.15;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.6;
+  --text-micro: 0.75rem;
+  --text-micro--letter-spacing: 0.08em;
+
+  /* -- radius: cards are rounded-3xl, anti-clinical --------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* -- shadows: warm-tinted, never grey -------------------- */
+  --shadow-soft: 0 1px 2px rgb(43 33 28 / 0.04), 0 8px 24px -8px rgb(43 33 28 / 0.1);
+  --shadow-lift: 0 2px 4px rgb(43 33 28 / 0.05), 0 20px 40px -12px rgb(43 33 28 / 0.16);
+
+  /* -- motion ---------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-quiet: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background: var(--color-linen);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  /* tabular figures everywhere numbers matter */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--color-clay-100);
+    color: var(--color-clay-700);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-clay-600);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* The mesh backdrop drifts on coprime durations so the loop
+   never visibly repeats. Pure CSS, GPU-composited. */
+@keyframes drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, -4%, 0) scale(1.12); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.06); }
+  50% { transform: translate3d(-5%, 5%, 0) scale(0.94); }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(0.96); }
+  50% { transform: translate3d(4%, 6%, 0) scale(1.1); }
+}
+
+.drift-a { animation: drift-a 19s var(--ease-quiet) infinite; }
+.drift-b { animation: drift-b 26s var(--ease-quiet) infinite; }
+.drift-c { animation: drift-c 34s var(--ease-quiet) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .drift-a, .drift-b, .drift-c { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
