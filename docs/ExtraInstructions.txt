@@ -1,0 +1,6 @@
+Hi, I just saw the team post the template, but does that mean we don't need a docs file and just need a GitHub README.md for the documentation part? And except for the ideation section, how about other sections like Creativity and Novelty, Feasibility, and Impact? Will these also be judged only from the README.md or from both the video and README.md?
+Nickleirsch — 12:22 AM
+Yes, you do not have to submit a docs file, everything should be in the README.md
+The other sections will be judged from both the README.md and the video
+
+You can, you are not required to use Figma, you can code and deploy your frontend prototype on Netlify/Vercel for example. You can also design it in Canva. There are no restrictions on what software you use for the design.
