@@ -3,8 +3,8 @@ import { BuildsQuietly } from "@/components/landing/BuildsQuietly";
 import { CarryLine } from "@/components/landing/CarryLine";
 import { GrainOverlay } from "@/components/landing/GrainOverlay";
 import { MeshBackdrop } from "@/components/landing/MeshBackdrop";
-import { Reveal } from "@/components/landing/Reveal";
-import { SplitText } from "@/components/landing/SplitText";
+import { Reveal } from "@/components/shared/Reveal";
+import { SplitText } from "@/components/shared/SplitText";
 import { HERO, HOW, PRODUCT } from "@/lib/copy";
 
 export default function Home() {

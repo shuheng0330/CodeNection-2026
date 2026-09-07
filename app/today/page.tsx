@@ -7,7 +7,7 @@ import { CarryBar } from "@/components/app/CarryBar";
 import { NoButton } from "@/components/app/NoButton";
 import { PutDownCard } from "@/components/app/PutDownCard";
 import { WeightChip } from "@/components/app/WeightChip";
-import { Reveal } from "@/components/landing/Reveal";
+import { Reveal } from "@/components/shared/Reveal";
 import { BAND, PRODUCT, TODAY } from "@/lib/copy";
 import { eventLoad } from "@/lib/engine/acwr";
 import { suggestPutDown } from "@/lib/engine/putdown";
