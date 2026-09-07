@@ -13,10 +13,15 @@
  * which is relative-to-self by construction and therefore not a grade.
  *
  * Enforced before submission by:
- *   rg -i "acwr|acute|chronic|burnout|streak" app/ components/
+ *   npm run gate
+ *
+ * OWNERSHIP: each block below is owned by one person. Add your strings to
+ * YOUR block only — appending to someone else's is how three agents produce
+ * a merge conflict in the one file everybody needs.
  */
 import type { BandKey } from "./engine/types";
 
+/* ── FROZEN · nobody edits without telling the team ───────────────── */
 export const PRODUCT = {
   name: "Pikul",
   /** Malay: to shoulder a load. Also a historic SEA unit of weight. */
@@ -33,6 +38,7 @@ type BandCopy = {
   tone: "sage" | "ember" | "amber" | "rust";
 };
 
+/* ── OWNER: A (engine & app) · band sentences shown on /today ─────── */
 export const BAND: Record<BandKey, BandCopy> = {
   light: {
     line: "This week's lighter than your usual.",
@@ -61,6 +67,7 @@ export const BAND: Record<BandKey, BandCopy> = {
   },
 };
 
+/* ── OWNER: B (landing & design) ──────────────────────────────────── */
 export const HERO = {
   eyebrow: "Pikul · to shoulder a load",
   headline: "It's never one big thing.",
@@ -75,6 +82,7 @@ export const HERO = {
   usualLabel: "your usual",
 } as const;
 
+/* ── OWNER: B (landing & design) ──────────────────────────────────── */
 export const QUIETLY = {
   a: "No single week broke you.",
   b: "It was the four before it.",
@@ -82,6 +90,7 @@ export const QUIETLY = {
   note: "Your last seven days, weighed against the month behind them.",
 } as const;
 
+/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
 export const TODAY = {
   putDownTitle: "One thing worth putting down",
   putDownHint: "You can hand this back. Here's how.",
@@ -90,6 +99,7 @@ export const TODAY = {
   usualBandLabel: "your usual",
 } as const;
 
+/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
 export const NO_BUTTON = {
   trigger: "Someone's asking me for something",
   step1Title: "What are they asking?",
@@ -115,9 +125,11 @@ export const NO_BUTTON = {
 } as const;
 
 /** "accepting this puts you at 118% of a usual week in week 11" */
+/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
 export const priceLine = (pct: number, weekLabel: string): string =>
   `Saying yes puts you at ${pct}% of a usual week in ${weekLabel}.`;
 
+/* ── OWNER: B (landing & design) ──────────────────────────────────── */
 export const HOW = {
   title: "How Pikul works",
   body: "Pikul borrows a model athletes use to avoid overtraining: your last seven days, weighed against your own rolling month. Not a target, not a grade — your own normal. Everything you carry converts to one measure, so a shift, an assignment and a family weekend can finally be compared.",
