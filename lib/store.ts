@@ -12,11 +12,27 @@ interface PikulState {
   personaId: string;
   /** only what the user added during the session — seed events are derived */
   userEvents: LoadEvent[];
+  /** the one commitment handed back this week — never a list, the restraint
+   *  is the product */
+  putDownId: string | null;
+  /** what the student decided to do with the time they got back */
+  recovery: string | null;
   setPersona: (id: string) => void;
   addEvent: (e: Omit<LoadEvent, "id" | "source">) => void;
   removeEvent: (id: string) => void;
+  putDown: (id: string) => void;
+  pickUpAgain: () => void;
+  setRecovery: (key: string | null) => void;
   reset: () => void;
 }
+
+/** A fresh blank slate. Returned rather than shared so no two resets can
+ *  ever hand out the same array. */
+const empty = (): Pick<PikulState, "userEvents" | "putDownId" | "recovery"> => ({
+  userEvents: [],
+  putDownId: null,
+  recovery: null,
+});
 
 /** Ids must survive a reset and a reload without ever colliding. Deriving one
  *  from userEvents.length looks fine until something is removed, at which
@@ -28,15 +44,18 @@ export const usePikul = create<PikulState>()(
   persist(
     (set) => ({
       personaId: DEFAULT_PERSONA.id,
-      userEvents: [],
-      setPersona: (personaId) => set({ personaId, userEvents: [] }),
+      ...empty(),
+      setPersona: (personaId) => set({ personaId, ...empty() }),
       addEvent: (e) =>
         set((s) => ({
           userEvents: [...s.userEvents, { ...e, id: nextId(), source: "user" as const }],
         })),
       removeEvent: (id) =>
         set((s) => ({ userEvents: s.userEvents.filter((e) => e.id !== id) })),
-      reset: () => set({ personaId: DEFAULT_PERSONA.id, userEvents: [] }),
+      putDown: (putDownId) => set({ putDownId, recovery: null }),
+      pickUpAgain: () => set({ putDownId: null, recovery: null }),
+      setRecovery: (recovery) => set({ recovery }),
+      reset: () => set({ personaId: DEFAULT_PERSONA.id, ...empty() }),
     }),
     { name: "pikul-demo" },
   ),
@@ -48,15 +67,20 @@ export const usePikul = create<PikulState>()(
 export function useCarry() {
   const personaId = usePikul((s) => s.personaId);
   const userEvents = usePikul((s) => s.userEvents);
+  const putDownId = usePikul((s) => s.putDownId);
 
   const persona = personaById(personaId);
   const asOf = demoAsOf();
-  const events = [...generateEvents(persona, asOf), ...userEvents];
+  const all = [...generateEvents(persona, asOf), ...userEvents];
+  // A commitment that has been handed back is gone from every calculation,
+  // not merely crossed out — otherwise the relief is cosmetic.
+  const events = putDownId ? all.filter((e) => e.id !== putDownId) : all;
+  const handedBack = putDownId ? (all.find((e) => e.id === putDownId) ?? null) : null;
   const today = toISODate(asOf);
   const carry = computeCarry(
     events.filter((e) => e.date <= today),
     asOf,
   );
 
-  return { persona, asOf, events, carry };
+  return { persona, asOf, events, carry, handedBack };
 }

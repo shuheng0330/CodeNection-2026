@@ -92,11 +92,65 @@ export const QUIETLY = {
 
 /* ── OWNER: A (engine & app) ──────────────────────────────────────── */
 export const TODAY = {
-  putDownTitle: "One thing worth putting down",
-  putDownHint: "You can hand this back. Here's how.",
   weekLabel: "This week",
-  nothingToPutDown: "Nothing needs to come off this week.",
   usualBandLabel: "your usual",
+} as const;
+
+/* ── OWNER: A (engine & app) · where the week actually went ─────── */
+export const AREAS = {
+  title: "What's making this week heavy",
+  labels: {
+    coursework: "Coursework",
+    work: "Work",
+    travel: "Getting there",
+    people: "Family & friends",
+    upkeep: "Everything else",
+  } as Record<string, string>,
+  /** the bars are weight, the numbers are hours, and those genuinely differ */
+  footnote:
+    "The longest bar isn't always the most hours — some things take more out of you than the clock says.",
+  empty: "Nothing on this week yet.",
+} as const;
+
+/* ── OWNER: A (engine & app) · the one thing to put down ───────── */
+export const PUT_DOWN = {
+  title: "One thing worth putting down",
+  action: "Hand it back",
+  undo: "Actually, keep it",
+  doneTitle: "Handed back",
+  /** Saying nothing is also information: it says the week is heavy for
+   *  reasons that are not the student's to negotiate away. */
+  reasons: {
+    settled: "Nothing needs to come off this week.",
+    "none-optional":
+      "This week is heavy, and none of it is yours to hand back — it's class, coursework and family. What helps now is not taking on anything more.",
+    "all-small":
+      "The only flexible things this week are small ones, and handing them back wouldn't buy you enough to feel. What helps now is not taking on anything more.",
+  } as Record<string, string>,
+  recoveryTitle: "What would you do with it?",
+  recovery: [
+    { key: "empty", label: "Leave it empty" },
+    { key: "sleep", label: "Sleep" },
+    { key: "outside", label: "Get outside" },
+    { key: "someone", label: "See someone" },
+  ],
+  recoveryHint: "No wrong answer. It's your time.",
+} as const;
+
+const whenPhrase = (when: string): string =>
+  when === "today" || when === "tomorrow" ? when : `on ${when}`;
+
+/** "Handing this back gives you about 9 hours on Saturday." */
+export const putDownLine = (hours: number, when: string): string =>
+  `Handing this back gives you about ${Math.round(hours)} hours ${whenPhrase(when)}.`;
+
+export const reclaimedLine = (hours: number, when: string): string =>
+  `About ${Math.round(hours)} hours ${whenPhrase(when)} are yours again.`;
+
+/* ── OWNER: A (engine & app) · the days you can still change ───── */
+export const AHEAD = {
+  title: "Still ahead of you",
+  empty: "Nothing else on this week.",
 } as const;
 
 /* ── OWNER: A (engine & app) ──────────────────────────────────────── */
