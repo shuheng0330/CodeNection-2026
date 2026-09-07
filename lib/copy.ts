@@ -153,6 +153,39 @@ export const AHEAD = {
   empty: "Nothing else on this week.",
 } as const;
 
+/* ── OWNER: A (engine & app) · paste it, don't type it ──────────── */
+export const ADD = {
+  trigger: "Add something",
+  title: "What have you taken on?",
+  pasteLabel: "Paste what they sent you",
+  pastePlaceholder: "eh can you cover my shift this friday 3pm-11pm?",
+  pasteHint: "Or just fill it in below.",
+  /** Provenance, said plainly. The point is to send the eye to the fields
+   *  we made up rather than to hide that we made them up. */
+  guessed: "we guessed",
+  readFrom: (word: string) => `read from “${word}”`,
+  fields: {
+    title: "What is it",
+    date: "When",
+    hours: "How long",
+    intensity: "How much does this take out of you?",
+  },
+  intensityScale: ["Barely", "A little", "Some", "A lot", "Everything"],
+  categories: {
+    class: "Class",
+    assignment: "Coursework",
+    shift: "Work",
+    commute: "Travel",
+    family: "Family",
+    social: "Social",
+    club: "Club",
+    admin: "Errands",
+  } as Record<string, string>,
+  submit: "Add it",
+  cancel: "Close",
+  untitled: "Something",
+} as const;
+
 /* ── OWNER: A (engine & app) ──────────────────────────────────────── */
 export const NO_BUTTON = {
   trigger: "Someone's asking me for something",

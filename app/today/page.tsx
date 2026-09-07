@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { addDays, format } from "date-fns";
+import { AddCommitmentSheet } from "@/components/app/AddCommitmentSheet";
 import { AreaBreakdown } from "@/components/app/AreaBreakdown";
 import { CarryBar } from "@/components/app/CarryBar";
 import { NoButton } from "@/components/app/NoButton";
@@ -96,8 +97,9 @@ export default function TodayPage() {
 
         {/* ---- decide, and see what is still changeable ---- */}
         <div className="lg:pt-14">
-          <Reveal delay={0.24} className="mt-12 lg:mt-0">
+          <Reveal delay={0.24} className="mt-12 grid gap-3 lg:mt-0">
             <NoButton events={events} asOf={asOf} />
+            <AddCommitmentSheet asOf={asOf} />
           </Reveal>
 
           <section className="mt-12">
