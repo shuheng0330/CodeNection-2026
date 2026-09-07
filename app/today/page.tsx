@@ -33,7 +33,7 @@ export default function TodayPage() {
   }, [events, asOf]);
 
   const putDown = useMemo(
-    () => suggestPutDown(events, addDays(asOf, -6)),
+    () => suggestPutDown(events, asOf),
     [events, asOf],
   );
 

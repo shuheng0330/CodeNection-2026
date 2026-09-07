@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { LoadEvent } from "./engine/types";
 import { computeCarry } from "./engine/acwr";
+import { toISODate } from "./engine/dates";
 import { demoAsOf, generateEvents } from "./seed/generateSemester";
 import { DEFAULT_PERSONA, personaById } from "./seed/personas";
 
@@ -13,8 +14,15 @@ interface PikulState {
   userEvents: LoadEvent[];
   setPersona: (id: string) => void;
   addEvent: (e: Omit<LoadEvent, "id" | "source">) => void;
+  removeEvent: (id: string) => void;
   reset: () => void;
 }
+
+/** Ids must survive a reset and a reload without ever colliding. Deriving one
+ *  from userEvents.length looks fine until something is removed, at which
+ *  point two events share a React key and the list quietly corrupts. */
+let seq = 0;
+const nextId = () => `u${Date.now().toString(36)}${(seq++).toString(36)}`;
 
 export const usePikul = create<PikulState>()(
   persist(
@@ -24,11 +32,10 @@ export const usePikul = create<PikulState>()(
       setPersona: (personaId) => set({ personaId, userEvents: [] }),
       addEvent: (e) =>
         set((s) => ({
-          userEvents: [
-            ...s.userEvents,
-            { ...e, id: `u${s.userEvents.length}`, source: "user" as const },
-          ],
+          userEvents: [...s.userEvents, { ...e, id: nextId(), source: "user" as const }],
         })),
+      removeEvent: (id) =>
+        set((s) => ({ userEvents: s.userEvents.filter((e) => e.id !== id) })),
       reset: () => set({ personaId: DEFAULT_PERSONA.id, userEvents: [] }),
     }),
     { name: "pikul-demo" },
@@ -45,8 +52,9 @@ export function useCarry() {
   const persona = personaById(personaId);
   const asOf = demoAsOf();
   const events = [...generateEvents(persona, asOf), ...userEvents];
+  const today = toISODate(asOf);
   const carry = computeCarry(
-    events.filter((e) => e.date <= asOf.toISOString().slice(0, 10)),
+    events.filter((e) => e.date <= today),
     asOf,
   );
 
