@@ -153,6 +153,36 @@ export const AHEAD = {
   empty: "Nothing else on this week.",
 } as const;
 
+/* ── OWNER: A (engine & app) · same hours, different answer ──── */
+export const COMPARE = {
+  title: "Two students, one week each.",
+  lead: "One of them is closer to breaking. Before you look at anything else — which?",
+  prompt: "Pick one",
+  hoursThisWeek: "this week",
+  reveal: "Show me",
+  again: "Try it again",
+  answer: (name: string): string => `${name} is.`,
+  /** the sentence the whole product exists to make true */
+  punchline: (
+    lighterName: string,
+    lighterHours: number,
+    heavierName: string,
+    heavierHours: number,
+  ): string =>
+    `${heavierName} is carrying ${Math.round(heavierHours - lighterHours)} hours more than ${lighterName}, and it is an ordinary week for ${heavierName}.`,
+  usualLine: (hours: number): string =>
+    `An ordinary week for them is about ${Math.round(hours)} hours.`,
+  method:
+    "Nobody chose these two. Both weeks are built from the same generator, and each verdict is measured against that student's own last four weeks — not against each other, and not against a target.",
+  askTitle: "Now give them both the same thing to do",
+  askLead: "Paste a message someone might send you. It gets priced against each of them.",
+  askPlaceholder: "eh can you cover my shift this friday 3pm-11pm?",
+  askCost: (pct: number, week: string): string =>
+    `${pct}% of a usual week in ${week}`,
+  back: "Today",
+} as const;
+
+
 /* ── OWNER: A (engine & app) · the weeks you can still change ── */
 export const WEEK = {
   title: "The weeks ahead",

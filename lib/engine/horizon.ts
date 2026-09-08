@@ -89,3 +89,33 @@ export function weeksAhead(
 /** Small multiples only tell the truth on a shared scale. */
 export const peakDayLoad = (weeks: WeekAhead[]): number =>
   Math.max(1, ...weeks.flatMap((w) => w.days.map((d) => d.load)));
+
+/**
+ * What an ordinary week costs this person, in hours.
+ *
+ * The engine reasons in weighted load, which is the right unit for maths and
+ * the wrong one for a sentence. Hours are what a student recognises, and
+ * putting the baseline in the same unit as the week is what makes "84 hours
+ * is an ordinary week for her" land.
+ */
+export function usualWeekHours(
+  events: LoadEvent[],
+  asOf: Date,
+  days: number = 28,
+): number {
+  const from = toISODate(addDays(asOf, -(days - 1)));
+  const to = toISODate(asOf);
+  const total = events
+    .filter((e) => e.date >= from && e.date <= to)
+    .reduce((s, e) => s + e.hours, 0);
+  return (total / days) * 7;
+}
+
+/** Hours committed in the seven days ending at asOf. */
+export function thisWeekHours(events: LoadEvent[], asOf: Date): number {
+  const from = toISODate(addDays(asOf, -6));
+  const to = toISODate(asOf);
+  return events
+    .filter((e) => e.date >= from && e.date <= to)
+    .reduce((s, e) => s + e.hours, 0);
+}

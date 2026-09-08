@@ -64,6 +64,12 @@ export default function TodayPage() {
         </Link>
         <div className="flex items-baseline gap-5">
           <Link
+            href="/compare"
+            className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
+          >
+            Compare
+          </Link>
+          <Link
             href="/week"
             className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
           >
