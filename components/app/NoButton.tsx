@@ -36,7 +36,11 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   const [tone, setTone] = useState<Tone>("soften");
   const [copied, setCopied] = useState(false);
   const [decided, setDecided] = useState<"yes" | "no" | null>(null);
-  const logAsk = usePikul((s) => s.logAsk);
+  const decideAsk = usePikul((s) => s.decideAsk);
+  const undoAsk = usePikul((s) => s.undoAsk);
+  // A new intent per opening: pressing the button twice answers once, but
+  // asking again later is a different question and gets its own entry.
+  const [intentId, setIntentId] = useState(() => `ask-${Date.now()}`);
   const still = useReducedMotion();
   const titleId = useId();
 
@@ -82,7 +86,10 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setIntentId(`ask-${Date.now()}`);
+          setOpen(true);
+        }}
         className="w-full rounded-full bg-clay-600 px-6 py-4 font-medium text-white shadow-soft transition-colors hover:bg-clay-500"
       >
         {NO_BUTTON.trigger}
@@ -203,13 +210,20 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                             key={d}
                             onClick={() => {
                               setDecided(d);
-                              logAsk({
+                              decideAsk({
+                                intentId,
+                                decision: d,
                                 title: ASK_KINDS.find((k) => k.key === kind)!.label,
-                                hours: ASK_WEIGHTS[heft].hours,
                                 pct: price.landing?.pctOfUsual ?? 0,
                                 weekLabel: price.landing?.label ?? "",
                                 verdict: price.verdict,
-                                decision: d,
+                                event: {
+                                  date: candidate.date,
+                                  category: candidate.category,
+                                  title: ASK_KINDS.find((k) => k.key === kind)!.label,
+                                  hours: candidate.hours,
+                                  intensity: candidate.intensity,
+                                },
                               });
                             }}
                             aria-pressed={decided === d}
@@ -224,7 +238,22 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         ))}
                       </div>
                       {decided && (
-                        <p className="mt-3 text-sm text-ink-faint">{NO_BUTTON.logged}</p>
+                        <div className="mt-3 flex flex-wrap items-baseline gap-3">
+                          <p className="text-sm text-ink-faint">
+                            {decided === "yes"
+                              ? NO_BUTTON.acceptedNote
+                              : NO_BUTTON.declinedNote}
+                          </p>
+                          <button
+                            onClick={() => {
+                              undoAsk(intentId);
+                              setDecided(null);
+                            }}
+                            className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                          >
+                            {NO_BUTTON.undo}
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>

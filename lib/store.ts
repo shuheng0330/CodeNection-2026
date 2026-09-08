@@ -13,14 +13,30 @@ import { DEFAULT_PERSONA, personaById } from "./seed/personas";
  *  party trick. A yes is recorded exactly like a no. */
 export interface Ask {
   id: string;
+  /** Identifies the ask being answered, not the record. One request gets one
+   *  answer however many times the button is pressed. */
+  intentId: string;
   title: string;
   hours: number;
-  /** share of a usual week at the worst point, as the No Button showed it */
+  /** share of a usual week in the week it lands in, as the No Button showed it */
   pct: number;
   weekLabel: string;
   verdict: "fits" | "tight" | "costly";
   decision: "yes" | "no";
+  /** the commitment this created, when the answer was yes */
+  eventId: string | null;
   at: string;
+}
+
+export interface AskDecision {
+  intentId: string;
+  decision: "yes" | "no";
+  title: string;
+  pct: number;
+  weekLabel: string;
+  verdict: "fits" | "tight" | "costly";
+  /** what goes on the calendar if they say yes */
+  event: Omit<LoadEvent, "id" | "source">;
 }
 
 interface PikulState {
@@ -40,7 +56,8 @@ interface PikulState {
   putDown: (id: string) => void;
   pickUpAgain: () => void;
   setRecovery: (key: string | null) => void;
-  logAsk: (a: Omit<Ask, "id" | "at">) => void;
+  decideAsk: (input: AskDecision) => void;
+  undoAsk: (intentId: string) => void;
   clearAsks: () => void;
   reset: () => void;
 }
@@ -78,13 +95,64 @@ export const usePikul = create<PikulState>()(
       putDown: (putDownId) => set({ putDownId, recovery: null }),
       pickUpAgain: () => set({ putDownId: null, recovery: null }),
       setRecovery: (recovery) => set({ recovery }),
-      logAsk: (a) =>
-        set((s) => ({
-          asks: [
-            { ...a, id: nextId(), at: new Date().toISOString() },
-            ...s.asks,
-          ],
-        })),
+      /**
+       * The whole answer, in one write.
+       *
+       * Saying yes has to put the commitment on the calendar as well as record
+       * the decision — a log entry alone leaves the student looking at a week
+       * that does not include the thing they just agreed to. Both land in a
+       * single set(), so there is no state in between where one exists without
+       * the other.
+       *
+       * Answering twice is a no-op. A double tap, a replayed handler, or a
+       * button pressed again before the sheet closes must not book the shift
+       * twice. Reopening the sheet starts a new intent, because asking again
+       * is a different question.
+       */
+      decideAsk: (input) =>
+        set((s) => {
+          if (s.asks.some((a) => a.intentId === input.intentId)) return s;
+
+          const accepted = input.decision === "yes";
+          const eventId = accepted ? nextId() : null;
+
+          return {
+            userEvents: accepted
+              ? [
+                  ...s.userEvents,
+                  { ...input.event, id: eventId!, source: "user" as const },
+                ]
+              : s.userEvents,
+            asks: [
+              {
+                id: nextId(),
+                intentId: input.intentId,
+                title: input.title,
+                hours: input.event.hours,
+                pct: input.pct,
+                weekLabel: input.weekLabel,
+                verdict: input.verdict,
+                decision: input.decision,
+                eventId,
+                at: new Date().toISOString(),
+              },
+              ...s.asks,
+            ],
+          };
+        }),
+
+      /** Changing your mind takes the commitment back off the calendar too. */
+      undoAsk: (intentId) =>
+        set((s) => {
+          const ask = s.asks.find((a) => a.intentId === intentId);
+          if (!ask) return s;
+          return {
+            asks: s.asks.filter((a) => a.intentId !== intentId),
+            userEvents: ask.eventId
+              ? s.userEvents.filter((e) => e.id !== ask.eventId)
+              : s.userEvents,
+          };
+        }),
       clearAsks: () => set({ asks: [] }),
       reset: () => set({ personaId: DEFAULT_PERSONA.id, ...empty() }),
     }),

@@ -129,6 +129,7 @@ export default function TodayPage() {
               handedBack={handedBack}
               reason={reason}
               asOf={asOf}
+              events={events}
             />
           </Reveal>
         </div>

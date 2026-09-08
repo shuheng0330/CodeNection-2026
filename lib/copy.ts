@@ -145,6 +145,21 @@ export const PUT_DOWN = {
     "all-small":
       "The only flexible things this week are small ones, and handing them back wouldn't buy you enough to feel. What helps now is not taking on anything more.",
   } as Record<string, string>,
+  /* ---- preview, before anything is actually handed back ---- */
+  previewTitle: "Before you do",
+  previewIntro: (title: string): string => `Handing back ${title} would:`,
+  previewHours: (hours: number, when: string): string =>
+    `free about ${Math.round(hours)} hours ${when === "today" || when === "tomorrow" ? when : `on ${when}`}`,
+  previewOpensDay: (day: string): string => `leave ${day} genuinely clear`,
+  /** The honest half. A future commitment coming off does not change a week
+   *  that has already been lived, and pretending otherwise would be the one
+   *  lie this product cannot afford. */
+  previewUnchanged:
+    "It will not change this week's reading. That week has already happened — what changes is what is still ahead of you.",
+  previewConfirm: "Hand it back",
+  previewCancel: "Keep it for now",
+  previewNote: "Nothing is saved until you confirm.",
+
   recoveryTitle: "What would you do with it?",
   recovery: [
     { key: "empty", label: "Leave it empty" },
@@ -371,7 +386,11 @@ export const NO_BUTTON = {
    *  validates declining is just a different voice telling you what to do. */
   saidYes: "I said yes",
   saidNo: "I said no",
-  logged: "Kept.",
+  /** Saying yes puts it on the week. Saying so is the difference between a
+   *  record and a decision. */
+  acceptedNote: "Added to your week, and kept in what you were asked.",
+  declinedNote: "Kept in what you were asked. Nothing was added.",
+  undo: "Change my answer",
   verdict: {
     fits: "This fits.",
     tight: "This would make it tight.",
