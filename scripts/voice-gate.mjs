@@ -15,6 +15,10 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
 const ROOTS = ["app", "components"];
+/** copy.ts and decline.ts are where every user-facing string actually lives,
+ *  so gating only app/ and components/ misses the file this exists to police.
+ *  The rest of lib/ is named in the engine's own vocabulary and is not scanned. */
+const FILES = ["lib/copy.ts", "lib/decline.ts"];
 const BANNED = [
   "acwr",
   "acute",
@@ -47,8 +51,10 @@ function strip(src) {
 
 let failures = 0;
 
-for (const root of ROOTS) {
-  for (const file of walk(root)) {
+const targets = [...ROOTS.flatMap(walk), ...FILES];
+
+for (const file of targets) {
+  {
     const lines = strip(readFileSync(file, "utf8")).split("\n");
     lines.forEach((line, i) => {
       for (const word of BANNED) {

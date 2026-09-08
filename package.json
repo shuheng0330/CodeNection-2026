@@ -10,9 +10,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "gate": "node scripts/voice-gate.mjs",
-    "verify": "npm run gate && npm run test && npm run build"
+    "verify": "npm run gate && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
+    "chrono-node": "^2.10.1",
     "d3-shape": "^3.2.0",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.41.0",

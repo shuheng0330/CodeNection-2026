@@ -85,6 +85,14 @@ describe("ewma", () => {
 });
 
 describe("bandFor — the boundaries the whole UI keys off", () => {
+  it("does not call a missing number a crisis", () => {
+    // every comparison against NaN is false, so an unguarded chain falls
+    // through to the last branch and tells someone they are carrying too much
+    expect(bandFor(NaN)).toBe("usual");
+    expect(bandFor(Infinity)).toBe("usual");
+    expect(bandFor(-Infinity)).toBe("usual");
+  });
+
   it("classifies each band at its edges", () => {
     expect(bandFor(0.5)).toBe("light");
     expect(bandFor(0.79)).toBe("light");

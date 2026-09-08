@@ -9,6 +9,7 @@ import { ASK_WEIGHTS, priceCommitment } from "@/lib/engine/forecast";
 import type { LoadEvent } from "@/lib/engine/types";
 import { CURRENT_WEEK } from "@/lib/seed/generateSemester";
 import { spring } from "@/lib/motion";
+import { usePikul } from "@/lib/store";
 
 type Heft = keyof typeof ASK_WEIGHTS;
 
@@ -33,6 +34,8 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   const [heft, setHeft] = useState<Heft>("heavy");
   const [tone, setTone] = useState<Tone>("soften");
   const [copied, setCopied] = useState(false);
+  const [decided, setDecided] = useState<"yes" | "no" | null>(null);
+  const logAsk = usePikul((s) => s.logAsk);
 
   // The ask lands next week — the week that is already loaded before anyone asks.
   const candidate: LoadEvent = useMemo(
@@ -59,6 +62,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
     setTimeout(() => {
       setStep(0);
       setCopied(false);
+      setDecided(null);
     }, 300);
   };
 
@@ -173,6 +177,43 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                     >
                       {copied ? NO_BUTTON.copied : NO_BUTTON.copyAction}
                     </button>
+
+                    {/* The decision is the point, and it is worth keeping.
+                        Both answers are recorded the same way. */}
+                    <div className="mt-7 border-t border-hairline pt-5">
+                      <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                        {NO_BUTTON.decisionTitle}
+                      </p>
+                      <div className="mt-3 flex gap-2">
+                        {(["yes", "no"] as const).map((d) => (
+                          <button
+                            key={d}
+                            onClick={() => {
+                              setDecided(d);
+                              logAsk({
+                                title: ASK_KINDS.find((k) => k.key === kind)!.label,
+                                hours: ASK_WEIGHTS[heft].hours,
+                                pct: price.worst.pctOfUsual,
+                                weekLabel: price.worst.label,
+                                verdict: price.verdict,
+                                decision: d,
+                              });
+                            }}
+                            aria-pressed={decided === d}
+                            className={`min-h-11 flex-1 rounded-full border px-4 py-2.5 text-sm transition-colors ${
+                              decided === d
+                                ? "border-ink bg-ink text-linen"
+                                : "border-hairline text-ink-muted hover:bg-raised"
+                            }`}
+                          >
+                            {d === "yes" ? NO_BUTTON.saidYes : NO_BUTTON.saidNo}
+                          </button>
+                        ))}
+                      </div>
+                      {decided && (
+                        <p className="mt-3 text-sm text-ink-faint">{NO_BUTTON.logged}</p>
+                      )}
+                    </div>
                   </div>
                 </Step>
               )}
