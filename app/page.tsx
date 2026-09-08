@@ -1,88 +1,53 @@
 import Link from "next/link";
 import { BuildsQuietly } from "@/components/landing/BuildsQuietly";
-import { CarryLine } from "@/components/landing/CarryLine";
+import { CommitmentScene } from "@/components/landing/CommitmentScene";
+import { PutDownPrinciple } from "@/components/landing/PutDownPrinciple";
 import { GrainOverlay } from "@/components/landing/GrainOverlay";
-import { MeshBackdrop } from "@/components/landing/MeshBackdrop";
-import { Reveal } from "@/components/shared/Reveal";
-import { SplitText } from "@/components/shared/SplitText";
-import { HERO, HOW, PRODUCT } from "@/lib/copy";
+import { HERO, HOW, LANDING, PRODUCT } from "@/lib/copy";
+import styles from "@/components/landing/landing.module.css";
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main id="main" className={styles.page}>
       <GrainOverlay />
-
-      {/* ---------------- hero ---------------- */}
-      <section className="relative overflow-hidden px-6 pt-20 pb-24 sm:pt-28">
-        <MeshBackdrop />
-        <div className="relative mx-auto max-w-5xl">
-          <p className="text-center text-micro uppercase tracking-[0.08em] text-ink-muted">
-            {HERO.eyebrow}
-          </p>
-
-          <h1 className="mt-6 text-center font-display text-display">
-            <SplitText text={HERO.headline} />
-            <span className="block text-ink-muted">
-              <SplitText text={HERO.headline2} accent={HERO.headlineAccent} delay={0.35} />
-            </span>
-          </h1>
-
-          <div className="mt-14 sm:mt-16">
-            <CarryLine />
+      <a href="#hero" className={styles.skip}>{LANDING.skip}</a>
+      <header className={styles.header}>
+        <Link href="/" className={styles.brand} aria-label={PRODUCT.name}>{PRODUCT.name}<span aria-hidden="true">.</span></Link>
+        <span className={styles.brandNote}>{PRODUCT.meaning}</span>
+        <Link href="/today?reset=1" className={styles.headerLink}>{LANDING.openDemo}<span aria-hidden="true"> ↗</span></Link>
+      </header>
+      <section id="hero" aria-labelledby="hero-title" className={styles.hero}>
+        <div>
+          <p className={styles.eyebrow}>{LANDING.audience}</p>
+          <h1 id="hero-title">{HERO.headline}{" "}<span>{HERO.headline2}</span></h1>
+          <p className={styles.lead}>{HERO.sub}</p>
+          <div className={styles.actions}>
+            <Link href="/today?reset=1" className={styles.primary}>{HERO.cta}<span aria-hidden="true"> ↗</span></Link>
+            <a href="#how" className={styles.secondary}>{HERO.ctaSecondary}<span aria-hidden="true"> ↓</span></a>
           </div>
-
-          <Reveal delay={0.1} className="mx-auto mt-10 max-w-xl text-center">
-            <p className="text-lead text-ink-muted">{HERO.sub}</p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/today"
-                className="rounded-full bg-clay-600 px-7 py-3.5 font-medium text-white shadow-soft transition-colors hover:bg-clay-500"
-              >
-                {HERO.cta}
-              </Link>
-              <a
-                href="#how"
-                className="rounded-full border border-hairline px-7 py-3.5 font-medium text-ink transition-colors hover:bg-raised"
-              >
-                {HERO.ctaSecondary}
-              </a>
-            </div>
-          </Reveal>
+          <p className={styles.demoNote}>{LANDING.demoNote}</p>
         </div>
+        <CommitmentScene />
       </section>
-
-      {/* ---------------- it builds quietly ---------------- */}
       <BuildsQuietly />
-
-      {/* ---------------- how it works ---------------- */}
-      <section id="how" className="border-t border-hairline bg-raised/40 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-5xl">
-          <Reveal>
-            <h2 className="font-display text-h1">{HOW.title}</h2>
-            <p className="mt-5 max-w-2xl text-lead text-ink-muted">{HOW.body}</p>
-          </Reveal>
-
-          <div className="mt-14 grid gap-5 sm:grid-cols-3">
-            {HOW.points.map((p, i) => (
-              <Reveal key={p.t} delay={i * 0.08}>
-                <div className="h-full rounded-3xl border border-hairline bg-surface p-7 shadow-soft">
-                  <p className="font-display text-xl">{p.t}</p>
-                  <p className="mt-3 text-ink-muted">{p.d}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+      <PutDownPrinciple />
+      <section id="how" aria-labelledby="how-title" className={styles.how}>
+        <div className={styles.sectionHeading}>
+          <p className={styles.eyebrow}>{LANDING.howEyebrow}</p>
+          <h2 id="how-title">{HOW.title}</h2>
+          <p className={styles.lead}>{HOW.body}</p>
         </div>
+        <ol className={styles.steps}>
+          {HOW.points.map((point, i) => <li key={point.t}>
+            <span className={styles.stepNumber} aria-hidden="true">0{i + 1}</span>
+            <h3>{point.t}</h3><p>{point.d}</p>
+          </li>)}
+        </ol>
+        <Link href="/today?reset=1" className={styles.primary}>{HERO.cta}<span aria-hidden="true"> ↗</span></Link>
       </section>
-
-      <footer className="border-t border-hairline px-6 py-14">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-baseline justify-between gap-3">
-          <p className="font-display text-xl">
-            {PRODUCT.name}
-            <span className="ml-3 text-sm text-ink-faint">— {PRODUCT.meaning}</span>
-          </p>
-          <p className="text-sm text-ink-faint">CodeNection 2026 · Lifestyle track</p>
-        </div>
+      <footer className={styles.footer}>
+        <p className={styles.brand}>{PRODUCT.name}<span aria-hidden="true">.</span></p>
+        <p>{PRODUCT.meaning}</p><p>{LANDING.event}</p>
       </footer>
     </main>
   );
