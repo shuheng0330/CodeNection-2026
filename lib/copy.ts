@@ -153,7 +153,18 @@ export const CARRY_LABEL: Record<BandKey, string> = {
 
 /* ── Ku · where the week actually went ───────────────────────────────── */
 export const AREAS = {
-  title: "What's making this week heavy",
+  /**
+   * A calm week is not heavy, and a heading that insists it is undoes the
+   * sentence directly above it. Nurul's Today read "a bit more than your
+   * usual — still fine" with "what's making this week heavy" underneath.
+   *
+   * The release gate's wording for this is that a calm week must not
+   * manufacture a need to decline. Nor a need to worry.
+   */
+  titleFor: (band: BandKey): string =>
+    band === "heavy" || band === "toomuch"
+      ? "What's making this week heavy"
+      : "Where this week is going",
   labels: {
     coursework: "Coursework",
     work: "Work",

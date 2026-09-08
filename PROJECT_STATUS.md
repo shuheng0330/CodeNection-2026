@@ -31,25 +31,42 @@ This task changed documentation only. No application code was changed, no commit
 
 ## Release checks run 9 September 2026 (Ku's lane)
 
-Measured in headless Chrome against a production build, not estimated.
+Measured in headless Chrome against a production build, not estimated. The
+whole sweep is now `npm run check:release`, so anyone can rerun it before the
+freeze rather than take this section on trust. It needs a running server:
 
-Reflow and overflow, seven routes at 320, 360, 390, 640, 768, 1024 and 1440
-CSS pixels: no route scrolls horizontally at any width. 640 is included
-because it is what a 1280px desktop viewport becomes at 200% zoom, which is
-the other half of WCAG 1.4.10.
+    npm run build && npm start        # one terminal
+    npm run check:release             # another
 
-Touch targets, same sweep: `/today` and `/compare` are clean.
+It currently passes. What it covers:
 
-**Open, and not Ku's to fix.** The back link that reads "Today" on `/week`,
-`/recover`, `/asks` and `/method` measures 39x20 CSS pixels — under the 44px
-the phase plan's release gate requires. Thong owns those four files. The fix
-is one class change per link (`inline-flex min-h-11 items-center`), or it
-disappears entirely once AppShell replaces those per-page headers. Ku has not
-edited those files; announced here rather than changed.
+- Reflow and overflow, seven routes at 320, 360, 390, 640, 768, 1024 and 1440
+  CSS pixels. No route scrolls horizontally at any width. 640 is in the list
+  because it is what a 1280px desktop viewport becomes at 200% zoom, which is
+  the other half of WCAG 1.4.10.
+- Touch targets at every one of those widths, against the 44px the gate asks
+  for.
+- The request sheet from a keyboard: focus enters, lands on the heading rather
+  than a close button, cannot be tabbed or shift-tabbed out of, leaves on
+  Escape, returns to the trigger, and moves again on a step change so the new
+  step is announced.
+- Five straight run-throughs in one browser with nothing cleared between them,
+  all five producing identical figures, and three presses of "I said yes"
+  booking the shift once.
+- Accept, decline and change-your-mind, checked against what is actually in
+  storage rather than what the screen says.
+- The hand-back preview: opening it and cancelling it both save nothing.
+
+**Cross-owner change, announced here rather than assumed.** The back link
+reading "Today" on `/week`, `/recover`, `/asks` and `/method` measured 39x20
+CSS pixels, under the gate's 44px, on all seven widths. Ku added
+`inline-flex min-h-11 items-center` to that one link in each of those four
+files — one line per file, nothing else touched. Thong owns them; revert
+freely if AppShell is about to replace those headers anyway.
 
 Not covered by any of the above, and still outstanding for the Friday gate:
 NVDA or VoiceOver, real-Android TalkBack, and a physical-device pass. Those
-cannot be run headlessly and remain manual.
+cannot be run headlessly and stay manual.
 
 ### Defects found by looking at the rendered pages, and fixed
 

@@ -53,7 +53,7 @@ export default function RecoverPage() {
         </Link>
         <Link
           href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
+          className="inline-flex min-h-11 items-center text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
         >
           {RECOVER.back}
         </Link>

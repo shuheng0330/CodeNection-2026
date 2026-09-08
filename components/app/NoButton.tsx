@@ -390,7 +390,16 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               )}
 
               {step === 1 && (
-                <Step title={NO_BUTTON.step2Title} titleId={titleId} step={step}>
+                <Step
+                  // The heading is the dialog's accessible name and it is what
+                  // gets announced on the step change, so it cannot promise a
+                  // price the next paragraph then refuses to give.
+                  title={
+                    price && landing ? NO_BUTTON.step2Title : NO_BUTTON.cantPriceTitle
+                  }
+                  titleId={titleId}
+                  step={step}
+                >
                   {!price || !landing ? (
                     <CannotPrice
                       problems={
@@ -584,8 +593,7 @@ function CannotPrice({
 }) {
   return (
     <div>
-      <p className="font-display text-2xl text-ink">{NO_BUTTON.cantPriceTitle}</p>
-      <ul className="mt-4 grid gap-2">
+      <ul className="grid gap-2">
         {problems.map((p) => (
           <li key={p} className="flex gap-3 text-ink-muted">
             <span

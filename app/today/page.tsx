@@ -155,7 +155,7 @@ export default function TodayPage() {
             id="areas-title"
             className="px-3 text-micro uppercase tracking-[0.08em] text-ink-faint"
           >
-            {AREAS.title}
+            {AREAS.titleFor(carry.band)}
           </h2>
           <div className="mt-4">
             <AreaBreakdown events={events} asOf={asOf} />
