@@ -10,7 +10,7 @@ import { NoButton } from "@/components/app/NoButton";
 import { PutDownCard } from "@/components/app/PutDownCard";
 import { WeightChip } from "@/components/app/WeightChip";
 import { Reveal } from "@/components/shared/Reveal";
-import { AHEAD, AREAS, BAND, PRODUCT } from "@/lib/copy";
+import { AHEAD, AREAS, BAND, PRODUCT, WEEK } from "@/lib/copy";
 import { toISODate } from "@/lib/engine/dates";
 import { putDownReason, suggestPutDown, whenLabel } from "@/lib/engine/putdown";
 import { useCarry, usePikul } from "@/lib/store";
@@ -62,7 +62,15 @@ export default function TodayPage() {
         <Link href="/" className="font-display text-xl">
           {PRODUCT.name}
         </Link>
-        <p className="text-sm text-ink-faint">{format(asOf, "EEEE, d MMM")}</p>
+        <div className="flex items-baseline gap-5">
+          <Link
+            href="/week"
+            className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
+          >
+            {WEEK.title}
+          </Link>
+          <p className="text-sm text-ink-faint">{format(asOf, "EEEE, d MMM")}</p>
+        </div>
       </header>
 
       <div className="lg:grid lg:grid-cols-2 lg:gap-x-14">

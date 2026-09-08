@@ -153,6 +153,24 @@ export const AHEAD = {
   empty: "Nothing else on this week.",
 } as const;
 
+/* ── OWNER: A (engine & app) · the weeks you can still change ── */
+export const WEEK = {
+  title: "The weeks ahead",
+  lead: "Everything already on your calendar, weighed the same way as this week.",
+  empty: "Nothing on this week.",
+  wallLabel: "Worth knowing about now",
+  /** "Week 11 is the one to watch — seven things land across four days." */
+  wallLine: (label: string, count: number, days: number): string =>
+    `${label.charAt(0).toUpperCase()}${label.slice(1)} is the one to watch — ${count} things land across ${days} days.`,
+  wallDensity: (times: number): string =>
+    `That is about ${times.toFixed(1)} times a usual few days for you.`,
+  wallHint:
+    "None of it is optional, so the thing that helps is not adding anything to it.",
+  quiet: "Nothing ahead looks unusual for you.",
+  hoursLabel: (h: number): string => `${Math.round(h)}h`,
+  backToToday: "Today",
+} as const;
+
 /* ── OWNER: A (engine & app) · paste it, don't type it ──────────── */
 export const ADD = {
   trigger: "Add something",

@@ -1,4 +1,4 @@
-import { addDays, differenceInCalendarDays, parseISO } from "date-fns";
+import { addDays, differenceInCalendarDays } from "date-fns";
 import type { LoadEvent } from "./types";
 import { eventLoad } from "./acwr";
 import { toISODate } from "./dates";
