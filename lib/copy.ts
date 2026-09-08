@@ -153,6 +153,44 @@ export const AHEAD = {
   empty: "Nothing else on this week.",
 } as const;
 
+/* ── OWNER: A (engine & app) · showing the working ─────────── */
+export const METHOD = {
+  title: "How this works",
+  lead: "No model, no guessing, and nothing about you leaves your phone. Here is the whole of it.",
+  steps: [
+    {
+      t: "Everything becomes one measure",
+      d: "Each commitment is its hours multiplied by how much it takes out of you, on a one-to-five dial. That is why a two-hour group meeting can outweigh a four-hour lecture, and why a shift, an assignment and a weekend at home can finally be compared at all.",
+    },
+    {
+      t: "Your last seven days, against your own last four weeks",
+      d: "Both are weighted averages, so a hard Tuesday fades rather than falling off a cliff. The recent number divided by the settled one is the only figure the app cares about. Above one means this stretch is heavier than you usually carry. It is never compared to anyone else's.",
+    },
+    {
+      t: "The bands are deliberately wide",
+      d: "A perfectly steady life computes to exactly one, so “about your usual” has to contain it. We would rather say nothing than tell someone whose weeks have not changed that something is wrong.",
+    },
+    {
+      t: "Nothing is predicted",
+      d: "The weeks ahead use the same arithmetic on commitments already in your calendar. It is not a forecast of how you will feel. It is what you have already agreed to, added up.",
+    },
+  ],
+  limitsTitle: "What it cannot tell you",
+  limits: [
+    "This is a way of noticing a change in your own pattern, not a diagnosis, and not a medical opinion. It cannot tell you whether you are unwell.",
+    "The idea is borrowed from how sports scientists watch training load. It has never been tested on coursework, shifts or family duty — that part is our design decision, and it is unvalidated.",
+    "The method is argued about in the field it came from, including whether comparing a recent window against a longer one that contains it is sound at all. We think it is still the most honest simple signal available, and we would rather you knew the objection.",
+    "The one-to-five dial is ours. Nobody has established that a draining hour weighs exactly 1.7 ordinary ones.",
+    "It only knows what it has been told. A month of history has to exist before the comparison means very much.",
+  ],
+  refTitle: "The sources, and the maths written out",
+  ref: "The full working — the formula, where it comes from, and the papers arguing against it — is in the project README.",
+  privacyTitle: "Where your week is kept",
+  privacy: "In this browser, and nowhere else. There is no account, no server and no network call. Close the tab and it is still only yours.",
+  back: "Today",
+} as const;
+
+
 /* ── OWNER: A (engine & app) · time that is already yours ────── */
 export const RECOVER = {
   title: "Somewhere to put the time down",
