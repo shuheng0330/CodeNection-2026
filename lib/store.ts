@@ -9,6 +9,20 @@ import { toISODate } from "./engine/dates";
 import { seedEvents, stableAsOf } from "./seed/cache";
 import { DEFAULT_PERSONA, personaById } from "./seed/personas";
 
+/** One decision, kept so the No Button becomes a practice rather than a
+ *  party trick. A yes is recorded exactly like a no. */
+export interface Ask {
+  id: string;
+  title: string;
+  hours: number;
+  /** share of a usual week at the worst point, as the No Button showed it */
+  pct: number;
+  weekLabel: string;
+  verdict: "fits" | "tight" | "costly";
+  decision: "yes" | "no";
+  at: string;
+}
+
 interface PikulState {
   personaId: string;
   /** only what the user added during the session — seed events are derived */
@@ -18,21 +32,29 @@ interface PikulState {
   putDownId: string | null;
   /** what the student decided to do with the time they got back */
   recovery: string | null;
+  /** every ask that has been priced, and what they did about it */
+  asks: Ask[];
   setPersona: (id: string) => void;
   addEvent: (e: Omit<LoadEvent, "id" | "source">) => void;
   removeEvent: (id: string) => void;
   putDown: (id: string) => void;
   pickUpAgain: () => void;
   setRecovery: (key: string | null) => void;
+  logAsk: (a: Omit<Ask, "id" | "at">) => void;
+  clearAsks: () => void;
   reset: () => void;
 }
 
 /** A fresh blank slate. Returned rather than shared so no two resets can
  *  ever hand out the same array. */
-const empty = (): Pick<PikulState, "userEvents" | "putDownId" | "recovery"> => ({
+const empty = (): Pick<
+  PikulState,
+  "userEvents" | "putDownId" | "recovery" | "asks"
+> => ({
   userEvents: [],
   putDownId: null,
   recovery: null,
+  asks: [],
 });
 
 /** Ids must survive a reset and a reload without ever colliding. Deriving one
@@ -56,15 +78,29 @@ export const usePikul = create<PikulState>()(
       putDown: (putDownId) => set({ putDownId, recovery: null }),
       pickUpAgain: () => set({ putDownId: null, recovery: null }),
       setRecovery: (recovery) => set({ recovery }),
+      logAsk: (a) =>
+        set((s) => ({
+          asks: [
+            { ...a, id: nextId(), at: new Date().toISOString() },
+            ...s.asks,
+          ],
+        })),
+      clearAsks: () => set({ asks: [] }),
       reset: () => set({ personaId: DEFAULT_PERSONA.id, ...empty() }),
     }),
     {
       name: "pikul-demo",
       // A browser that already holds a v1 blob — the presenter's, mid-rehearsal —
       // must not restore a shape the newer screens do not expect.
-      version: 2,
-      migrate: (persisted, from) =>
-        from < 2 ? { ...(persisted as object), recovery: null } : persisted,
+      version: 3,
+      migrate: (persisted, from) => {
+        const base = persisted as Record<string, unknown>;
+        return {
+          ...base,
+          ...(from < 2 ? { recovery: null } : {}),
+          ...(from < 3 ? { asks: [] } : {}),
+        };
+      },
     },
   ),
 );

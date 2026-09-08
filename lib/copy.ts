@@ -153,6 +153,27 @@ export const AHEAD = {
   empty: "Nothing else on this week.",
 } as const;
 
+/* ── OWNER: A (engine & app) · the decisions, kept ─────────── */
+export const ASKS = {
+  title: "What you were asked",
+  lead: "Every request you priced, and what you decided. Both answers count the same.",
+  empty: "Nothing yet. The next time someone asks you for something, price it first.",
+  emptyAction: "Try it",
+  tookOn: "took on",
+  handedBack: "handed back",
+  hours: (h: number): string => `${Math.round(h)}h`,
+  /** "118% of a usual week in week 11" */
+  cost: (pct: number, week: string): string => `${pct}% of a usual week in ${week}`,
+  yes: "said yes",
+  no: "said no",
+  /** Not a scoreboard. A person who says yes to everything they love is not
+   *  failing at anything. */
+  note: "This is a record, not a report card. Saying yes to something worth it is the whole point of knowing what it costs.",
+  clear: "Clear this list",
+  back: "Today",
+} as const;
+
+
 /* ── OWNER: A (engine & app) · showing the working ─────────── */
 export const METHOD = {
   title: "How this works",
@@ -323,6 +344,12 @@ export const NO_BUTTON = {
   ],
   copyAction: "Copy reply",
   copied: "Copied",
+  decisionTitle: "What did you do?",
+  /** A yes weighs exactly as much as a no here. A tool that only ever
+   *  validates declining is just a different voice telling you what to do. */
+  saidYes: "I said yes",
+  saidNo: "I said no",
+  logged: "Kept.",
   verdict: {
     fits: "This fits.",
     tight: "This would make it tight.",
