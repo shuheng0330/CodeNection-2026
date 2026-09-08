@@ -1,3 +1,5 @@
+> Historical plan: superseded by [PHASE_PLAN.md](PHASE_PLAN.md) on 8 September 2026. Retained for decision history; do not use its ownership, scope, freeze date, or submission-format claims as current instructions.
+
 # Pikul - Preliminary Round Delivery Plan
 
 **Deadline:** 13 September 2026, 23:59 MYT
