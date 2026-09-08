@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { differenceInCalendarDays, parseISO } from "date-fns";
 import { decisionDemo, DEMO_MESSAGE } from "./decisionDemo";
 import { seedEvents } from "./cache";
 import { toISODate } from "../engine/dates";
@@ -52,6 +53,27 @@ describe("decisionDemo — the fixture the landing and the app share", () => {
     expect(parsed.date.value).toBe(demo.candidate.date);
     expect(parsed.hours.value).toBe(demo.candidate.hours);
     expect(parsed.category.value).toBe(demo.candidate.category);
+  });
+
+  it("still reads the message the way the demo needs it read", () => {
+    // The check above became tautological once the fixture started parsing
+    // the message itself, so this is the one that would actually catch a
+    // parser regression: an eight-hour Friday shift, next week, not this one.
+    expect(demo.candidate.hours).toBe(8);
+    expect(demo.candidate.category).toBe("shift");
+    expect(parseISO(demo.candidate.date).getDay()).toBe(5);
+    expect(demo.draft.date.from).toBe("parsed");
+    expect(demo.draft.hours.from).toBe("parsed");
+    // Nine days out from a Wednesday: the week after next, which is the one
+    // the forecast already calls heavy. A request landing in a quiet week
+    // prices as "this fits" — true, honest, and demonstrating nothing.
+    expect(differenceInCalendarDays(parseISO(demo.candidate.date), demo.asOf)).toBe(9);
+  });
+
+  it("labels the dial as ours, because nobody wrote it in the message", () => {
+    expect(demo.draft.intensity.from).toBe("guessed");
+    expect(demo.candidate.intensity).toBeGreaterThanOrEqual(1);
+    expect(demo.candidate.intensity).toBeLessThanOrEqual(5);
   });
 
   it("stays on the demo's own reference day", () => {

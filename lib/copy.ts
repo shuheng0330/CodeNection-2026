@@ -15,18 +15,55 @@
  * Enforced before submission by:
  *   npm run gate
  *
- * OWNERSHIP: each block below is owned by one person. Add your strings to
- * YOUR block only — appending to someone else's is how three agents produce
- * a merge conflict in the one file everybody needs.
+ * OWNERSHIP
+ * ---------
+ * Three of us write into this file, so every block carries a name:
+ *
+ *   Ku     Today, Compare, the request flow, the put-down, adding things
+ *   Lim    the landing page, the hero, brand voice
+ *   Thong  navigation, Week, Recover, Asks, Method
+ *
+ * Add strings to YOUR block. Appending to someone else's is how three
+ * people produce a conflict in the one file everybody needs. If you want a
+ * string in a block that isn't yours, say so in the group first — it is a
+ * ten-second conversation and it saves a merge.
+ *
+ * Never reformat the whole file. A prettier pass here rewrites every line
+ * and turns a two-line change into a full-file conflict for the other two.
  */
 import type { BandKey } from "./engine/types";
 
-/* ── FROZEN · nobody edits without telling the team ───────────────── */
+/* ── FROZEN · all three agreed this. Changing it needs a message in the group ─── */
 export const PRODUCT = {
   name: "Pikul",
   /** Malay: to shoulder a load. Also a historic SEA unit of weight. */
   meaning: "to shoulder a load",
   tagline: "You're carrying more than usual.",
+} as const;
+
+/* ── Thong · getting between screens ─────────────────────────────────── */
+/**
+ * Every route's name in one place, so the shell and the pages that mount it
+ * cannot drift apart. `short` is the phone label — the bottom bar has five
+ * slots and no room for "How it works".
+ *
+ * Today's header reads from here already. When AppShell lands it consumes
+ * the same list and the per-page headers come out.
+ */
+export const NAV = {
+  items: [
+    { href: "/today", label: "Today", short: "Today" },
+    { href: "/week", label: "The weeks ahead", short: "Week" },
+    { href: "/recover", label: "Recover", short: "Recover" },
+    { href: "/asks", label: "What you were asked", short: "Asks" },
+    { href: "/compare", label: "Compare", short: "Compare" },
+    { href: "/method", label: "How it works", short: "Method" },
+  ],
+  /** the phone bar keeps four and hides the rest behind this */
+  more: "More",
+  /** spoken name for the nav landmark */
+  landmark: "Sections",
+  home: "Pikul home",
 } as const;
 
 type BandCopy = {
@@ -38,7 +75,7 @@ type BandCopy = {
   tone: "sage" | "ember" | "amber" | "rust";
 };
 
-/* ── OWNER: A (engine & app) · band sentences shown on /today ─────── */
+/* ── Ku · the sentence /today leads with ─────────────────────────────── */
 export const BAND: Record<BandKey, BandCopy> = {
   light: {
     line: "This week's lighter than your usual.",
@@ -67,7 +104,7 @@ export const BAND: Record<BandKey, BandCopy> = {
   },
 };
 
-/* ── OWNER: B (landing & design) ──────────────────────────────────── */
+/* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const HERO = {
   eyebrow: "Pikul · to shoulder a load",
   headline: "It's never one big thing.",
@@ -82,7 +119,7 @@ export const HERO = {
   usualLabel: "your usual",
 } as const;
 
-/* ── OWNER: B (landing & design) ──────────────────────────────────── */
+/* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const QUIETLY = {
   a: "No single week broke you.",
   b: "It was the four before it.",
@@ -90,13 +127,13 @@ export const QUIETLY = {
   note: "Your last seven days, weighed against the month behind them.",
 } as const;
 
-/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
+/* ── Ku · Today ──────────────────────────────────────────────────────── */
 export const TODAY = {
   weekLabel: "This week",
   usualBandLabel: "your usual",
 } as const;
 
-/* ── OWNER: A (engine & app) · what the bar says out loud ────────── */
+/* ── Ku · what the bar says out loud ─────────────────────────────────── */
 /**
  * The bar is the product's main output and, until now, it said nothing to a
  * screen reader — the marker and the band carried everything.
@@ -114,7 +151,7 @@ export const CARRY_LABEL: Record<BandKey, string> = {
   toomuch: "Your week sits well above the range you usually carry.",
 };
 
-/* ── OWNER: A (engine & app) · where the week actually went ─────── */
+/* ── Ku · where the week actually went ───────────────────────────────── */
 export const AREAS = {
   title: "What's making this week heavy",
   labels: {
@@ -130,7 +167,7 @@ export const AREAS = {
   empty: "Nothing on this week yet.",
 } as const;
 
-/* ── OWNER: A (engine & app) · the one thing to put down ───────── */
+/* ── Ku · the one thing to put down ──────────────────────────────────── */
 export const PUT_DOWN = {
   title: "One thing worth putting down",
   action: "Hand it back",
@@ -180,13 +217,13 @@ export const putDownLine = (hours: number, when: string): string =>
 export const reclaimedLine = (hours: number, when: string): string =>
   `About ${Math.round(hours)} hours ${whenPhrase(when)} are yours again.`;
 
-/* ── OWNER: A (engine & app) · the days you can still change ───── */
+/* ── Ku · the days you can still change ──────────────────────────────── */
 export const AHEAD = {
   title: "Still ahead of you",
   empty: "Nothing else on this week.",
 } as const;
 
-/* ── OWNER: A (engine & app) · the decisions, kept ─────────── */
+/* ── Thong · the decisions, kept ─────────────────────────────────────── */
 export const ASKS = {
   title: "What you were asked",
   lead: "Every request you priced, and what you decided. Both answers count the same.",
@@ -207,7 +244,7 @@ export const ASKS = {
 } as const;
 
 
-/* ── OWNER: A (engine & app) · showing the working ─────────── */
+/* ── Thong · showing the working ─────────────────────────────────────── */
 export const METHOD = {
   title: "How this works",
   lead: "No model, no guessing, and nothing about you leaves your phone. Here is the whole of it.",
@@ -245,7 +282,7 @@ export const METHOD = {
 } as const;
 
 
-/* ── OWNER: A (engine & app) · time that is already yours ────── */
+/* ── Thong · time that is already yours ──────────────────────────────── */
 export const RECOVER = {
   title: "Somewhere to put the time down",
   found: "The quietest day you have coming",
@@ -278,7 +315,7 @@ export const RECOVER = {
 } as const;
 
 
-/* ── OWNER: A (engine & app) · same hours, different answer ──── */
+/* ── Ku · same hours, different answer ───────────────────────────────── */
 export const COMPARE = {
   title: "Two students, one week each.",
   lead: "One of them is closer to breaking. Before you look at anything else — which?",
@@ -305,11 +342,22 @@ export const COMPARE = {
   askCost: (pct: number, week: string): string =>
     `${pct}% of a usual week in ${week}`,
   askBeyond: "Too far ahead to price",
+  /** What we made of the message, before either number appears.
+   *  A figure without its input is unfalsifiable, and unfalsifiable is
+   *  exactly the impression this screen is trying not to leave. */
+  askReadTitle: "What we read from that",
+  askRead: (when: string, hours: number, kind: string): string =>
+    `${hours}${hours === 1 ? " hour" : " hours"} of ${kind.toLowerCase()}, on ${when}.`,
+  /** The parser found nothing it recognised, so every field below is ours.
+   *  Saying so is the difference between a demonstration and a magic trick. */
+  askGuessed:
+    "Nothing in that message was something we recognised, so all of it is our guess. Try naming a day and a time.",
+  askProblemTitle: "We can't price that one",
   back: "Today",
 } as const;
 
 
-/* ── OWNER: A (engine & app) · the weeks you can still change ── */
+/* ── Thong · the weeks you can still change ──────────────────────────── */
 export const WEEK = {
   title: "The weeks ahead",
   lead: "Everything already on your calendar, weighed the same way as this week.",
@@ -327,7 +375,7 @@ export const WEEK = {
   backToToday: "Today",
 } as const;
 
-/* ── OWNER: A (engine & app) · paste it, don't type it ──────────── */
+/* ── Ku · paste it, don't type it ────────────────────────────────────── */
 export const ADD = {
   trigger: "Add something",
   title: "What have you taken on?",
@@ -360,27 +408,64 @@ export const ADD = {
   untitled: "Something",
 } as const;
 
-/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
+/* ── Ku · the request, priced before you answer ──────────────────────── */
 export const NO_BUTTON = {
   trigger: "Someone's asking me for something",
-  step1Title: "What are they asking?",
-  step2Title: "How heavy is it, roughly?",
-  step3Title: "Here's what saying yes costs",
-  weights: [
-    { key: "light", label: "Light", hint: "an hour or two" },
-    { key: "medium", label: "Medium", hint: "half a day" },
-    { key: "heavy", label: "Heavy", hint: "a day or more" },
-  ],
+
+  /* ---- step one: the message, already read ---- */
+  step1Title: "What they're asking",
+  step2Title: "Here's what saying yes costs",
+  /** Nothing here is on anyone's calendar and nothing was received from
+   *  anywhere. Every surface showing it has to say so. */
+  sampleLabel: "sample message",
+  messageLabel: "What they sent",
+  readTitle: "What we read from it",
+  readLead:
+    "We filled this in from the message. Anything wrong is yours to correct — the price follows whatever is in these boxes, not what we guessed.",
+  swap: "Use a different message",
+  swapCancel: "Keep this one",
+  swapLabel: "Paste what they sent you",
+  swapPlaceholder: "eh can you cover my shift this friday 3pm-11pm?",
+  restore: "Back to the sample",
+  next: "See what it costs",
+  back: "Back to the message",
+
+  /* ---- when we will not produce a number ---- */
+  /**
+   * A forecast we cannot honestly compute is refused, not softened. Saying
+   * "this fits" about a request four months away is not caution, it is a
+   * wrong answer delivered confidently — the weeks we can see genuinely do
+   * not contain it, so there is nothing for it to fit into.
+   */
+  cantPriceTitle: "We can't price this one",
+  problems: {
+    "hours-missing": "How long it takes is blank, so there is nothing to weigh.",
+    "hours-tiny": "How long it takes has to be more than zero.",
+    "hours-absurd":
+      "That is longer than a day. If it really runs across several days, add it as one commitment per day.",
+    "date-missing": "The date isn't a date we can read.",
+    "date-past":
+      "That day has already been and gone, so there is no decision left to make about it.",
+    "date-beyond":
+      "That is further out than the four weeks we can see, so we have no week to measure it against. Ask again when it is closer and the answer will mean something.",
+  } as Record<string, string>,
+  fixHint: "Fix it above and the forecast comes back.",
+
+  /* ---- the reply ---- */
   tones: [
     { key: "soften", label: "Soften it" },
     { key: "renegotiate", label: "Offer less" },
     { key: "firm", label: "Hold firm" },
   ],
+  replyTitle: "If the answer is no",
   copyAction: "Copy reply",
   copied: "Copied",
-  /** An ask past the four weeks we can see gets no invented number. */
-  beyondHorizon:
-    "That is far enough ahead that it does not touch any week we can see yet.",
+  /** The clipboard fails in plain HTTP, in some in-app browsers, and whenever
+   *  the tab is not focused. Claiming success when the buffer is empty is
+   *  worse than not offering the button. */
+  copyFailed: "Couldn't copy — select the text above and copy it yourself.",
+  copyManualHint: "Nothing was sent. This is yours to send, or not.",
+
   decisionTitle: "What did you do?",
   /** A yes weighs exactly as much as a no here. A tool that only ever
    *  validates declining is just a different voice telling you what to do. */
@@ -399,11 +484,28 @@ export const NO_BUTTON = {
 } as const;
 
 /** "accepting this puts you at 118% of a usual week in week 11" */
-/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
 export const priceLine = (pct: number, weekLabel: string): string =>
   `Saying yes puts you at ${pct}% of a usual week in ${weekLabel}.`;
 
-/* ── OWNER: B (landing & design) ──────────────────────────────────── */
+/**
+ * The same figure with its starting point attached: "week 11 goes from 128%
+ * to 132%".
+ *
+ * The after-figure alone is unreadable — 132% of a usual week sounds severe
+ * until you know the week was already at 128% before anyone asked, at which
+ * point the honest reading is that this request is not what made the week
+ * hard. Withholding the before-figure would let a four-point change carry
+ * the weight of the whole overload, which is exactly the kind of quiet
+ * exaggeration this product cannot afford.
+ */
+export const beforeAfterLine = (
+  before: number,
+  after: number,
+  weekLabel: string,
+): string =>
+  `${weekLabel.charAt(0).toUpperCase()}${weekLabel.slice(1)} is at ${before}% of a usual week already. Saying yes makes it ${after}%.`;
+
+/* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const HOW = {
   title: "How Pikul works",
   body: "Pikul borrows a model athletes use to avoid overtraining: your last seven days, weighed against your own rolling month. Not a target, not a grade — your own normal. Everything you carry converts to one measure, so a shift, an assignment and a family weekend can finally be compared.",

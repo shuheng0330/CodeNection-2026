@@ -55,7 +55,7 @@ describe("priceCommitment", () => {
   it("charges nothing for an ask that lands beyond the horizon", () => {
     const p = priceCommitment(steady(), ask(90, 40), asOf, CURRENT_WEEK);
     for (const w of p.weeks) expect(w.ratioAfter).toBe(w.ratioBefore);
-    expect(p.verdict).toBe("fits");
+    expect(p.verdict).toBe("beyond");
   });
 
   it("charges the week the ask actually lands in", () => {
@@ -117,10 +117,15 @@ describe("priceCommitment — an ask changes exactly one week", () => {
     expect(p.landing!.ratioAfter).toBeGreaterThan(p.landing!.ratioBefore);
   });
 
-  it("charges nothing, and says so, for an ask beyond the horizon", () => {
+  it("refuses to answer for an ask beyond the horizon", () => {
+    // "fits" was the old answer here, and it was wrong in the worst possible
+    // direction: a request four months out does not fit into four weeks we
+    // cannot see, it is simply absent from them. Anyone reading `verdict`
+    // without also checking `landing` was handed confident reassurance about
+    // a week nobody had looked at.
     const p = priceCommitment(steady(), ask(90, 40), asOf, CURRENT_WEEK);
     expect(p.landing).toBeNull();
-    expect(p.verdict).toBe("fits");
+    expect(p.verdict).toBe("beyond");
     for (const w of p.weeks) expect(w.ratioAfter).toBe(w.ratioBefore);
   });
 

@@ -1,9 +1,9 @@
-import { addDays, nextFriday } from "date-fns";
 import { computeCarry } from "../engine/acwr";
 import { toISODate } from "../engine/dates";
 import { priceCommitment, type CommitmentPrice } from "../engine/forecast";
 import { thisWeekHours, usualWeekHours } from "../engine/horizon";
 import type { CarryState, LoadEvent } from "../engine/types";
+import { extract, type Draft } from "../parse/extract";
 import { seedEvents, stableAsOf } from "./cache";
 import { CURRENT_WEEK } from "./generateSemester";
 import { AISYAH, type Persona } from "./personas";
@@ -26,6 +26,9 @@ export interface DecisionDemo {
   asOf: Date;
   /** the request as it arrived, for the paste demonstration */
   message: string;
+  /** what the parser made of that message, field by field, so the screen
+   *  showing the request can say which parts it read and which it guessed */
+  draft: Draft;
   /** proposed, not committed */
   candidate: LoadEvent;
   /** engine-derived, never written by hand */
@@ -47,7 +50,9 @@ export const DEMO_MESSAGE = "can you cover next friday 3pm-11pm? kelly called in
  *  student's real week. Every surface showing it has to say so. */
 export const DEMO_LABEL = "sample week";
 
-const DEMO_HOURS = 8;
+/** The message reads as a request, not as a title. The parser is honest
+ *  about having guessed this, and the student can edit it. */
+const DEMO_TITLE = "Cover Kelly's shift";
 
 let cached: DecisionDemo | null = null;
 
@@ -58,15 +63,23 @@ export function decisionDemo(): DecisionDemo {
   const persona = AISYAH;
   const events = seedEvents(persona, asOf);
 
-  // Derived from asOf rather than written as a date, so the fixture stays
-  // correct on whatever day this is opened.
+  // Read out of the message rather than written alongside it.
+  //
+  // These used to be two independent derivations that agreed — the date came
+  // from nextFriday(asOf) + 7, the message said "next friday", and a test
+  // checked the two matched. They matched because the demo day is always a
+  // Wednesday, which is a fact about the seed generator that nothing in this
+  // file depended on deliberately. Parsing the message makes the agreement
+  // structural: the landing, the request sheet and the forecast are now
+  // reading the same sentence, and cannot drift apart.
+  const draft = extract(DEMO_MESSAGE, asOf);
   const candidate: LoadEvent = {
     id: "demo-request",
-    date: toISODate(addDays(nextFriday(asOf), 7)),
-    category: "shift",
-    title: "Cover Kelly's shift",
-    hours: DEMO_HOURS,
-    intensity: 4,
+    date: draft.date.value,
+    category: draft.category.value,
+    title: DEMO_TITLE,
+    hours: draft.hours.value,
+    intensity: draft.intensity.value,
     source: "user",
   };
 
@@ -74,6 +87,7 @@ export function decisionDemo(): DecisionDemo {
     persona,
     asOf,
     message: DEMO_MESSAGE,
+    draft,
     candidate,
     price: priceCommitment(events, candidate, asOf, CURRENT_WEEK),
     carry: computeCarry(

@@ -1,18 +1,27 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { addDays, format } from "date-fns";
-import { NO_BUTTON, priceLine } from "@/lib/copy";
-import { ASK_KINDS, draftDecline, type AskKind, type Tone } from "@/lib/decline";
-import { ASK_WEIGHTS, priceCommitment } from "@/lib/engine/forecast";
-import type { LoadEvent } from "@/lib/engine/types";
+import { ADD, NO_BUTTON, beforeAfterLine } from "@/lib/copy";
+import { draftDecline, type AskKind, type Tone } from "@/lib/decline";
+import { toISODate } from "@/lib/engine/dates";
+import {
+  priceCommitment,
+  verdictFor,
+  type CommitmentPrice,
+} from "@/lib/engine/forecast";
+import { checkRequest, horizonEnd } from "@/lib/engine/validate";
+import type { LoadCategory, LoadEvent } from "@/lib/engine/types";
+import { extract } from "@/lib/parse/extract";
+import { decisionDemo } from "@/lib/seed/decisionDemo";
 import { CURRENT_WEEK } from "@/lib/seed/generateSemester";
 import { sheetMotion, spring } from "@/lib/motion";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import { usePikul } from "@/lib/store";
 
-type Heft = keyof typeof ASK_WEIGHTS;
+type FieldKey = "title" | "date" | "hours" | "category" | "intensity";
+
+const CATEGORIES = Object.keys(ADD.categories) as LoadCategory[];
 
 const VERDICT_TONE = {
   fits: "text-sage",
@@ -21,21 +30,52 @@ const VERDICT_TONE = {
 } as const;
 
 /**
+ * Which drafted reply suits the thing being asked for.
+ *
+ * The student used to pick this from a list of four, which is a question
+ * about our data model rather than about their life. The message already
+ * says what kind of ask it is, so the category the parser found decides it.
+ */
+const REPLY_KIND: Record<LoadCategory, AskKind> = {
+  shift: "shift",
+  assignment: "project",
+  class: "project",
+  club: "event",
+  social: "event",
+  family: "event",
+  commute: "favour",
+  admin: "favour",
+};
+
+/**
  * The demo moment.
  *
  * Everything else in this space is retrospective — it shows you the damage
  * after you already agreed. This owns the decision point instead: it prices
  * the yes before you give it, then writes the no for you, because rebalancing
  * always needs a counterparty and that is the part nobody builds.
+ *
+ * It opens on a request that has already arrived and already been read, so
+ * there is nothing to type before the forecast appears. What we read of it is
+ * on screen field by field, labelled as read or as guessed, and every one of
+ * them is editable — the price follows the boxes, never our guess.
  */
 export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) {
+  const demo = decisionDemo();
+
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
-  const [kind, setKind] = useState<AskKind>("shift");
-  const [heft, setHeft] = useState<Heft>("heavy");
+  const [message, setMessage] = useState(demo.message);
+  const [swapping, setSwapping] = useState(false);
+  const [edited, setEdited] = useState<Partial<Record<FieldKey, string>>>({
+    title: demo.candidate.title,
+  });
   const [tone, setTone] = useState<Tone>("soften");
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const [decided, setDecided] = useState<"yes" | "no" | null>(null);
+  /** The forecast exactly as it read at the moment they answered. */
+  const [settled, setSettled] = useState<CommitmentPrice | null>(null);
+
   const decideAsk = usePikul((s) => s.decideAsk);
   const undoAsk = usePikul((s) => s.undoAsk);
   // A new intent per opening: pressing the button twice answers once, but
@@ -43,33 +83,73 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   const [intentId, setIntentId] = useState(() => `ask-${Date.now()}`);
   const still = useReducedMotion();
   const titleId = useId();
+  const replyRef = useRef<HTMLParagraphElement | null>(null);
 
-  // The ask lands next week — the week that is already loaded before anyone asks.
-  const candidate: LoadEvent = useMemo(
-    () => ({
-      id: "ask",
-      date: format(addDays(asOf, 9), "yyyy-MM-dd"),
-      category:
-        kind === "shift" ? "shift" : kind === "project" ? "assignment" : "social",
-      title: "What they are asking",
-      hours: ASK_WEIGHTS[heft].hours,
-      intensity: ASK_WEIGHTS[heft].intensity,
-      source: "user",
-    }),
-    [asOf, kind, heft],
+  const isSample = message === demo.message;
+
+  // The sample's parse is precomputed in the fixture, so opening the sheet
+  // repeats no work the landing page has already done.
+  const draft = useMemo(
+    () => (isSample ? demo.draft : extract(message, asOf)),
+    [isSample, demo.draft, message, asOf],
   );
 
-  const price = useMemo(
-    () => priceCommitment(events, candidate, asOf, CURRENT_WEEK),
+  // A field the student has touched is theirs; everything else follows the
+  // message, so pasting a new one genuinely re-reads rather than half-updating.
+  const value = (k: FieldKey): string => edited[k] ?? String(draft[k].value);
+  const isGuess = (k: FieldKey): boolean =>
+    edited[k] === undefined && draft[k].from === "guessed";
+  const set = (k: FieldKey, v: string) => setEdited((e) => ({ ...e, [k]: v }));
+
+  const title = value("title");
+  const date = value("date");
+  const hours = value("hours");
+  const category = value("category") as LoadCategory;
+  const intensity = value("intensity");
+
+  const check = useMemo(
+    () => checkRequest({ title, date, hours, category, intensity }, asOf),
+    [title, date, hours, category, intensity, asOf],
+  );
+
+  const candidate: LoadEvent | null = useMemo(() => {
+    if (!check.event) return null;
+    return {
+      ...check.event,
+      title: check.event.title || ADD.untitled,
+      id: "ask",
+      source: "user",
+    };
+  }, [check.event]);
+
+  const live = useMemo(
+    () => (candidate ? priceCommitment(events, candidate, asOf, CURRENT_WEEK) : null),
     [events, candidate, asOf],
   );
+
+  // Once they have answered, the commitment is on the calendar — and handing
+  // a committed event back to priceCommitment as a candidate counts it twice,
+  // so the week would jump a second time the instant they said yes. Show them
+  // what they were actually looking at when they decided.
+  const price = settled ?? live;
+  const landing = price?.landing ?? null;
+
+  const reply = draftDecline(REPLY_KIND[category] ?? "favour", tone);
+
+  const repaste = (text: string) => {
+    setMessage(text);
+    setEdited({});
+    setCopyState("idle");
+  };
 
   const close = () => {
     setOpen(false);
     setTimeout(() => {
       setStep(0);
-      setCopied(false);
+      setSwapping(false);
+      setCopyState("idle");
       setDecided(null);
+      setSettled(null);
     }, 300);
   };
 
@@ -81,7 +161,46 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
     focusKey: step,
   });
 
-  const draft = draftDecline(kind, tone);
+  const copyReply = async () => {
+    try {
+      await navigator.clipboard.writeText(reply);
+      setCopyState("copied");
+    } catch {
+      // Plain HTTP, several in-app browsers and an unfocused tab all fail
+      // here, and the old code claimed success regardless. Select the text so
+      // the fallback is one keystroke rather than a careful drag.
+      setCopyState("failed");
+      const node = replyRef.current;
+      const selection = window.getSelection();
+      if (node && selection) {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+  };
+
+  const answer = (decision: "yes" | "no") => {
+    if (!candidate || !landing || decided) return;
+    setSettled(live);
+    setDecided(decision);
+    decideAsk({
+      intentId,
+      decision,
+      title: candidate.title,
+      pct: landing.pctOfUsual,
+      weekLabel: landing.label,
+      verdict: verdictFor(landing.ratioAfter),
+      event: {
+        date: candidate.date,
+        category: candidate.category,
+        title: candidate.title,
+        hours: candidate.hours,
+        intensity: candidate.intensity,
+      },
+    });
+  };
 
   return (
     <>
@@ -90,7 +209,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
           setIntentId(`ask-${Date.now()}`);
           setOpen(true);
         }}
-        className="w-full rounded-full bg-clay-600 px-6 py-4 font-medium text-white shadow-soft transition-colors hover:bg-clay-500"
+        className="min-h-11 w-full rounded-full bg-clay-600 px-6 py-4 font-medium text-white shadow-soft transition-colors hover:bg-clay-500"
       >
         {NO_BUTTON.trigger}
       </button>
@@ -118,159 +237,336 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
 
               {step === 0 && (
                 <Step title={NO_BUTTON.step1Title} titleId={titleId} step={step}>
-                  <div className="grid gap-2">
-                    {ASK_KINDS.map((k) => (
-                      <Choice
-                        key={k.key}
-                        active={kind === k.key}
-                        onClick={() => setKind(k.key)}
-                      >
-                        {k.label}
-                      </Choice>
-                    ))}
+                  {/* ---- what arrived ---- */}
+                  <div className="rounded-2xl rounded-bl-md border border-hairline bg-raised/70 px-4 py-3.5">
+                    {isSample && (
+                      <p className="mb-2 text-micro uppercase tracking-[0.08em] text-ink-faint">
+                        {NO_BUTTON.sampleLabel}
+                      </p>
+                    )}
+                    <p className="text-ink">{message || NO_BUTTON.swapPlaceholder}</p>
                   </div>
-                  <Next onClick={() => setStep(1)} />
+
+                  <div className="mt-2 flex flex-wrap items-baseline gap-4">
+                    <button
+                      onClick={() => setSwapping((s) => !s)}
+                      className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                    >
+                      {swapping ? NO_BUTTON.swapCancel : NO_BUTTON.swap}
+                    </button>
+                    {!isSample && (
+                      <button
+                        onClick={() => {
+                          setMessage(demo.message);
+                          setEdited({ title: demo.candidate.title });
+                          setCopyState("idle");
+                          setSwapping(false);
+                        }}
+                        className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                      >
+                        {NO_BUTTON.restore}
+                      </button>
+                    )}
+                  </div>
+
+                  <AnimatePresence initial={false}>
+                    {swapping && (
+                      <motion.div
+                        initial={still ? false : { opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <label className="mt-3 block">
+                          <span className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                            {NO_BUTTON.swapLabel}
+                          </span>
+                          <textarea
+                            value={isSample ? "" : message}
+                            onChange={(e) => repaste(e.target.value)}
+                            rows={2}
+                            placeholder={NO_BUTTON.swapPlaceholder}
+                            className="mt-2 w-full resize-none rounded-2xl border border-hairline bg-surface px-4 py-3 text-ink placeholder:text-ink-faint"
+                          />
+                        </label>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* ---- and what we made of it ---- */}
+                  <div className="mt-7 border-t border-hairline pt-6">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                        {NO_BUTTON.readTitle}
+                      </p>
+                      {draft.matchedOn && (
+                        <p className="text-sm text-ink-faint">
+                          {ADD.readFrom(draft.matchedOn)}
+                        </p>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm text-ink-muted">{NO_BUTTON.readLead}</p>
+
+                    <div className="mt-5 grid gap-5">
+                      <Row label={ADD.fields.title} guessed={false}>
+                        <input
+                          value={title}
+                          onChange={(e) => set("title", e.target.value)}
+                          className="w-full rounded-2xl border border-hairline px-4 py-3"
+                        />
+                      </Row>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <Row label={ADD.fields.date} guessed={isGuess("date")}>
+                          <input
+                            type="date"
+                            value={date}
+                            min={toISODate(asOf)}
+                            max={horizonEnd(asOf)}
+                            onChange={(e) => set("date", e.target.value)}
+                            className="w-full rounded-2xl border border-hairline px-4 py-3"
+                          />
+                        </Row>
+                        <Row label={ADD.fields.hours} guessed={isGuess("hours")}>
+                          <input
+                            type="number"
+                            inputMode="decimal"
+                            min={0.5}
+                            step={0.5}
+                            value={hours}
+                            onChange={(e) => set("hours", e.target.value)}
+                            className="tnum w-full rounded-2xl border border-hairline px-4 py-3"
+                          />
+                        </Row>
+                      </div>
+
+                      <Row label="" guessed={isGuess("category")}>
+                        <div className="flex flex-wrap gap-2">
+                          {CATEGORIES.map((c) => (
+                            <button
+                              key={c}
+                              onClick={() => set("category", c)}
+                              aria-pressed={category === c}
+                              className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors ${
+                                category === c
+                                  ? "border-clay-600 bg-clay-100 text-clay-700"
+                                  : "border-hairline text-ink-muted hover:bg-raised"
+                              }`}
+                            >
+                              {ADD.categories[c]}
+                            </button>
+                          ))}
+                        </div>
+                      </Row>
+
+                      <Row label={ADD.fields.intensity} guessed={isGuess("intensity")}>
+                        <div className="flex gap-2">
+                          {ADD.intensityScale.map((label, i) => {
+                            const level = String(i + 1);
+                            return (
+                              <button
+                                key={level}
+                                onClick={() => set("intensity", level)}
+                                aria-pressed={intensity === level}
+                                className={`min-h-11 flex-1 rounded-2xl border px-1 py-2 text-xs transition-colors ${
+                                  intensity === level
+                                    ? "border-clay-600 bg-clay-100 text-clay-700"
+                                    : "border-hairline text-ink-muted hover:bg-raised"
+                                }`}
+                              >
+                                {label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </Row>
+                    </div>
+                  </div>
+
+                  <Next onClick={() => setStep(1)} label={NO_BUTTON.next} />
                 </Step>
               )}
 
               {step === 1 && (
                 <Step title={NO_BUTTON.step2Title} titleId={titleId} step={step}>
-                  <div className="grid gap-2">
-                    {NO_BUTTON.weights.map((w) => (
-                      <Choice
-                        key={w.key}
-                        active={heft === w.key}
-                        onClick={() => setHeft(w.key as Heft)}
+                  {!price || !landing ? (
+                    <CannotPrice
+                      problems={
+                        check.problems.length > 0 ? check.problems : ["date-beyond"]
+                      }
+                      onBack={() => setStep(0)}
+                    />
+                  ) : (
+                    <>
+                      <p
+                        className={`font-display text-2xl ${
+                          VERDICT_TONE[verdictFor(landing.ratioAfter)]
+                        }`}
                       >
-                        <span className="font-medium">{w.label}</span>
-                        <span className="ml-2 text-ink-faint">{w.hint}</span>
-                      </Choice>
-                    ))}
-                  </div>
-                  <Next onClick={() => setStep(2)} label="See what it costs" />
-                </Step>
-              )}
-
-              {step === 2 && (
-                <Step title={NO_BUTTON.step3Title} titleId={titleId} step={step}>
-                  <p className={`font-display text-2xl ${VERDICT_TONE[price.verdict]}`}>
-                    {NO_BUTTON.verdict[price.verdict]}
-                  </p>
-                  <p className="mt-3 text-lead text-ink-muted">
-                    {price.landing
-                      ? priceLine(price.landing.pctOfUsual, price.landing.label)
-                      : NO_BUTTON.beyondHorizon}
-                  </p>
-
-                  <ForecastStrip price={price} />
-
-                  <div className="mt-7">
-                    <div className="flex gap-2">
-                      {NO_BUTTON.tones.map((t) => (
-                        <button
-                          key={t.key}
-                          onClick={() => {
-                            setTone(t.key as Tone);
-                            setCopied(false);
-                          }}
-                          className={`flex-1 rounded-full border px-3 py-2 text-sm transition-colors ${
-                            tone === t.key
-                              ? "border-clay-600 bg-clay-100 text-clay-700"
-                              : "border-hairline text-ink-muted hover:bg-raised"
-                          }`}
-                        >
-                          {t.label}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="mt-4 rounded-2xl border border-hairline bg-raised/60 p-4">
-                      <p className="text-ink">{draft}</p>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        navigator.clipboard?.writeText(draft);
-                        setCopied(true);
-                      }}
-                      className="mt-3 w-full rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-500"
-                    >
-                      {copied ? NO_BUTTON.copied : NO_BUTTON.copyAction}
-                    </button>
-
-                    {/* The decision is the point, and it is worth keeping.
-                        Both answers are recorded the same way. */}
-                    <div className="mt-7 border-t border-hairline pt-5">
-                      <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
-                        {NO_BUTTON.decisionTitle}
+                        {NO_BUTTON.verdict[verdictFor(landing.ratioAfter)]}
                       </p>
-                      <div className="mt-3 flex gap-2">
-                        {(["yes", "no"] as const).map((d) => (
-                          <button
-                            key={d}
-                            onClick={() => {
-                              setDecided(d);
-                              decideAsk({
-                                intentId,
-                                decision: d,
-                                title: ASK_KINDS.find((k) => k.key === kind)!.label,
-                                pct: price.landing?.pctOfUsual ?? 0,
-                                weekLabel: price.landing?.label ?? "",
-                                verdict: price.verdict,
-                                event: {
-                                  date: candidate.date,
-                                  category: candidate.category,
-                                  title: ASK_KINDS.find((k) => k.key === kind)!.label,
-                                  hours: candidate.hours,
-                                  intensity: candidate.intensity,
-                                },
-                              });
-                            }}
-                            aria-pressed={decided === d}
-                            className={`min-h-11 flex-1 rounded-full border px-4 py-2.5 text-sm transition-colors ${
-                              decided === d
-                                ? "border-ink bg-ink text-linen"
-                                : "border-hairline text-ink-muted hover:bg-raised"
-                            }`}
-                          >
-                            {d === "yes" ? NO_BUTTON.saidYes : NO_BUTTON.saidNo}
-                          </button>
-                        ))}
-                      </div>
-                      {decided && (
-                        <div className="mt-3 flex flex-wrap items-baseline gap-3">
-                          <p className="text-sm text-ink-faint">
-                            {decided === "yes"
-                              ? NO_BUTTON.acceptedNote
-                              : NO_BUTTON.declinedNote}
-                          </p>
-                          <button
-                            onClick={() => {
-                              undoAsk(intentId);
-                              setDecided(null);
-                            }}
-                            className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
-                          >
-                            {NO_BUTTON.undo}
-                          </button>
+                      <p className="mt-3 text-lead text-ink-muted">
+                        {beforeAfterLine(
+                          Math.round(landing.ratioBefore * 100),
+                          landing.pctOfUsual,
+                          landing.label,
+                        )}
+                      </p>
+
+                      <ForecastStrip price={price} />
+
+                      {/* ---- the reply, for if the answer is no ---- */}
+                      <div className="mt-8 border-t border-hairline pt-6">
+                        <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                          {NO_BUTTON.replyTitle}
+                        </p>
+                        <div className="mt-3 flex gap-2">
+                          {NO_BUTTON.tones.map((t) => (
+                            <button
+                              key={t.key}
+                              onClick={() => {
+                                setTone(t.key as Tone);
+                                setCopyState("idle");
+                              }}
+                              aria-pressed={tone === t.key}
+                              className={`min-h-11 flex-1 rounded-full border px-3 py-2 text-sm transition-colors ${
+                                tone === t.key
+                                  ? "border-clay-600 bg-clay-100 text-clay-700"
+                                  : "border-hairline text-ink-muted hover:bg-raised"
+                              }`}
+                            >
+                              {t.label}
+                            </button>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                  </div>
+
+                        <div className="mt-4 rounded-2xl border border-hairline bg-raised/60 p-4">
+                          <p ref={replyRef} className="select-all text-ink">
+                            {reply}
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={copyReply}
+                          className="mt-3 min-h-11 w-full rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-500"
+                        >
+                          {copyState === "copied"
+                            ? NO_BUTTON.copied
+                            : NO_BUTTON.copyAction}
+                        </button>
+                        <p className="mt-2 text-sm text-ink-faint" role="status">
+                          {copyState === "failed"
+                            ? NO_BUTTON.copyFailed
+                            : NO_BUTTON.copyManualHint}
+                        </p>
+
+                        {/* ---- and the decision, whichever way it goes ---- */}
+                        <div className="mt-7 border-t border-hairline pt-5">
+                          <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                            {NO_BUTTON.decisionTitle}
+                          </p>
+                          <div className="mt-3 flex gap-2">
+                            {(["yes", "no"] as const).map((d) => (
+                              <button
+                                key={d}
+                                onClick={() => answer(d)}
+                                aria-pressed={decided === d}
+                                className={`min-h-11 flex-1 rounded-full border px-4 py-2.5 text-sm transition-colors ${
+                                  decided === d
+                                    ? "border-ink bg-ink text-linen"
+                                    : "border-hairline text-ink-muted hover:bg-raised"
+                                }`}
+                              >
+                                {d === "yes" ? NO_BUTTON.saidYes : NO_BUTTON.saidNo}
+                              </button>
+                            ))}
+                          </div>
+                          {decided && (
+                            <div
+                              className="mt-3 flex flex-wrap items-baseline gap-3"
+                              role="status"
+                            >
+                              <p className="text-sm text-ink-faint">
+                                {decided === "yes"
+                                  ? NO_BUTTON.acceptedNote
+                                  : NO_BUTTON.declinedNote}
+                              </p>
+                              <button
+                                onClick={() => {
+                                  undoAsk(intentId);
+                                  setDecided(null);
+                                  setSettled(null);
+                                }}
+                                className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                              >
+                                {NO_BUTTON.undo}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => setStep(0)}
+                        className="mt-6 min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
+                      >
+                        {NO_BUTTON.back}
+                      </button>
+                    </>
+                  )}
                 </Step>
               )}
 
               <button
                 onClick={close}
-                className="mt-5 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
+                className="mt-5 min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
               >
-                Close
+                {ADD.cancel}
               </button>
             </motion.div>
           </>
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+/**
+ * A refusal, not a softer number.
+ *
+ * The four weeks we can see either contain this request or they do not. When
+ * they do not, there is no honest figure to show — and showing a cautious one
+ * anyway is exactly the failure this screen exists to prevent.
+ */
+function CannotPrice({
+  problems,
+  onBack,
+}: {
+  problems: string[];
+  onBack: () => void;
+}) {
+  return (
+    <div>
+      <p className="font-display text-2xl text-ink">{NO_BUTTON.cantPriceTitle}</p>
+      <ul className="mt-4 grid gap-2">
+        {problems.map((p) => (
+          <li key={p} className="flex gap-3 text-ink-muted">
+            <span
+              aria-hidden
+              className="mt-2.5 h-1 w-3 shrink-0 rounded-full bg-clay-600"
+            />
+            <span>{NO_BUTTON.problems[p]}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 text-sm text-ink-faint">{NO_BUTTON.fixHint}</p>
+      <button
+        onClick={onBack}
+        className="mt-6 min-h-11 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
+      >
+        {NO_BUTTON.back}
+      </button>
+    </div>
   );
 }
 
@@ -308,24 +604,31 @@ function Step({
   );
 }
 
-function Choice({
-  active,
-  onClick,
+function Row({
+  label,
+  guessed,
   children,
 }: {
-  active: boolean;
-  onClick: () => void;
+  label: string;
+  guessed: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={`rounded-2xl border px-4 py-3.5 text-left transition-colors ${
-        active ? "border-clay-600 bg-clay-100" : "border-hairline hover:bg-raised"
-      }`}
-    >
+    <label className="block">
+      {(label || guessed) && (
+        <span className="mb-2 flex items-baseline gap-2">
+          <span className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+            {label}
+          </span>
+          {guessed && (
+            <span className="rounded-full bg-raised px-2 py-0.5 text-[11px] text-ink-faint">
+              {ADD.guessed}
+            </span>
+          )}
+        </span>
+      )}
       {children}
-    </button>
+    </label>
   );
 }
 
@@ -333,7 +636,7 @@ function Next({ onClick, label = "Next" }: { onClick: () => void; label?: string
   return (
     <button
       onClick={onClick}
-      className="mt-6 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
+      className="mt-7 min-h-11 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
     >
       {label}
     </button>
@@ -341,7 +644,7 @@ function Next({ onClick, label = "Next" }: { onClick: () => void; label?: string
 }
 
 /** Four weeks ahead, with the ask shaded on top. The dashed line is your usual. */
-function ForecastStrip({ price }: { price: ReturnType<typeof priceCommitment> }) {
+function ForecastStrip({ price }: { price: CommitmentPrice }) {
   const max = Math.max(1.7, ...price.weeks.map((w) => w.ratioAfter));
 
   return (
