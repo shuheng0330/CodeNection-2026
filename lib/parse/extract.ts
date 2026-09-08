@@ -42,9 +42,11 @@ const TIME_NOISE =
 
 /** chrono matched the normalised text, so its phrase may not appear in the
  *  original at all — "sabtu" had already become "saturday" by then. Strip the
- *  day and time words in both languages rather than mapping positions back. */
+ *  day and time words in both languages rather than mapping positions back.
+ *  `depan`, `ini` and `lepas` are here because they qualify a weekday and
+ *  would otherwise be left stranded in the title. */
 const DATE_NOISE =
-  /\b(?:mon|tue|tues|wed|weds|thu|thur|thurs|fri|sat|sun|monday|tuesday|wednesday|thursday|friday|saturday|sunday|isnin|selasa|rabu|khamis|jumaat|jumat|sabtu|ahad|minggu|hujung|esok|besok|lusa|semalam|today|tomorrow|tonight|weekend|ni|nanti|tadi|pagi|petang|malam|ada)\b/gi;
+  /\b(?:mon|tue|tues|wed|weds|thu|thur|thurs|fri|sat|sun|monday|tuesday|wednesday|thursday|friday|saturday|sunday|isnin|selasa|rabu|khamis|jumaat|jumat|sabtu|ahad|minggu|hujung|esok|besok|lusa|semalam|today|tomorrow|tonight|weekend|ni|ini|depan|lepas|nanti|tadi|pagi|petang|malam|ada)\b/gi;
 
 /** Filler left behind once the date and time have been lifted out. */
 const NOISE =
@@ -84,7 +86,14 @@ export function extract(raw: string, ref: Date): Draft {
 
   // en.GB, not the default: Malaysia writes 12/9 as 12 September, and the
   // US-first parser reads that as 9 December.
-  const results = en.GB.parse(text, ref, { forwardDate: true });
+  //
+  // forwardDate is what makes a bare "friday" mean the coming one, which is
+  // right for a request — but it also drags an explicit "last friday" into
+  // the future, where it becomes a date the student was never asked about.
+  // When the message says the day has passed, take it at its word and let
+  // the validator explain that there is nothing left to decide.
+  const backwards = /\blast\b|\byesterday\b/.test(text);
+  const results = en.GB.parse(text, ref, { forwardDate: !backwards });
   const dated =
     results.find((r) => r.start.isCertain("day") || r.start.isCertain("weekday")) ??
     results[0];

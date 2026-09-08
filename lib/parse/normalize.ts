@@ -9,8 +9,46 @@
  * `hujung minggu -> saturday` turns "hujung minggu" into "hujung sunday",
  * so every multi-word phrase is listed first.
  */
+/**
+ * The weekday names, kept as data because they are also needed with a
+ * qualifier attached.
+ *
+ * `minggu` is deliberately absent. It means both Sunday and week, and
+ * "minggu depan" is next week rather than next Sunday — so it stays a bare
+ * rule below, after the multi-word phrases have had their turn.
+ */
+const WEEKDAYS: [string, string][] = [
+  ["isnin", "monday"],
+  ["selasa", "tuesday"],
+  ["rabu", "wednesday"],
+  ["khamis", "thursday"],
+  ["jumaat", "friday"],
+  ["jumat", "friday"],
+  ["sabtu", "saturday"],
+  ["ahad", "sunday"],
+];
+
+/**
+ * "sabtu depan" means next Saturday. It was being read as this one.
+ *
+ * The weekday rules below translate the day and leave the qualifier behind as
+ * an untranslated Malay word, which chrono then ignores — so "sabtu depan"
+ * arrived as "saturday depan", parsed as the coming Saturday, and quietly
+ * lost a week. Asked on a Wednesday that is a six-day error in the date the
+ * entire forecast is built on, and nothing about the answer looks wrong.
+ *
+ * Both `ni` and `ini` turn up in messages, and both mean this one.
+ */
+const QUALIFIED: [RegExp, string][] = WEEKDAYS.flatMap(([ms, en]) => [
+  [new RegExp(`\\b${ms}\\s+depan\\b`, "g"), `next ${en}`],
+  [new RegExp(`\\b${ms}\\s+(?:ni|ini)\\b`, "g"), `this ${en}`],
+  [new RegExp(`\\b${ms}\\s+lepas\\b`, "g"), `last ${en}`],
+]);
+
 export const REPLACEMENTS: [RegExp, string][] = [
   // ---- multi-word, always first ----
+  ...QUALIFIED,
+  [/\bhujung\s*minggu\s+depan\b/g, "next saturday"],
   [/\bhujung\s*minggu\b/g, "saturday"],
   [/\bminggu\s+depan\b/g, "next week"],
   [/\bminggu\s+ni\b/g, "this week"],
