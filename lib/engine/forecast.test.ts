@@ -86,3 +86,49 @@ describe("priceCommitment", () => {
     }
   });
 });
+
+describe("priceCommitment — an ask changes exactly one week", () => {
+  it("leaves every week the ask does not fall in untouched", () => {
+    const p = priceCommitment(steady(), ask(2, 8), asOf, CURRENT_WEEK);
+    const landed = p.landing;
+    expect(landed).not.toBeNull();
+    for (const w of p.weeks) {
+      if (w.label === landed!.label) continue;
+      expect(w.ratioAfter).toBe(w.ratioBefore);
+    }
+  });
+
+  it("never reports a later week as lighter because you took work on", () => {
+    // The bug this replaces: a commitment raises the 28-day baseline of every
+    // later week faster than it raises their 7-day window, so those weeks came
+    // out LOWER with the extra work than without it — which read as "say yes
+    // and next week gets easier".
+    for (const daysAhead of [1, 2, 5, 9, 16, 20]) {
+      const p = priceCommitment(steady(), ask(daysAhead, 9), asOf, CURRENT_WEEK);
+      for (const w of p.weeks) {
+        expect(w.ratioAfter).toBeGreaterThanOrEqual(w.ratioBefore);
+      }
+    }
+  });
+
+  it("prices the week the ask lands in, not the heaviest one", () => {
+    const p = priceCommitment(steady(), ask(2, 8), asOf, CURRENT_WEEK);
+    expect(p.landing!.label).toBe("week 10");
+    expect(p.landing!.ratioAfter).toBeGreaterThan(p.landing!.ratioBefore);
+  });
+
+  it("charges nothing, and says so, for an ask beyond the horizon", () => {
+    const p = priceCommitment(steady(), ask(90, 40), asOf, CURRENT_WEEK);
+    expect(p.landing).toBeNull();
+    expect(p.verdict).toBe("fits");
+    for (const w of p.weeks) expect(w.ratioAfter).toBe(w.ratioBefore);
+  });
+
+  it("takes its verdict from the landing week", () => {
+    const light = priceCommitment(steady(), ask(9, 1), asOf, CURRENT_WEEK);
+    const crushing = priceCommitment(steady(), ask(9, 200), asOf, CURRENT_WEEK);
+    expect(light.verdict).toBe("fits");
+    expect(crushing.verdict).toBe("costly");
+    expect(crushing.landing!.ratioAfter).toBeGreaterThan(light.landing!.ratioAfter);
+  });
+});

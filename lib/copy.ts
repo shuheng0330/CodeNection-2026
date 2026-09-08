@@ -271,6 +271,7 @@ export const COMPARE = {
   askPlaceholder: "eh can you cover my shift this friday 3pm-11pm?",
   askCost: (pct: number, week: string): string =>
     `${pct}% of a usual week in ${week}`,
+  askBeyond: "Too far ahead to price",
   back: "Today",
 } as const;
 
@@ -344,6 +345,9 @@ export const NO_BUTTON = {
   ],
   copyAction: "Copy reply",
   copied: "Copied",
+  /** An ask past the four weeks we can see gets no invented number. */
+  beyondHorizon:
+    "That is far enough ahead that it does not touch any week we can see yet.",
   decisionTitle: "What did you do?",
   /** A yes weighs exactly as much as a no here. A tool that only ever
    *  validates declining is just a different voice telling you what to do. */

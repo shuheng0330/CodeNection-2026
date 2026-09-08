@@ -139,7 +139,9 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                     {NO_BUTTON.verdict[price.verdict]}
                   </p>
                   <p className="mt-3 text-lead text-ink-muted">
-                    {priceLine(price.worst.pctOfUsual, price.worst.label)}
+                    {price.landing
+                      ? priceLine(price.landing.pctOfUsual, price.landing.label)
+                      : NO_BUTTON.beyondHorizon}
                   </p>
 
                   <ForecastStrip price={price} />
@@ -193,8 +195,8 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                               logAsk({
                                 title: ASK_KINDS.find((k) => k.key === kind)!.label,
                                 hours: ASK_WEIGHTS[heft].hours,
-                                pct: price.worst.pctOfUsual,
-                                weekLabel: price.worst.label,
+                                pct: price.landing?.pctOfUsual ?? 0,
+                                weekLabel: price.landing?.label ?? "",
                                 verdict: price.verdict,
                                 decision: d,
                               });
@@ -301,8 +303,10 @@ function ForecastStrip({ price }: { price: ReturnType<typeof priceCommitment> })
                   ? "bg-rust"
                   : w.ratioAfter >= 1.3
                     ? "bg-amber"
-                    : "bg-ember"
-              }`}
+                    : w.ratioAfter >= 1.1
+                      ? "bg-ember"
+                      : "bg-sage"
+              } ${price.landing && w.label === price.landing.label ? "" : "opacity-40"}`}
               initial={{ height: `${(w.ratioBefore / max) * 100}%` }}
               animate={{ height: `${(w.ratioAfter / max) * 100}%` }}
               transition={{ ...spring.settle, delay: 0.15 }}

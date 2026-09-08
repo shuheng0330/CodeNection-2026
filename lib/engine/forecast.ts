@@ -27,7 +27,11 @@ export interface WeekPrice {
 
 export interface CommitmentPrice {
   weeks: WeekPrice[];
+  /** heaviest week ahead — context for the strip, not the price of this ask */
   worst: WeekPrice;
+  /** the week this ask actually falls in, and the only one it changes.
+   *  null when it lands beyond the horizon we can see. */
+  landing: WeekPrice | null;
   verdict: "fits" | "tight" | "costly";
 }
 
@@ -48,32 +52,56 @@ export function priceCommitment(
   currentWeek: number,
 ): CommitmentPrice {
   const weeks: WeekPrice[] = [];
+  let landing: WeekPrice | null = null;
 
   for (let i = 0; i < FORECAST_WEEKS; i++) {
+    const weekStart = startOfWeek(addDays(asOf, i * 7), { weekStartsOn: 1 });
     const weekEnd = endOfWeek(addDays(asOf, i * 7), { weekStartsOn: 1 });
-    const cutoff = format(weekEnd, "yyyy-MM-dd");
+    const from = format(weekStart, "yyyy-MM-dd");
+    const to = format(weekEnd, "yyyy-MM-dd");
 
-    const upTo = events.filter((e) => e.date <= cutoff);
+    const upTo = events.filter((e) => e.date <= to);
     const before = computeCarry(upTo, weekEnd).ratio;
-    const after =
-      candidate.date <= cutoff
-        ? computeCarry([...upTo, candidate], weekEnd).ratio
-        : before;
 
-    weeks.push({
-      weekStart: format(startOfWeek(addDays(asOf, i * 7), { weekStartsOn: 1 }), "yyyy-MM-dd"),
+    // An ask changes exactly one week: the one it happens in.
+    //
+    // Measuring "with and without" at every week end looks more thorough and
+    // is unusable. A commitment also raises the 28-day baseline of every LATER
+    // week, and it raises it faster than it raises their 7-day window — so
+    // those weeks come out LOWER with the extra work than without it. Reported
+    // as a price, that says "agree to this shift and next week gets easier",
+    // and picking the worst week across all four could quote a week the ask
+    // never touched. Weeks the commitment does not fall in are unchanged,
+    // because nothing about what is committed to them has changed.
+    const lands = candidate.date >= from && candidate.date <= to;
+    const after = lands ? computeCarry([...upTo, candidate], weekEnd).ratio : before;
+
+    const week: WeekPrice = {
+      weekStart: from,
       label: weekLabelFor(asOf, addDays(asOf, i * 7), currentWeek),
       ratioBefore: before,
       ratioAfter: after,
       pctOfUsual: Math.round(after * 100),
-    });
+    };
+    weeks.push(week);
+    if (lands) landing = week;
   }
 
+  // The heaviest week ahead — context for the strip, never the price.
   const worst = weeks.reduce((a, b) => (b.ratioAfter > a.ratioAfter ? b : a));
-  const verdict =
-    worst.ratioAfter < 1.3 ? "fits" : worst.ratioAfter < 1.5 ? "tight" : "costly";
 
-  return { weeks, worst, verdict };
+  // An ask beyond the horizon costs nothing we can see, and saying otherwise
+  // would be inventing a number.
+  const priced = landing ?? null;
+  const verdict = !priced
+    ? "fits"
+    : priced.ratioAfter < 1.3
+      ? "fits"
+      : priced.ratioAfter < 1.5
+        ? "tight"
+        : "costly";
+
+  return { weeks, worst, landing, verdict };
 }
 
 /** What the ask costs, in the same units as everything else. */

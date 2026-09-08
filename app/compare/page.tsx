@@ -203,7 +203,9 @@ export default function ComparePage() {
                     >
                       <p className="font-medium">{persona.name}</p>
                       <p className="tnum mt-2 font-display text-2xl text-clay-600">
-                        {COMPARE.askCost(price.worst.pctOfUsual, price.worst.label)}
+                        {price.landing
+                          ? COMPARE.askCost(price.landing.pctOfUsual, price.landing.label)
+                          : COMPARE.askBeyond}
                       </p>
                     </div>
                   ))}
