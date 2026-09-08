@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ADD } from "@/lib/copy";
 import { toISODate } from "@/lib/engine/dates";
@@ -73,16 +74,14 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
     close();
   };
 
-  return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        className="min-h-11 w-full rounded-full border border-hairline px-6 py-3.5 font-medium text-ink transition-colors hover:bg-raised"
-      >
-        {ADD.trigger}
-      </button>
-
-      <AnimatePresence>
+  /**
+   * Portalled to the body for the same reason the request sheet is: a fixed
+   * overlay inside an ancestor that creates a stacking context — a transform,
+   * a filter, `position: sticky` — is only above that ancestor's own
+   * siblings, and Today's decision panel is sticky.
+   */
+  const overlay = (
+    <AnimatePresence>
         {open && (
           <>
             <motion.div
@@ -221,6 +220,17 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
           </>
         )}
       </AnimatePresence>
+  );
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="min-h-11 w-full rounded-full border border-hairline px-6 py-3.5 font-medium text-ink transition-colors hover:bg-raised"
+      >
+        {ADD.trigger}
+      </button>
+      {typeof document === "undefined" ? null : createPortal(overlay, document.body)}
     </>
   );
 }

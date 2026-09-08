@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { addDays, format } from "date-fns";
+import Link from "next/link";
+import { format } from "date-fns";
 import { AddCommitmentSheet } from "@/components/app/AddCommitmentSheet";
 import { AreaBreakdown } from "@/components/app/AreaBreakdown";
 import { CarryBar } from "@/components/app/CarryBar";
 import { NoButton } from "@/components/app/NoButton";
 import { PutDownCard } from "@/components/app/PutDownCard";
-import { WeightChip } from "@/components/app/WeightChip";
 import { RouteHeader } from "@/components/app/decision/RouteHeader";
 import { Reveal } from "@/components/shared/Reveal";
 import { AHEAD, AREAS, BAND, TODAY } from "@/lib/copy";
-import { toISODate } from "@/lib/engine/dates";
+import { daysAhead } from "@/lib/engine/horizon";
 import { putDownReason, suggestPutDown, whenLabel } from "@/lib/engine/putdown";
 import { useCarry, usePikul } from "@/lib/store";
 import { useHydrated } from "@/lib/useHydrated";
@@ -59,13 +59,7 @@ export default function TodayPage() {
     () => putDownReason(events, asOf, carry.ratio),
     [events, asOf, carry.ratio],
   );
-  const ahead = useMemo(() => {
-    const from = toISODate(addDays(asOf, 1));
-    const to = toISODate(addDays(asOf, 7));
-    return events
-      .filter((e) => e.date >= from && e.date <= to)
-      .sort((a, b) => (a.date === b.date ? b.hours - a.hours : a.date.localeCompare(b.date)));
-  }, [events, asOf]);
+  const ahead = useMemo(() => daysAhead(events, asOf), [events, asOf]);
 
   if (!hydrated) {
     return <div className="min-h-screen bg-linen" />;
@@ -84,12 +78,21 @@ export default function TodayPage() {
           NAV list, so nothing below here changes when it lands. */}
       <RouteHeader
         current="/today"
-        aside={<p className="text-sm text-ink-faint">{format(asOf, "EEEE, d MMMM")}</p>}
+        aside={
+          <p className="text-sm text-ink-faint">
+            {format(asOf, "EEEE, d MMMM")}
+          </p>
+        }
       />
 
+      {/* Four blocks in one order on a phone and two columns on a desktop.
+          The grid places them explicitly rather than reflowing them, so the
+          reading and its explanation keep the wide column while the panel
+          beside it holds everything that can still change — and neither
+          column ends in a long stretch of nothing. */}
       <main
         id="reading"
-        className="flex flex-col lg:grid lg:grid-cols-12 lg:gap-x-12"
+        className="flex flex-col lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12"
       >
         {/* ── what this week weighs ── */}
         <section
@@ -105,7 +108,10 @@ export default function TodayPage() {
                 Handing a commitment back or switching student changes this
                 sentence without moving focus, so nothing would announce it. */}
             <div role="status">
-              <h1 id="reading-title" className="mt-2 text-balance font-display text-h1">
+              <h1
+                id="reading-title"
+                className="mt-2 text-balance font-display text-h1"
+              >
                 {BAND[carry.band].line}
               </h1>
             </div>
@@ -116,67 +122,89 @@ export default function TodayPage() {
           </Reveal>
         </section>
 
-        {/* ── and what can still be done about it ──
-            Spanning both rows rather than sitting in one is what gives the
-            sticky panel somewhere to travel: a grid item sized to its own
-            content has no slack, and sticky inside it never moves. */}
+        {/* ── and what can still be done about it ── */}
         <section
           aria-labelledby="decide-title"
-          className="mt-10 lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:mt-10"
+          className="mt-10 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:mt-10"
         >
-          <div className="lg:sticky lg:top-10">
-            <h2 id="decide-title" className="sr-only">
-              Decisions
-            </h2>
-            <div className="grid gap-3">
-              <NoButton events={events} asOf={asOf} />
-              <AddCommitmentSheet asOf={asOf} />
-            </div>
-
-            <Reveal delay={0.12} className="mt-6">
-              <PutDownCard
-                suggestion={suggestion}
-                handedBack={handedBack}
-                reason={reason}
-                asOf={asOf}
-                events={events}
-              />
-            </Reveal>
+          <h2 id="decide-title" className="sr-only">
+            Decisions
+          </h2>
+          <div className="grid gap-3">
+            <NoButton events={events} asOf={asOf} />
+            <AddCommitmentSheet asOf={asOf} />
           </div>
+
+          <Reveal delay={0.12} className="mt-6">
+            <PutDownCard
+              suggestion={suggestion}
+              handedBack={handedBack}
+              reason={reason}
+              asOf={asOf}
+              events={events}
+            />
+          </Reveal>
         </section>
 
         {/* ── the detail behind the verdict ── */}
-        <div className="lg:col-span-7 lg:col-start-1 lg:row-start-2">
-          <section className="mt-12" aria-labelledby="areas-title">
-            <h2
-              id="areas-title"
-              className="px-3 text-micro uppercase tracking-[0.08em] text-ink-faint"
-            >
-              {AREAS.title}
-            </h2>
-            <div className="mt-4">
-              <AreaBreakdown events={events} asOf={asOf} />
-            </div>
-          </section>
+        <section
+          className="mt-12 lg:col-span-7 lg:col-start-1 lg:row-start-2"
+          aria-labelledby="areas-title"
+        >
+          <h2
+            id="areas-title"
+            className="px-3 text-micro uppercase tracking-[0.08em] text-ink-faint"
+          >
+            {AREAS.title}
+          </h2>
+          <div className="mt-4">
+            <AreaBreakdown events={events} asOf={asOf} />
+          </div>
+        </section>
 
-          <section className="mt-12" aria-labelledby="ahead-title">
-            <h2
-              id="ahead-title"
-              className="text-micro uppercase tracking-[0.08em] text-ink-faint"
-            >
-              {AHEAD.title}
-            </h2>
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              {ahead.length === 0 ? (
-                <p className="text-ink-muted">{AHEAD.empty}</p>
-              ) : (
-                ahead.map((e) => (
-                  <WeightChip key={e.id} event={e} when={whenLabel(e.date, asOf)} />
-                ))
-              )}
-            </div>
-          </section>
-        </div>
+        <section
+          className="mt-12 lg:col-span-5 lg:col-start-8 lg:row-start-2"
+          aria-labelledby="ahead-title"
+        >
+          <h2
+            id="ahead-title"
+            className="text-micro uppercase tracking-[0.08em] text-ink-faint"
+          >
+            {AHEAD.title}
+          </h2>
+          {ahead.length === 0 ? (
+            <p className="mt-4 text-ink-muted">{AHEAD.empty}</p>
+          ) : (
+            <>
+              <ul className="mt-4 grid">
+                {ahead.map((d) => (
+                  <li
+                    key={d.date}
+                    className="flex items-baseline justify-between gap-4 border-b border-hairline py-3 last:border-0"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium capitalize">
+                        {whenLabel(d.date, asOf)}
+                      </p>
+                      <p className="truncate text-sm text-ink-muted">
+                        {AHEAD.dayLine(d.heaviest.title, d.others)}
+                      </p>
+                    </div>
+                    <p className="tnum shrink-0 text-sm text-ink-muted">
+                      {AHEAD.hours(d.hours)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/week"
+                className="mt-4 inline-flex min-h-11 items-center text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+              >
+                {AHEAD.more}
+              </Link>
+            </>
+          )}
+        </section>
       </main>
 
       {/* ── the demo controls, kept outside the product ──

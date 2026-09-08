@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ADD, NO_BUTTON, beforeAfterLine } from "@/lib/copy";
 import { draftDecline, type AskKind, type Tone } from "@/lib/decline";
@@ -202,19 +203,21 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
     });
   };
 
-  return (
-    <>
-      <button
-        onClick={() => {
-          setIntentId(`ask-${Date.now()}`);
-          setOpen(true);
-        }}
-        className="min-h-11 w-full rounded-full bg-clay-600 px-6 py-4 font-medium text-white shadow-soft transition-colors hover:bg-clay-500"
-      >
-        {NO_BUTTON.trigger}
-      </button>
-
-      <AnimatePresence>
+  /**
+   * Portalled to the body, not rendered where it is mounted.
+   *
+   * `position: fixed` and a z-index are not enough on their own: any ancestor
+   * with a transform, a filter or `position: sticky` starts a stacking
+   * context, and the sheet's z-50 then only means "above its siblings inside
+   * that context". Today's decision panel is sticky, so the week's own
+   * content — which comes after the panel in the DOM — painted straight over
+   * the top of an open sheet.
+   *
+   * At the body there is nothing left to be trapped inside, which is also
+   * where the focus trap's inert walk expects to end up.
+   */
+  const overlay = (
+    <AnimatePresence>
         {open && (
           <>
             <motion.div
@@ -226,7 +229,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
             />
             <motion.div
               ref={sheetRef}
-              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-10 shadow-lift outline-none sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
+              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-0 shadow-lift outline-none sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
               {...sheetMotion(!!still)}
               role="dialog"
               aria-modal="true"
@@ -383,7 +386,6 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                     </div>
                   </div>
 
-                  <Next onClick={() => setStep(1)} label={NO_BUTTON.next} />
                 </Step>
               )}
 
@@ -459,51 +461,6 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                             ? NO_BUTTON.copyFailed
                             : NO_BUTTON.copyManualHint}
                         </p>
-
-                        {/* ---- and the decision, whichever way it goes ---- */}
-                        <div className="mt-7 border-t border-hairline pt-5">
-                          <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
-                            {NO_BUTTON.decisionTitle}
-                          </p>
-                          <div className="mt-3 flex gap-2">
-                            {(["yes", "no"] as const).map((d) => (
-                              <button
-                                key={d}
-                                onClick={() => answer(d)}
-                                aria-pressed={decided === d}
-                                className={`min-h-11 flex-1 rounded-full border px-4 py-2.5 text-sm transition-colors ${
-                                  decided === d
-                                    ? "border-ink bg-ink text-linen"
-                                    : "border-hairline text-ink-muted hover:bg-raised"
-                                }`}
-                              >
-                                {d === "yes" ? NO_BUTTON.saidYes : NO_BUTTON.saidNo}
-                              </button>
-                            ))}
-                          </div>
-                          {decided && (
-                            <div
-                              className="mt-3 flex flex-wrap items-baseline gap-3"
-                              role="status"
-                            >
-                              <p className="text-sm text-ink-faint">
-                                {decided === "yes"
-                                  ? NO_BUTTON.acceptedNote
-                                  : NO_BUTTON.declinedNote}
-                              </p>
-                              <button
-                                onClick={() => {
-                                  undoAsk(intentId);
-                                  setDecided(null);
-                                  setSettled(null);
-                                }}
-                                className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
-                              >
-                                {NO_BUTTON.undo}
-                              </button>
-                            </div>
-                          )}
-                        </div>
                       </div>
 
                       <button
@@ -517,16 +474,96 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                 </Step>
               )}
 
-              <button
-                onClick={close}
-                className="mt-5 min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
-              >
-                {ADD.cancel}
-              </button>
+              {/* The action, pinned.
+                  The sheet is taller than a phone and taller than a laptop,
+                  and the thing it exists for was the last item in it — so
+                  every reading of the forecast ended in a scroll to find the
+                  buttons. Sticky to the bottom of the sheet's own scroller,
+                  with the padding the container gives up below, so it clears
+                  a home indicator and an Android keyboard alike. */}
+              <div className="sticky bottom-0 -mx-6 mt-7 border-t border-hairline bg-surface px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4">
+                {step === 0 && (
+                  <button
+                    onClick={() => setStep(1)}
+                    className="min-h-11 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
+                  >
+                    {NO_BUTTON.next}
+                  </button>
+                )}
+
+                {step === 1 && landing && (
+                  <>
+                    <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                      {NO_BUTTON.decisionTitle}
+                    </p>
+                    <div className="mt-2.5 flex gap-2">
+                      {(["yes", "no"] as const).map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => answer(d)}
+                          aria-pressed={decided === d}
+                          className={`min-h-11 flex-1 rounded-full border px-4 py-2.5 text-sm transition-colors ${
+                            decided === d
+                              ? "border-ink bg-ink text-linen"
+                              : "border-hairline text-ink-muted hover:bg-raised"
+                          }`}
+                        >
+                          {d === "yes" ? NO_BUTTON.saidYes : NO_BUTTON.saidNo}
+                        </button>
+                      ))}
+                    </div>
+                    {decided && (
+                      <div
+                        className="mt-2.5 flex flex-wrap items-baseline gap-3"
+                        role="status"
+                      >
+                        <p className="text-sm text-ink-faint">
+                          {decided === "yes"
+                            ? NO_BUTTON.acceptedNote
+                            : NO_BUTTON.declinedNote}
+                        </p>
+                        <button
+                          onClick={() => {
+                            undoAsk(intentId);
+                            setDecided(null);
+                            setSettled(null);
+                          }}
+                          className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                        >
+                          {NO_BUTTON.undo}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                <button
+                  onClick={close}
+                  className="min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
+                >
+                  {ADD.cancel}
+                </button>
+              </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
+  );
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          setIntentId(`ask-${Date.now()}`);
+          setOpen(true);
+        }}
+        className="min-h-11 w-full rounded-full bg-clay-600 px-6 py-4 font-medium text-white shadow-soft transition-colors hover:bg-clay-500"
+      >
+        {NO_BUTTON.trigger}
+      </button>
+      {/* Today holds its first paint until hydration, so this component only
+          ever renders in the browser — but guarding costs nothing. */}
+      {typeof document === "undefined" ? null : createPortal(overlay, document.body)}
     </>
   );
 }
@@ -632,24 +669,23 @@ function Row({
   );
 }
 
-function Next({ onClick, label = "Next" }: { onClick: () => void; label?: string }) {
-  return (
-    <button
-      onClick={onClick}
-      className="mt-7 min-h-11 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
-    >
-      {label}
-    </button>
-  );
-}
-
 /** Four weeks ahead, with the ask shaded on top. The dashed line is your usual. */
 function ForecastStrip({ price }: { price: CommitmentPrice }) {
   const max = Math.max(1.7, ...price.weeks.map((w) => w.ratioAfter));
 
   return (
     <div className="mt-6">
-      <div className="relative flex h-32 items-end gap-3">
+      {/* No `items-end` on this row.
+          Each column's bar is a percentage of its column's height, and
+          align-items:end sizes a column to its content — so the height
+          resolved against nothing and every bar collapsed to zero. The strip
+          has been drawing an empty frame with labels under it. Stretching the
+          columns gives the percentages the definite height they need. */}
+      <div
+        className="relative flex h-32 gap-3"
+        role="img"
+        aria-label={forecastLabel(price)}
+      >
         <div
           className="absolute inset-x-0 border-t border-dashed border-ink-faint/60"
           style={{ bottom: `${(1 / max) * 100}%` }}
@@ -660,7 +696,7 @@ function ForecastStrip({ price }: { price: CommitmentPrice }) {
         </div>
 
         {price.weeks.map((w) => (
-          <div key={w.label} className="relative flex flex-1 flex-col justify-end">
+          <div key={w.label} className="relative flex h-full flex-1 flex-col justify-end">
             <motion.div
               className={`w-full rounded-t-md ${
                 w.ratioAfter >= 1.5
@@ -679,7 +715,7 @@ function ForecastStrip({ price }: { price: CommitmentPrice }) {
         ))}
       </div>
 
-      <div className="mt-2 flex gap-3">
+      <div aria-hidden className="mt-2 flex gap-3">
         {price.weeks.map((w) => (
           <p
             key={w.label}
@@ -691,4 +727,22 @@ function ForecastStrip({ price }: { price: CommitmentPrice }) {
       </div>
     </div>
   );
+}
+
+/**
+ * The chart, said out loud.
+ *
+ * A screen reader got four week labels and no bars at all. The spoken version
+ * carries the same claim the picture does and nothing more: which week moves,
+ * from what to what, and that the rest are untouched.
+ */
+function forecastLabel(price: CommitmentPrice): string {
+  const rest = price.weeks
+    .filter((w) => w.label !== price.landing?.label)
+    .map((w) => `${w.label} ${w.pctOfUsual}%`)
+    .join(", ");
+  if (!price.landing) {
+    return `The next four weeks, unchanged by this: ${rest}.`;
+  }
+  return `The next four weeks, as a share of a usual week. ${price.landing.label} goes from ${Math.round(price.landing.ratioBefore * 100)}% to ${price.landing.pctOfUsual}%. The rest are unchanged: ${rest}.`;
 }

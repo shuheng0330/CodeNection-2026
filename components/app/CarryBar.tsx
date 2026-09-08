@@ -28,10 +28,15 @@ export function CarryBar({ ratio, band }: { ratio: number; band: BandKey }) {
     <div className="w-full">
       {/* One graphic with one sentence. role="img" makes the band and the
           marker presentational, so nothing inside can leak a stray label. */}
+      {/* The hairline is not decoration.
+          On /compare the highlighted card is clay-tinted, and the track's own
+          warm fill vanishes into it — the band and marker were floating on
+          nothing. An outline keeps the whole scale legible on every ground
+          this bar is placed on. */}
       <div
         role="img"
         aria-label={CARRY_LABEL[band]}
-        className="relative h-12 w-full rounded-full bg-raised"
+        className="relative h-12 w-full rounded-full border border-hairline bg-raised"
       >
         {/* the comfortable band */}
         <div

@@ -221,6 +221,13 @@ export const reclaimedLine = (hours: number, when: string): string =>
 export const AHEAD = {
   title: "Still ahead of you",
   empty: "Nothing else on this week.",
+  /** A day is named by the heaviest thing on it. Naming all of them turns
+   *  this into the backlog the whole product refuses to be. */
+  dayLine: (heaviest: string, others: number): string =>
+    others === 0 ? heaviest : `${heaviest}, and ${others} more`,
+  hours: (h: number): string => (h < 1 ? "under an hour" : `${Math.round(h)}h`),
+  /** Today shows the next few days; the whole run belongs on its own screen. */
+  more: "See the weeks ahead",
 } as const;
 
 /* ── Thong · the decisions, kept ─────────────────────────────────────── */

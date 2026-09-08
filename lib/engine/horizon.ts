@@ -90,6 +90,54 @@ export function weeksAhead(
 export const peakDayLoad = (weeks: WeekAhead[]): number =>
   Math.max(1, ...weeks.flatMap((w) => w.days.map((d) => d.load)));
 
+export interface DayAhead {
+  date: string;
+  hours: number;
+  load: number;
+  /** the heaviest thing on it, which is what the day is actually about */
+  heaviest: LoadEvent;
+  /** how many other things share the day */
+  others: number;
+}
+
+/**
+ * The next few days, one row each.
+ *
+ * Listing every commitment individually turns this into a backlog: twenty-odd
+ * chips, half of them the word "Commute", and the one that matters buried in
+ * the middle. A student looking at a heavy week does not need to be handed
+ * the heavy week back as a list.
+ *
+ * So a day is a row, its weight is its hours, and what it is about is the
+ * heaviest thing on it. Days with nothing on them are dropped rather than
+ * shown as empty — a calendar of dates and durations cannot honestly promise
+ * anyone that a day is free.
+ */
+export function daysAhead(
+  events: LoadEvent[],
+  asOf: Date,
+  count: number = 5,
+): DayAhead[] {
+  const out: DayAhead[] = [];
+
+  for (let i = 1; i <= count; i++) {
+    const date = toISODate(addDays(asOf, i));
+    const onDay = events.filter((e) => e.date === date);
+    if (onDay.length === 0) continue;
+
+    const ranked = [...onDay].sort((a, b) => eventLoad(b) - eventLoad(a));
+    out.push({
+      date,
+      hours: onDay.reduce((s, e) => s + e.hours, 0),
+      load: onDay.reduce((s, e) => s + eventLoad(e), 0),
+      heaviest: ranked[0],
+      others: ranked.length - 1,
+    });
+  }
+
+  return out;
+}
+
 /**
  * What an ordinary week costs this person, in hours.
  *
