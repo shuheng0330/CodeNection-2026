@@ -153,6 +153,39 @@ export const AHEAD = {
   empty: "Nothing else on this week.",
 } as const;
 
+/* ── OWNER: A (engine & app) · time that is already yours ────── */
+export const RECOVER = {
+  title: "Somewhere to put the time down",
+  found: "The quietest day you have coming",
+  /** "Saturday is the quietest day in your next ten." */
+  foundLine: (day: string): string =>
+    `${day} is the quietest day you have coming.`,
+  clearAfter: (day: string): string => `And ${day} after it is clear.`,
+  busyAfter: "It is the calmest one there is, though the day after is not.",
+  planTitle: "What would you do with it?",
+  /** Naming when and what, rather than resolving to rest, is the part that
+   *  actually survives contact with a heavy week. */
+  planLine: (day: string, choice: string): string =>
+    `If ${day} comes and nothing has caught fire — ${choice}.`,
+  choices: [
+    { key: "empty", label: "leave it empty" },
+    { key: "sleep", label: "sleep in" },
+    { key: "outside", label: "get out of the house" },
+    { key: "someone", label: "see someone" },
+  ],
+  noteTitle: "We are not going to check",
+  note: "Nothing here is logged, counted, or held against you next week. It is your time, and the only reason it exists is that you made room for it.",
+  none: "There is no unclaimed time in your next ten days.",
+  /** The one screen that points at another: relief has to come from somewhere. */
+  noneFix: (title: string, day: string): string =>
+    `Handing back ${title} would give you ${day} back.`,
+  noneAction: "See what to put down",
+  noneHard:
+    "Nothing in the next ten days is yours to hand back. The thing that helps is not taking on anything more.",
+  back: "Today",
+} as const;
+
+
 /* ── OWNER: A (engine & app) · same hours, different answer ──── */
 export const COMPARE = {
   title: "Two students, one week each.",
