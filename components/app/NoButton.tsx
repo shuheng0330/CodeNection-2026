@@ -1,14 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useId, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { addDays, format } from "date-fns";
 import { NO_BUTTON, priceLine } from "@/lib/copy";
 import { ASK_KINDS, draftDecline, type AskKind, type Tone } from "@/lib/decline";
 import { ASK_WEIGHTS, priceCommitment } from "@/lib/engine/forecast";
 import type { LoadEvent } from "@/lib/engine/types";
 import { CURRENT_WEEK } from "@/lib/seed/generateSemester";
-import { spring } from "@/lib/motion";
+import { sheetMotion, spring } from "@/lib/motion";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { usePikul } from "@/lib/store";
 
 type Heft = keyof typeof ASK_WEIGHTS;
@@ -36,6 +37,8 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   const [copied, setCopied] = useState(false);
   const [decided, setDecided] = useState<"yes" | "no" | null>(null);
   const logAsk = usePikul((s) => s.logAsk);
+  const still = useReducedMotion();
+  const titleId = useId();
 
   // The ask lands next week — the week that is already loaded before anyone asks.
   const candidate: LoadEvent = useMemo(
@@ -66,6 +69,14 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
     }, 300);
   };
 
+  // Armed on open and released on close-request, so focus goes back to the
+  // trigger immediately rather than waiting out the exit animation.
+  const sheetRef = useFocusTrap<HTMLDivElement>({
+    active: open,
+    onClose: close,
+    focusKey: step,
+  });
+
   const draft = draftDecline(kind, tone);
 
   return (
@@ -88,18 +99,18 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               onClick={close}
             />
             <motion.div
-              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-10 shadow-lift sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={spring.ui}
+              ref={sheetRef}
+              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-10 shadow-lift outline-none sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
+              {...sheetMotion(!!still)}
               role="dialog"
               aria-modal="true"
+              aria-labelledby={titleId}
+              tabIndex={-1}
             >
               <div className="mx-auto mb-6 h-1.5 w-10 rounded-full bg-hairline" />
 
               {step === 0 && (
-                <Step title={NO_BUTTON.step1Title}>
+                <Step title={NO_BUTTON.step1Title} titleId={titleId} step={step}>
                   <div className="grid gap-2">
                     {ASK_KINDS.map((k) => (
                       <Choice
@@ -116,7 +127,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               )}
 
               {step === 1 && (
-                <Step title={NO_BUTTON.step2Title}>
+                <Step title={NO_BUTTON.step2Title} titleId={titleId} step={step}>
                   <div className="grid gap-2">
                     {NO_BUTTON.weights.map((w) => (
                       <Choice
@@ -134,7 +145,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               )}
 
               {step === 2 && (
-                <Step title={NO_BUTTON.step3Title}>
+                <Step title={NO_BUTTON.step3Title} titleId={titleId} step={step}>
                   <p className={`font-display text-2xl ${VERDICT_TONE[price.verdict]}`}>
                     {NO_BUTTON.verdict[price.verdict]}
                   </p>
@@ -234,14 +245,35 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   );
 }
 
-function Step({ title, children }: { title: string; children: React.ReactNode }) {
+function Step({
+  title,
+  titleId,
+  step,
+  children,
+}: {
+  title: string;
+  titleId: string;
+  step: number;
+  children: React.ReactNode;
+}) {
+  const still = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, x: 12 }}
+      initial={still ? false : { opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={spring.settle}
     >
-      <h2 className="font-display text-h2">{title}</h2>
+      {/* key forces a remount per step: focusing a node that already holds
+          focus announces nothing, which is why step changes were silent. */}
+      <h2
+        key={step}
+        id={titleId}
+        tabIndex={-1}
+        data-autofocus
+        className="font-display text-h2 outline-none"
+      >
+        {title}
+      </h2>
       <div className="mt-5">{children}</div>
     </motion.div>
   );

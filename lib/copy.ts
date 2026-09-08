@@ -96,6 +96,24 @@ export const TODAY = {
   usualBandLabel: "your usual",
 } as const;
 
+/* ── OWNER: A (engine & app) · what the bar says out loud ────────── */
+/**
+ * The bar is the product's main output and, until now, it said nothing to a
+ * screen reader — the marker and the band carried everything.
+ *
+ * Deliberately no number. A sighted student cannot read a figure off the bar
+ * either; what they get is which side of the band they are on and roughly how
+ * far. The spoken version has to match that precision, not exceed it. Giving
+ * one group a percentage the design withholds from the other is not a fix.
+ */
+export const CARRY_LABEL: Record<BandKey, string> = {
+  light: "Your week sits below the range you usually carry.",
+  usual: "Your week sits inside the range you usually carry.",
+  busy: "Your week sits a little above the range you usually carry.",
+  heavy: "Your week sits above the range you usually carry.",
+  toomuch: "Your week sits well above the range you usually carry.",
+};
+
 /* ── OWNER: A (engine & app) · where the week actually went ─────── */
 export const AREAS = {
   title: "What's making this week heavy",

@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useId, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ADD } from "@/lib/copy";
 import { toISODate } from "@/lib/engine/dates";
 import type { Intensity, LoadCategory } from "@/lib/engine/types";
 import { extract } from "@/lib/parse/extract";
-import { spring } from "@/lib/motion";
+import { sheetMotion } from "@/lib/motion";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import { usePikul } from "@/lib/store";
 
 type FieldKey = "title" | "date" | "hours" | "category" | "intensity";
@@ -31,6 +32,8 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
   const [raw, setRaw] = useState("");
   const [edited, setEdited] = useState<Partial<Record<FieldKey, string>>>({});
   const addEvent = usePikul((s) => s.addEvent);
+  const still = useReducedMotion();
+  const titleId = useId();
 
   const draft = useMemo(() => extract(raw, asOf), [raw, asOf]);
 
@@ -53,6 +56,10 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
       setEdited({});
     }, 300);
   };
+
+  // Focus lands on the heading, not the paste box. Focusing a textarea on
+  // open raises the Android keyboard over the sheet before anyone has read it.
+  const sheetRef = useFocusTrap<HTMLDivElement>({ active: open, onClose: close });
 
   const submit = () => {
     const hours = Number(value("hours"));
@@ -86,17 +93,23 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
               onClick={close}
             />
             <motion.div
-              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-10 shadow-lift sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={spring.ui}
+              ref={sheetRef}
+              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-10 shadow-lift outline-none sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
+              {...sheetMotion(!!still)}
               role="dialog"
               aria-modal="true"
-              aria-label={ADD.title}
+              aria-labelledby={titleId}
+              tabIndex={-1}
             >
               <div className="mx-auto mb-6 h-1.5 w-10 rounded-full bg-hairline" />
-              <h2 className="font-display text-h2">{ADD.title}</h2>
+              <h2
+                id={titleId}
+                tabIndex={-1}
+                data-autofocus
+                className="font-display text-h2 outline-none"
+              >
+                {ADD.title}
+              </h2>
 
               {/* ---- paste it ---- */}
               <label className="mt-6 block">

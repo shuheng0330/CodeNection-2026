@@ -101,7 +101,13 @@ export default function TodayPage() {
         {/* ---- see, explain, act ---- */}
         <div className="lg:pt-4">
           <Reveal className="mt-10">
-            <h1 className="font-display text-h1">{BAND[carry.band].line}</h1>
+            {/* A live region wrapping the heading rather than replacing it:
+                role="status" on the h1 itself would trade away the heading.
+                Handing a commitment back or switching student changes this
+                sentence without moving focus, so nothing would announce it. */}
+            <div role="status">
+              <h1 className="font-display text-h1">{BAND[carry.band].line}</h1>
+            </div>
           </Reveal>
 
           <Reveal delay={0.06} className="mt-8">

@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import type { BandKey } from "@/lib/engine/types";
-import { TODAY } from "@/lib/copy";
+import { CARRY_LABEL, TODAY } from "@/lib/copy";
 
 const TONE: Record<BandKey, string> = {
   light: "bg-sage",
@@ -26,7 +26,13 @@ export function CarryBar({ ratio, band }: { ratio: number; band: BandKey }) {
 
   return (
     <div className="w-full">
-      <div className="relative h-12 w-full rounded-full bg-raised">
+      {/* One graphic with one sentence. role="img" makes the band and the
+          marker presentational, so nothing inside can leak a stray label. */}
+      <div
+        role="img"
+        aria-label={CARRY_LABEL[band]}
+        className="relative h-12 w-full rounded-full bg-raised"
+      >
         {/* the comfortable band */}
         <div
           className="absolute inset-y-0 rounded-full bg-clay-100"
@@ -35,9 +41,13 @@ export function CarryBar({ ratio, band }: { ratio: number; band: BandKey }) {
         {/* where you are */}
         <motion.div
           className={`absolute top-1/2 h-9 w-2.5 -translate-y-1/2 rounded-full ${TONE[band]}`}
-          initial={still ? false : { left: "50%", opacity: 0 }}
+          initial={false}
           animate={{ left: `calc(${pos * 100}% - 5px)`, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 120, damping: 20 }}
+          transition={
+            still
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 120, damping: 20 }
+          }
         />
       </div>
       <div className="mt-2 flex justify-center">
