@@ -34,6 +34,11 @@ export const eventLoad = (e: LoadEvent): number =>
   e.hours * INTENSITY_WEIGHT[e.intensity];
 
 export function bandFor(ratio: number): BandKey {
+  // Every comparison against NaN is false, so without this guard a missing
+  // or corrupt ratio falls all the way through and tells someone they are
+  // carrying too much. "We don't know you yet" is the honest answer, and it
+  // matches the neutral 1.0 computeCarry returns on a cold start.
+  if (!Number.isFinite(ratio)) return "usual";
   if (ratio < BAND_EDGES.light) return "light";
   if (ratio < BAND_EDGES.usual) return "usual";
   if (ratio < BAND_EDGES.busy) return "busy";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import Link from "next/link";
 import { addDays, format } from "date-fns";
 import { AddCommitmentSheet } from "@/components/app/AddCommitmentSheet";
@@ -14,13 +14,14 @@ import { AHEAD, AREAS, BAND, PRODUCT } from "@/lib/copy";
 import { toISODate } from "@/lib/engine/dates";
 import { putDownReason, suggestPutDown, whenLabel } from "@/lib/engine/putdown";
 import { useCarry, usePikul } from "@/lib/store";
+import { useHydrated } from "@/lib/useHydrated";
 import { PERSONAS } from "@/lib/seed/personas";
 
 export default function TodayPage() {
   // The seed is derived from the real date and the store rehydrates from
-  // localStorage, so render nothing until mounted rather than risk a
-  // server/client mismatch mid-demo.
-  const [mounted, setMounted] = useState(false);
+  // localStorage, so render nothing until the client has taken over rather
+  // than risk a server/client mismatch mid-demo.
+  const hydrated = useHydrated();
   const reset = usePikul((s) => s.reset);
   const setPersona = usePikul((s) => s.setPersona);
 
@@ -31,7 +32,6 @@ export default function TodayPage() {
     if (q.get("reset") === "1") reset();
     const p = q.get("persona");
     if (p && PERSONAS.some((x) => x.id === p)) setPersona(p);
-    setMounted(true);
   }, [reset, setPersona]);
 
   const { persona, asOf, events, carry, handedBack } = useCarry();
@@ -52,7 +52,7 @@ export default function TodayPage() {
       .sort((a, b) => (a.date === b.date ? b.hours - a.hours : a.date.localeCompare(b.date)));
   }, [events, asOf]);
 
-  if (!mounted) {
+  if (!hydrated) {
     return <div className="min-h-screen bg-linen" />;
   }
 

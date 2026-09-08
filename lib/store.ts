@@ -1,11 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { LoadEvent } from "./engine/types";
 import { computeCarry } from "./engine/acwr";
 import { toISODate } from "./engine/dates";
-import { demoAsOf, generateEvents } from "./seed/generateSemester";
+import { seedEvents, stableAsOf } from "./seed/cache";
 import { DEFAULT_PERSONA, personaById } from "./seed/personas";
 
 interface PikulState {
@@ -57,30 +58,43 @@ export const usePikul = create<PikulState>()(
       setRecovery: (recovery) => set({ recovery }),
       reset: () => set({ personaId: DEFAULT_PERSONA.id, ...empty() }),
     }),
-    { name: "pikul-demo" },
+    {
+      name: "pikul-demo",
+      // A browser that already holds a v1 blob — the presenter's, mid-rehearsal —
+      // must not restore a shape the newer screens do not expect.
+      version: 2,
+      migrate: (persisted, from) =>
+        from < 2 ? { ...(persisted as object), recovery: null } : persisted,
+    },
   ),
 );
 
 /** Seed events are regenerated rather than stored: the generator is
  *  deterministic, so this is cheaper than persisting 280 rows and it can
- *  never drift out of sync with the engine. */
+ *  never drift out of sync with the engine.
+ *
+ *  Memoised on three primitives. Without this the whole body reran on every
+ *  render — and because it handed back a fresh asOf and a fresh events array
+ *  each time, it also invalidated every useMemo downstream of it. */
 export function useCarry() {
   const personaId = usePikul((s) => s.personaId);
   const userEvents = usePikul((s) => s.userEvents);
   const putDownId = usePikul((s) => s.putDownId);
 
-  const persona = personaById(personaId);
-  const asOf = demoAsOf();
-  const all = [...generateEvents(persona, asOf), ...userEvents];
-  // A commitment that has been handed back is gone from every calculation,
-  // not merely crossed out — otherwise the relief is cosmetic.
-  const events = putDownId ? all.filter((e) => e.id !== putDownId) : all;
-  const handedBack = putDownId ? (all.find((e) => e.id === putDownId) ?? null) : null;
-  const today = toISODate(asOf);
-  const carry = computeCarry(
-    events.filter((e) => e.date <= today),
-    asOf,
-  );
+  return useMemo(() => {
+    const persona = personaById(personaId);
+    const asOf = stableAsOf();
+    const all = [...seedEvents(persona, asOf), ...userEvents];
+    // A commitment that has been handed back is gone from every calculation,
+    // not merely crossed out — otherwise the relief is cosmetic.
+    const events = putDownId ? all.filter((e) => e.id !== putDownId) : all;
+    const handedBack = putDownId ? (all.find((e) => e.id === putDownId) ?? null) : null;
+    const today = toISODate(asOf);
+    const carry = computeCarry(
+      events.filter((e) => e.date <= today),
+      asOf,
+    );
 
-  return { persona, asOf, events, carry, handedBack };
+    return { persona, asOf, events, carry, handedBack };
+  }, [personaId, userEvents, putDownId]);
 }
