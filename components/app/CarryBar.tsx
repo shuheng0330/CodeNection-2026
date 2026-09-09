@@ -25,19 +25,22 @@ export function CarryBar({ ratio, band }: { ratio: number; band: BandKey }) {
   const usualTo = ((1.1 - 0.5) / 1.3) * 100;
 
   return (
-    <div className="w-full">
-      {/* One graphic with one sentence. role="img" makes the band and the
-          marker presentational, so nothing inside can leak a stray label. */}
-      {/* The hairline is not decoration.
-          On /compare the highlighted card is clay-tinted, and the track's own
-          warm fill vanishes into it — the band and marker were floating on
-          nothing. An outline keeps the whole scale legible on every ground
-          this bar is placed on. */}
-      <div
-        role="img"
-        aria-label={CARRY_LABEL[band]}
-        className="relative h-12 w-full rounded-full border border-hairline bg-raised"
-      >
+    /* One graphic, one sentence.
+       role="img" sits on the whole thing rather than on the track alone, so
+       the "your usual" caption underneath is covered by the label instead of
+       being read out on its own — two words that mean nothing by themselves.
+       The band-specific sentence is ours; the line explaining what the shaded
+       area is came from Thong's version and is the half a screen reader
+       genuinely cannot infer. */
+    <div
+      className="w-full"
+      role="img"
+      aria-label={`${CARRY_LABEL[band]} ${TODAY.bandExplainer}`}
+    >
+      {/* The hairline is not decoration. On /compare the highlighted card is
+          clay-tinted and the track's own warm fill vanishes into it, leaving
+          the band and marker floating on nothing. */}
+      <div className="relative h-12 w-full rounded-full border border-hairline bg-raised">
         {/* the comfortable band */}
         <div
           className="absolute inset-y-0 rounded-full bg-clay-100"

@@ -252,6 +252,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
 
                   <div className="mt-2 flex flex-wrap items-baseline gap-4">
                     <button
+                      type="button"
                       onClick={() => setSwapping((s) => !s)}
                       className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
                     >
@@ -259,6 +260,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                     </button>
                     {!isSample && (
                       <button
+                        type="button"
                         onClick={() => {
                           setMessage(demo.message);
                           setEdited({ title: demo.candidate.title });
@@ -347,6 +349,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         <div className="flex flex-wrap gap-2">
                           {CATEGORIES.map((c) => (
                             <button
+                              type="button"
                               key={c}
                               onClick={() => set("category", c)}
                               aria-pressed={category === c}
@@ -368,6 +371,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                             const level = String(i + 1);
                             return (
                               <button
+                                type="button"
                                 key={level}
                                 onClick={() => set("intensity", level)}
                                 aria-pressed={intensity === level}
@@ -434,6 +438,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         <div className="mt-3 flex gap-2">
                           {NO_BUTTON.tones.map((t) => (
                             <button
+                              type="button"
                               key={t.key}
                               onClick={() => {
                                 setTone(t.key as Tone);
@@ -458,6 +463,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         </div>
 
                         <button
+                          type="button"
                           onClick={copyReply}
                           className="mt-3 min-h-11 w-full rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-500"
                         >
@@ -473,6 +479,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                       </div>
 
                       <button
+                        type="button"
                         onClick={() => setStep(0)}
                         className="mt-6 min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
                       >
@@ -493,6 +500,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               <div className="sticky bottom-0 -mx-6 mt-7 border-t border-hairline bg-surface px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4">
                 {step === 0 && (
                   <button
+                    type="button"
                     onClick={() => setStep(1)}
                     className="min-h-11 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
                   >
@@ -508,6 +516,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                     <div className="mt-2.5 flex gap-2">
                       {(["yes", "no"] as const).map((d) => (
                         <button
+                          type="button"
                           key={d}
                           onClick={() => answer(d)}
                           aria-pressed={decided === d}
@@ -532,6 +541,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                             : NO_BUTTON.declinedNote}
                         </p>
                         <button
+                          type="button"
                           onClick={() => {
                             undoAsk(intentId);
                             setDecided(null);
@@ -547,6 +557,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                 )}
 
                 <button
+                  type="button"
                   onClick={close}
                   className="min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
                 >
@@ -562,6 +573,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   return (
     <>
       <button
+        type="button"
         onClick={() => {
           setIntentId(`ask-${Date.now()}`);
           setOpen(true);
@@ -606,6 +618,7 @@ function CannotPrice({
       </ul>
       <p className="mt-4 text-sm text-ink-faint">{NO_BUTTON.fixHint}</p>
       <button
+        type="button"
         onClick={onBack}
         className="mt-6 min-h-11 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
       >

@@ -67,6 +67,11 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
     [title, date, hours, category, intensity, asOf],
   );
 
+  // Which box is actually wrong, so the invalid state lands on that control
+  // rather than on the form as a whole.
+  const badDate = check.problems.some((p) => p.startsWith("date-"));
+  const badHours = check.problems.some((p) => p.startsWith("hours-"));
+
   const repaste = (text: string) => {
     setRaw(text);
     setEdited({});
@@ -170,6 +175,8 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                       value={date}
                       min={toISODate(asOf)}
                       onChange={(e) => set("date", e.target.value)}
+                      aria-invalid={badDate || undefined}
+                      aria-describedby={badDate ? problemsId : undefined}
                       className="w-full rounded-2xl border border-hairline px-4 py-3"
                     />
                   </Row>
@@ -181,17 +188,20 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                       step={0.5}
                       value={hours}
                       onChange={(e) => set("hours", e.target.value)}
+                      aria-invalid={badHours || undefined}
+                      aria-describedby={badHours ? problemsId : undefined}
                       className="tnum w-full rounded-2xl border border-hairline px-4 py-3"
                     />
                   </Row>
                 </div>
 
-                <Row label="" guessed={isGuess("category")}>
+                <ChoiceRow label={ADD.fields.category} guessed={isGuess("category")}>
                   <div className="flex flex-wrap gap-2">
                     {CATEGORIES.map((c) => (
                       <button
+                        type="button"
                         key={c}
-                        onClick={() => set("category", c)}
+                                                onClick={() => set("category", c)}
                         aria-pressed={category === c}
                         className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors ${
                           category === c
@@ -203,16 +213,20 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                       </button>
                     ))}
                   </div>
-                </Row>
+                </ChoiceRow>
 
-                <Row label={ADD.fields.intensity} guessed={isGuess("intensity")}>
+                <ChoiceRow
+                  label={ADD.fields.intensity}
+                  guessed={isGuess("intensity")}
+                >
                   <div className="flex gap-2">
                     {ADD.intensityScale.map((label, i) => {
                       const level = String(i + 1);
                       return (
                         <button
+                          type="button"
                           key={level}
-                          onClick={() => set("intensity", level)}
+                                                    onClick={() => set("intensity", level)}
                           aria-pressed={intensity === level}
                           className={`min-h-11 flex-1 rounded-2xl border px-1 py-2 text-xs transition-colors ${
                             intensity === level
@@ -225,7 +239,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                       );
                     })}
                   </div>
-                </Row>
+                </ChoiceRow>
               </div>
 
               {/* The action, pinned — the same treatment the request sheet
@@ -251,6 +265,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                 )}
 
                 <button
+                  type="button"
                   onClick={submit}
                   disabled={!check.ok}
                   aria-describedby={check.ok ? undefined : problemsId}
@@ -259,6 +274,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                   {ADD.submit}
                 </button>
                 <button
+                  type="button"
                   onClick={close}
                   className="min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
                 >
@@ -274,6 +290,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
   return (
     <>
       <button
+        type="button"
         onClick={() => setOpen(true)}
         className="min-h-11 w-full rounded-full border border-hairline px-6 py-3.5 font-medium text-ink transition-colors hover:bg-raised"
       >
@@ -284,6 +301,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
   );
 }
 
+/** One field with one control: a label wrapping its input. */
 function Row({
   label,
   guessed,
@@ -309,5 +327,42 @@ function Row({
       )}
       {children}
     </label>
+  );
+}
+
+/**
+ * One question with several buttons under it.
+ *
+ * Thong's, kept over my version of the same thing. A `<label>` can only name
+ * one control, so wrapping a row of eight category buttons in one made the
+ * label meaningless — and the category group had no visible question at all.
+ * A fieldset and legend is what a group of choices actually is, and it gets
+ * announced when focus enters any button in it.
+ */
+function ChoiceRow({
+  label,
+  guessed,
+  children,
+}: {
+  label: string;
+  guessed: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <fieldset>
+      <legend className="mb-2">
+        <span className="flex items-baseline gap-2">
+          <span className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+            {label}
+          </span>
+          {guessed && (
+            <span className="rounded-full bg-raised px-2 py-0.5 text-[11px] text-ink-faint">
+              {ADD.guessed}
+            </span>
+          )}
+        </span>
+      </legend>
+      {children}
+    </fieldset>
   );
 }

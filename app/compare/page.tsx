@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { CarryBar } from "@/components/app/CarryBar";
-import { RouteHeader } from "@/components/app/decision/RouteHeader";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
 import { ADD, BAND, COMPARE, NO_BUTTON } from "@/lib/copy";
 import { computeCarry } from "@/lib/engine/acwr";
@@ -107,10 +107,9 @@ export default function ComparePage() {
   const revealed = picked !== null;
 
   return (
-    <div className="mx-auto w-full max-w-lg px-5 pb-24 pt-8 lg:max-w-5xl lg:px-10 lg:pt-10">
-      <RouteHeader current="/compare" />
-
-      <main>
+    <AppShell>
+      {/* pb-28 on a phone clears the shell's fixed bottom bar. */}
+      <main className="mx-auto w-full max-w-lg px-5 pb-28 pt-8 lg:max-w-5xl lg:px-10 lg:pb-20 lg:pt-10">
         <Reveal className="mt-10 max-w-2xl">
           <h1 className="text-balance font-display text-h1">{COMPARE.title}</h1>
           <p className="mt-4 text-lead text-ink-muted">{COMPARE.lead}</p>
@@ -279,6 +278,6 @@ export default function ComparePage() {
           )}
         </AnimatePresence>
       </main>
-    </div>
+    </AppShell>
   );
 }

@@ -1,31 +1,20 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import Link from "next/link";
+import { useMemo } from "react";
 import { CollisionCard } from "@/components/app/CollisionCard";
 import { NoButton } from "@/components/app/NoButton";
 import { WeekPanels } from "@/components/app/WeekPanels";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { PRODUCT, WEEK } from "@/lib/copy";
+import { WEEK } from "@/lib/copy";
 import { collisions } from "@/lib/engine/collisions";
 import { weeksAhead } from "@/lib/engine/horizon";
 import { CURRENT_WEEK } from "@/lib/seed/generateSemester";
-import { PERSONAS } from "@/lib/seed/personas";
-import { useCarry, usePikul } from "@/lib/store";
+import { useCarry } from "@/lib/store";
 import { useHydrated } from "@/lib/useHydrated";
 
 export default function WeekPage() {
   const hydrated = useHydrated();
-  const reset = usePikul((s) => s.reset);
-  const setPersona = usePikul((s) => s.setPersona);
-
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search);
-    if (q.get("reset") === "1") reset();
-    const p = q.get("persona");
-    if (p && PERSONAS.some((x) => x.id === p)) setPersona(p);
-  }, [reset, setPersona]);
-
   const { asOf, events } = useCarry();
 
   const weeks = useMemo(
@@ -46,19 +35,8 @@ export default function WeekPage() {
   if (!hydrated) return <div className="min-h-screen bg-linen" />;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-24 pt-10 lg:max-w-6xl lg:px-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="inline-flex min-h-11 items-center text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {WEEK.backToToday}
-        </Link>
-      </header>
-
+    <AppShell>
+      <main className="mx-auto min-h-screen w-full max-w-lg px-4 pb-28 pt-10 sm:px-5 lg:max-w-6xl lg:px-10">
       <Reveal className="mt-10">
         <h1 className="font-display text-h1">{WEEK.title}</h1>
         <p className="mt-4 max-w-xl text-lead text-ink-muted">{WEEK.lead}</p>
@@ -75,12 +53,13 @@ export default function WeekPage() {
       </Reveal>
 
       <Reveal delay={0.14} className="mt-10">
-        <WeekPanels weeks={weeks} />
+        <WeekPanels weeks={weeks} events={events} />
       </Reveal>
 
       <Reveal delay={0.2} className="mx-auto mt-12 max-w-lg">
         <NoButton events={events} asOf={asOf} />
       </Reveal>
-    </main>
+      </main>
+    </AppShell>
   );
 }

@@ -51,19 +51,20 @@ export const PRODUCT = {
  * the same list and the per-page headers come out.
  */
 export const NAV = {
-  items: [
-    { href: "/today", label: "Today", short: "Today" },
-    { href: "/week", label: "The weeks ahead", short: "Week" },
-    { href: "/recover", label: "Recover", short: "Recover" },
-    { href: "/asks", label: "What you were asked", short: "Asks" },
-    { href: "/compare", label: "Compare", short: "Compare" },
-    { href: "/method", label: "How it works", short: "Method" },
-  ],
-  /** the phone bar keeps four and hides the rest behind this */
+  appLabel: "Your week",
+  primaryLabel: "Pikul",
+  secondaryLabel: "More from Pikul",
+  mobileLabel: "Pikul pages",
+  skip: "Skip to content",
+  today: "Today",
+  week: "Week",
+  recover: "Recover",
+  asks: "Asks",
   more: "More",
-  /** spoken name for the nav landmark */
-  landmark: "Sections",
-  home: "Pikul home",
+  moreTitle: "More from Pikul",
+  compare: "Compare weeks",
+  method: "How it works",
+  closeMore: "Close more pages",
 } as const;
 
 type BandCopy = {
@@ -131,6 +132,9 @@ export const QUIETLY = {
 export const TODAY = {
   weekLabel: "This week",
   usualBandLabel: "your usual",
+  /** Thong's addition, kept: the band means nothing to someone who cannot
+   *  see it shaded, and no per-band sentence should have to repeat it. */
+  bandExplainer: "The shaded area marks your usual.",
 } as const;
 
 /* ── Ku · what the bar says out loud ─────────────────────────────────── */
@@ -243,12 +247,14 @@ export const AHEAD = {
 
 /* ── Thong · the decisions, kept ─────────────────────────────────────── */
 export const ASKS = {
+  eyebrow: "Decision history",
   title: "What you were asked",
   lead: "Every request you priced, and what you decided. Both answers count the same.",
   empty: "Nothing yet. The next time someone asks you for something, price it first.",
   emptyAction: "Try it",
   tookOn: "took on",
-  handedBack: "handed back",
+  keptFree: "kept free",
+  historyTitle: "Each decision",
   hours: (h: number): string => `${Math.round(h)}h`,
   /** "118% of a usual week in week 11" */
   cost: (pct: number, week: string): string => `${pct}% of a usual week in ${week}`,
@@ -264,6 +270,7 @@ export const ASKS = {
 
 /* ── Thong · showing the working ─────────────────────────────────────── */
 export const METHOD = {
+  eyebrow: "The method",
   title: "How this works",
   lead: "No model, no guessing, and nothing about you leaves your phone. Here is the whole of it.",
   steps: [
@@ -302,7 +309,9 @@ export const METHOD = {
 
 /* ── Thong · time that is already yours ──────────────────────────────── */
 export const RECOVER = {
+  eyebrow: "Recovery",
   title: "Somewhere to put the time down",
+  lead: "Find time that is already yours, then decide what you want to protect it for.",
   found: "The quietest day you have coming",
   /** "Saturday is the quietest day in your next ten." */
   foundLine: (day: string): string =>
@@ -379,6 +388,16 @@ export const COMPARE = {
 export const WEEK = {
   title: "The weeks ahead",
   lead: "Everything already on your calendar, weighed the same way as this week.",
+  livingTitle: "Pick a day. See what is in it.",
+  livingLead:
+    "Four weeks on the same scale, so a tall day means the same thing in every panel.",
+  sharedScale: "One shared scale",
+  selectHint: "Choose a day to open it.",
+  heaviestWeek: "Your heaviest week ahead.",
+  selectedDay: "Selected day",
+  alreadyCarried: "Already carried",
+  dayEmpty: "Nothing is planned for this day.",
+  noHorizon: "There are no weeks to show yet.",
   empty: "Nothing on this week.",
   wallLabel: "Worth knowing about now",
   /** "Week 11 is the one to watch — seven things land across four days." */
@@ -390,6 +409,24 @@ export const WEEK = {
     "None of it is optional, so the thing that helps is not adding anything to it.",
   quiet: "Nothing ahead looks unusual for you.",
   hoursLabel: (h: number): string => `${Math.round(h)}h`,
+  eventHours: (h: number): string =>
+    h < 1 ? "under an hour" : `${Number.isInteger(h) ? h : h.toFixed(1)}h`,
+  weekSummary: (label: string, hours: number): string =>
+    `${label}, ${Math.round(hours)} hours`,
+  daysLabel: (label: string): string => `Days in ${label}`,
+  dayLabel: (date: string, hours: number, past: boolean): string =>
+    `${date}, ${Math.round(hours)} hours${past ? ", already carried" : ""}`,
+  dayDetailsLabel: (date: string): string => `Commitments for ${date}`,
+  categories: {
+    class: "Class",
+    assignment: "Assignment",
+    shift: "Shift",
+    commute: "Commute",
+    family: "Family",
+    social: "Social",
+    club: "Club",
+    admin: "Admin",
+  },
   backToToday: "Today",
 } as const;
 
@@ -408,6 +445,9 @@ export const ADD = {
     title: "What is it",
     date: "When",
     hours: "How long",
+    /** Thong's addition, kept: the category chips were an unlabelled group,
+     *  which is a row of buttons with no question attached to them. */
+    category: "What kind of thing?",
     intensity: "How much does this take out of you?",
   },
   intensityScale: ["Barely", "A little", "Some", "A lot", "Everything"],

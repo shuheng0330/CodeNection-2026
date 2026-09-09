@@ -75,6 +75,7 @@ export function PutDownCard({
           <div className="mt-3 flex flex-wrap gap-2">
             {PUT_DOWN.recovery.map((r) => (
               <button
+                type="button"
                 key={r.key}
                 onClick={() => setRecovery(recovery === r.key ? null : r.key)}
                 aria-pressed={recovery === r.key}
@@ -103,6 +104,7 @@ export function PutDownCard({
         </fieldset>
 
         <button
+          type="button"
           onClick={pickUpAgain}
           className="mt-5 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
         >
@@ -163,6 +165,7 @@ export function PutDownCard({
 
               <div className="mt-5 flex flex-wrap gap-2">
                 <button
+                  type="button"
                   onClick={() => {
                     putDown(suggestion.event.id);
                     setPreviewing(false);
@@ -172,6 +175,7 @@ export function PutDownCard({
                   {PUT_DOWN.previewConfirm}
                 </button>
                 <button
+                  type="button"
                   onClick={() => setPreviewing(false)}
                   className="min-h-11 flex-1 rounded-full border border-dusk/30 px-6 py-3 text-ink-muted transition-colors hover:bg-dusk-100"
                 >
