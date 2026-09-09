@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { format, parseISO } from "date-fns";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { PUT_DOWN, putDownLine, reclaimedLine } from "@/lib/copy";
 import type { PutDown, PutDownReason } from "@/lib/engine/putdown";
 import { whenLabel } from "@/lib/engine/putdown";
 import type { LoadEvent } from "@/lib/engine/types";
 import { spring } from "@/lib/motion";
+import { freeBlocks } from "@/lib/engine/recover";
 import { usePikul } from "@/lib/store";
 
 /**
@@ -21,18 +23,31 @@ export function PutDownCard({
   handedBack,
   reason,
   asOf,
+  events,
 }: {
   suggestion: PutDown | null;
   handedBack: LoadEvent | null;
   reason: PutDownReason;
   asOf: Date;
+  events: LoadEvent[];
 }) {
   const still = useReducedMotion();
+  const [previewing, setPreviewing] = useState(false);
   const putDown = usePikul((s) => s.putDown);
   const pickUpAgain = usePikul((s) => s.pickUpAgain);
   const recovery = usePikul((s) => s.recovery);
   const setRecovery = usePikul((s) => s.setRecovery);
-  const [confirming, setConfirming] = useState(false);
+
+  // What the week would look like without it. Computed, never saved — the
+  // preview has to be able to be cancelled with nothing left behind.
+  const freedDay = useMemo(() => {
+    if (!suggestion) return null;
+    const without = events.filter((e) => e.id !== suggestion.event.id);
+    const gained = freeBlocks(without, asOf).filter(
+      (b) => !freeBlocks(events, asOf).some((had) => had.date === b.date),
+    );
+    return gained[0] ? format(parseISO(gained[0].date), "EEEE") : null;
+  }, [suggestion, events, asOf]);
 
   // ---- after: the time is back, and it belongs to them ----
   if (handedBack) {
@@ -60,6 +75,7 @@ export function PutDownCard({
           <div className="mt-3 flex flex-wrap gap-2">
             {PUT_DOWN.recovery.map((r) => (
               <button
+                type="button"
                 key={r.key}
                 onClick={() => setRecovery(recovery === r.key ? null : r.key)}
                 aria-pressed={recovery === r.key}
@@ -88,6 +104,7 @@ export function PutDownCard({
         </fieldset>
 
         <button
+          type="button"
           onClick={pickUpAgain}
           className="mt-5 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
         >
@@ -112,41 +129,74 @@ export function PutDownCard({
         <p className="mt-2 text-ink-muted">
           {putDownLine(suggestion.hoursBack, suggestion.when)}
         </p>
-        {confirming ? (
-          <div className="mt-5 rounded-2xl border border-dusk/30 bg-surface/70 p-4">
-            <p className="font-medium text-ink">{PUT_DOWN.confirmTitle}</p>
-            <p className="mt-2 text-sm text-ink-muted">
-              {suggestion.event.title} · {putDownLine(suggestion.hoursBack, suggestion.when)}
-            </p>
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirming(false);
-                  putDown(suggestion.event.id);
-                }}
-                className="min-h-11 rounded-full bg-dusk px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-              >
-                {PUT_DOWN.confirmAction}
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfirming(false)}
-                className="min-h-11 rounded-full border border-dusk/30 px-5 py-3 text-sm font-medium text-ink-muted transition-colors hover:bg-dusk-100"
-              >
-                {PUT_DOWN.cancelAction}
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setConfirming(true)}
-            className="mt-5 min-h-11 w-full rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
-          >
-            {PUT_DOWN.action}
-          </button>
-        )}
+
+        <AnimatePresence initial={false} mode="wait">
+          {previewing ? (
+            <motion.div
+              key="preview"
+              initial={still ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="mt-5 border-t border-dusk/20 pt-5"
+            >
+              <p className="text-micro uppercase tracking-[0.08em] text-dusk">
+                {PUT_DOWN.previewTitle}
+              </p>
+              <p className="mt-3 text-ink">
+                {PUT_DOWN.previewIntro(suggestion.event.title)}
+              </p>
+              <ul className="mt-2 grid gap-1.5">
+                <li className="flex gap-3 text-ink-muted">
+                  <span aria-hidden className="mt-2.5 h-1 w-3 shrink-0 rounded-full bg-dusk" />
+                  <span>
+                    {PUT_DOWN.previewHours(suggestion.hoursBack, suggestion.when)}
+                  </span>
+                </li>
+                {freedDay && (
+                  <li className="flex gap-3 text-ink-muted">
+                    <span aria-hidden className="mt-2.5 h-1 w-3 shrink-0 rounded-full bg-dusk" />
+                    <span>{PUT_DOWN.previewOpensDay(freedDay)}</span>
+                  </li>
+                )}
+              </ul>
+
+              {/* The half nobody else would print. */}
+              <p className="mt-4 text-sm text-ink-faint">{PUT_DOWN.previewUnchanged}</p>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    putDown(suggestion.event.id);
+                    setPreviewing(false);
+                  }}
+                  className="min-h-11 flex-1 rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
+                >
+                  {PUT_DOWN.previewConfirm}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPreviewing(false)}
+                  className="min-h-11 flex-1 rounded-full border border-dusk/30 px-6 py-3 text-ink-muted transition-colors hover:bg-dusk-100"
+                >
+                  {PUT_DOWN.previewCancel}
+                </button>
+              </div>
+              <p className="mt-3 text-sm text-ink-faint">{PUT_DOWN.previewNote}</p>
+            </motion.div>
+          ) : (
+            <motion.button
+              key="offer"
+              initial={still ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPreviewing(true)}
+              className="mt-5 min-h-11 w-full rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
+            >
+              {PUT_DOWN.action}
+            </motion.button>
+          )}
+        </AnimatePresence>
       </motion.div>
     );
   }

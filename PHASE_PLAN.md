@@ -103,7 +103,7 @@ All three write frontend code and test their own desktop/mobile work. Each scree
 
 | Owner | Write ownership |
 |---|---|
-| Ku | `app/today/**`, `app/compare/**`, `lib/engine/**`, `lib/parse/**`, `lib/seed/**`, `lib/store.ts`, `lib/decline.ts`; `components/app/{NoButton,AddCommitmentSheet,CarryBar,AreaBreakdown,PutDownCard,WeightChip}.tsx`; new `components/app/decision/**` |
+| Ku | `app/today/**`, `app/compare/**`, `lib/engine/**`, `lib/parse/**`, `lib/seed/**`, `lib/store.ts`, `lib/decline.ts`; `components/app/{NoButton,AddCommitmentSheet,CarryBar,AreaBreakdown,PutDownCard}.tsx`; `components/app/decision/**` |
 | Lim Wey Cheng | `app/page.tsx`, `app/globals.css`, `app/layout.tsx`, `app/favicon.ico`, new `app/opengraph-image.*`, `components/landing/**`, `public/**` |
 | Thong | `app/{week,recover,asks,method}/**`, `app/(app)/layout.tsx`; `components/app/{WeekPanels,CollisionCard}.tsx`; new `components/app/shell/**`, `components/app/week/**` |
 

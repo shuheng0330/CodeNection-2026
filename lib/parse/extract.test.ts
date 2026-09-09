@@ -39,6 +39,25 @@ describe("normalize", () => {
     expect(normalize("minggu depan")).toBe("next week");
   });
 
+  it("keeps the qualifier attached to the day it qualifies", () => {
+    // The weekday rules used to translate the day and abandon the qualifier
+    // as a Malay word chrono ignores, so "sabtu depan" arrived as "saturday
+    // depan" and read as this Saturday — a week early, with nothing about
+    // the answer looking wrong.
+    expect(normalize("sabtu depan")).toBe("next saturday");
+    expect(normalize("jumaat depan")).toBe("next friday");
+    expect(normalize("khamis ni")).toBe("this thursday");
+    expect(normalize("khamis ini")).toBe("this thursday");
+    expect(normalize("ahad lepas")).toBe("last sunday");
+  });
+
+  it("still reads minggu as a week when it is one", () => {
+    // minggu is both Sunday and week, and "minggu depan" is not next Sunday
+    expect(normalize("minggu depan")).toBe("next week");
+    expect(normalize("hujung minggu depan")).toBe("next saturday");
+    expect(normalize("ahad")).toBe("sunday");
+  });
+
   it("covers the shorthand chrono silently drops", () => {
     expect(normalize("tues")).toBe("tue");
     expect(normalize("weds")).toBe("wed");
@@ -62,6 +81,33 @@ describe("extract", () => {
     expect(d.date.value).toBe("2026-09-12");
     expect(d.hours.value).toBe(8);
     expect(d.category.value).toBe("shift");
+  });
+
+  it("tells this Saturday and next Saturday apart", () => {
+    // The whole forecast is built on this date. A week's error here is
+    // invisible in the answer and changes which week gets charged.
+    expect(extract("sabtu ni", REF).date.value).toBe("2026-09-12");
+    expect(extract("sabtu depan", REF).date.value).toBe("2026-09-19");
+    expect(extract("boleh ganti shift sabtu depan?", REF).date.value).toBe(
+      "2026-09-19",
+    );
+  });
+
+  it("leaves the qualifier out of the title", () => {
+    const d = extract("boleh ganti shift sabtu depan? 9 pagi sampai 5 petang", REF);
+    expect(d.title.value).toBe("Ganti shift");
+    expect(d.hours.value).toBe(8);
+  });
+
+  it("does not drag a day that has passed into the future", () => {
+    // Forward-dating is what makes a bare "jumaat" mean the coming Friday,
+    // and it used to turn "jumaat lepas" into a Friday nobody was asked
+    // about. A day in the past is refused further down the line, which is
+    // the honest answer — but only if it arrives as the past.
+    expect(extract("jumaat lepas", REF).date.value).toBe("2026-09-04");
+    expect(extract("semalam", REF).date.value).toBe("2026-09-06");
+    // and the ordinary forward reading is untouched
+    expect(extract("jumaat", REF).date.value).toBe("2026-09-11");
   });
 
   it("reads dates the way Malaysia writes them", () => {

@@ -15,13 +15,25 @@
  * Enforced before submission by:
  *   npm run gate
  *
- * OWNERSHIP: each block below is owned by one person. Add your strings to
- * YOUR block only — appending to someone else's is how three agents produce
- * a merge conflict in the one file everybody needs.
+ * OWNERSHIP
+ * ---------
+ * Three of us write into this file, so every block carries a name:
+ *
+ *   Ku     Today, Compare, the request flow, the put-down, adding things
+ *   Lim    the landing page, the hero, brand voice
+ *   Thong  navigation, Week, Recover, Asks, Method
+ *
+ * Add strings to YOUR block. Appending to someone else's is how three
+ * people produce a conflict in the one file everybody needs. If you want a
+ * string in a block that isn't yours, say so in the group first — it is a
+ * ten-second conversation and it saves a merge.
+ *
+ * Never reformat the whole file. A prettier pass here rewrites every line
+ * and turns a two-line change into a full-file conflict for the other two.
  */
 import type { BandKey } from "./engine/types";
 
-/* ── FROZEN · nobody edits without telling the team ───────────────── */
+/* ── FROZEN · all three agreed this. Changing it needs a message in the group ─── */
 export const PRODUCT = {
   name: "Pikul",
   /** Malay: to shoulder a load. Also a historic SEA unit of weight. */
@@ -29,7 +41,15 @@ export const PRODUCT = {
   tagline: "You're carrying more than usual.",
 } as const;
 
-/* ── OWNER: Thong (shared app navigation) ────────────────────────── */
+/* ── Thong · getting between screens ─────────────────────────────────── */
+/**
+ * Every route's name in one place, so the shell and the pages that mount it
+ * cannot drift apart. `short` is the phone label — the bottom bar has five
+ * slots and no room for "How it works".
+ *
+ * Today's header reads from here already. When AppShell lands it consumes
+ * the same list and the per-page headers come out.
+ */
 export const NAV = {
   appLabel: "Your week",
   primaryLabel: "Pikul",
@@ -56,7 +76,7 @@ type BandCopy = {
   tone: "sage" | "ember" | "amber" | "rust";
 };
 
-/* ── OWNER: A (engine & app) · band sentences shown on /today ─────── */
+/* ── Ku · the sentence /today leads with ─────────────────────────────── */
 export const BAND: Record<BandKey, BandCopy> = {
   light: {
     line: "This week's lighter than your usual.",
@@ -85,7 +105,7 @@ export const BAND: Record<BandKey, BandCopy> = {
   },
 };
 
-/* ── OWNER: B (landing & design) ──────────────────────────────────── */
+/* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const HERO = {
   eyebrow: "Pikul · to shoulder a load",
   headline: "It's never one big thing.",
@@ -100,7 +120,7 @@ export const HERO = {
   usualLabel: "your usual",
 } as const;
 
-/* ── OWNER: B (landing & design) ──────────────────────────────────── */
+/* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const QUIETLY = {
   a: "No single week broke you.",
   b: "It was the four before it.",
@@ -108,17 +128,47 @@ export const QUIETLY = {
   note: "Your last seven days, weighed against the month behind them.",
 } as const;
 
-/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
+/* ── Ku · Today ──────────────────────────────────────────────────────── */
 export const TODAY = {
   weekLabel: "This week",
   usualBandLabel: "your usual",
-  carryBarLabel: (position: string): string =>
-    `Your week is ${position}. The shaded area marks your usual.`,
+  /** Thong's addition, kept: the band means nothing to someone who cannot
+   *  see it shaded, and no per-band sentence should have to repeat it. */
+  bandExplainer: "The shaded area marks your usual.",
 } as const;
 
-/* ── OWNER: A (engine & app) · where the week actually went ─────── */
+/* ── Ku · what the bar says out loud ─────────────────────────────────── */
+/**
+ * The bar is the product's main output and, until now, it said nothing to a
+ * screen reader — the marker and the band carried everything.
+ *
+ * Deliberately no number. A sighted student cannot read a figure off the bar
+ * either; what they get is which side of the band they are on and roughly how
+ * far. The spoken version has to match that precision, not exceed it. Giving
+ * one group a percentage the design withholds from the other is not a fix.
+ */
+export const CARRY_LABEL: Record<BandKey, string> = {
+  light: "Your week sits below the range you usually carry.",
+  usual: "Your week sits inside the range you usually carry.",
+  busy: "Your week sits a little above the range you usually carry.",
+  heavy: "Your week sits above the range you usually carry.",
+  toomuch: "Your week sits well above the range you usually carry.",
+};
+
+/* ── Ku · where the week actually went ───────────────────────────────── */
 export const AREAS = {
-  title: "What's making this week heavy",
+  /**
+   * A calm week is not heavy, and a heading that insists it is undoes the
+   * sentence directly above it. Nurul's Today read "a bit more than your
+   * usual — still fine" with "what's making this week heavy" underneath.
+   *
+   * The release gate's wording for this is that a calm week must not
+   * manufacture a need to decline. Nor a need to worry.
+   */
+  titleFor: (band: BandKey): string =>
+    band === "heavy" || band === "toomuch"
+      ? "What's making this week heavy"
+      : "Where this week is going",
   labels: {
     coursework: "Coursework",
     work: "Work",
@@ -132,13 +182,10 @@ export const AREAS = {
   empty: "Nothing on this week yet.",
 } as const;
 
-/* ── OWNER: A (engine & app) · the one thing to put down ───────── */
+/* ── Ku · the one thing to put down ──────────────────────────────────── */
 export const PUT_DOWN = {
   title: "One thing worth putting down",
   action: "Hand it back",
-  confirmTitle: "Hand this back?",
-  confirmAction: "Yes, hand it back",
-  cancelAction: "No, keep it",
   undo: "Actually, keep it",
   doneTitle: "Handed back",
   /** Saying nothing is also information: it says the week is heavy for
@@ -150,6 +197,21 @@ export const PUT_DOWN = {
     "all-small":
       "The only flexible things this week are small ones, and handing them back wouldn't buy you enough to feel. What helps now is not taking on anything more.",
   } as Record<string, string>,
+  /* ---- preview, before anything is actually handed back ---- */
+  previewTitle: "Before you do",
+  previewIntro: (title: string): string => `Handing back ${title} would:`,
+  previewHours: (hours: number, when: string): string =>
+    `free about ${Math.round(hours)} hours ${when === "today" || when === "tomorrow" ? when : `on ${when}`}`,
+  previewOpensDay: (day: string): string => `leave ${day} genuinely clear`,
+  /** The honest half. A future commitment coming off does not change a week
+   *  that has already been lived, and pretending otherwise would be the one
+   *  lie this product cannot afford. */
+  previewUnchanged:
+    "It will not change this week's reading. That week has already happened — what changes is what is still ahead of you.",
+  previewConfirm: "Hand it back",
+  previewCancel: "Keep it for now",
+  previewNote: "Nothing is saved until you confirm.",
+
   recoveryTitle: "What would you do with it?",
   recovery: [
     { key: "empty", label: "Leave it empty" },
@@ -170,13 +232,20 @@ export const putDownLine = (hours: number, when: string): string =>
 export const reclaimedLine = (hours: number, when: string): string =>
   `About ${Math.round(hours)} hours ${whenPhrase(when)} are yours again.`;
 
-/* ── OWNER: A (engine & app) · the days you can still change ───── */
+/* ── Ku · the days you can still change ──────────────────────────────── */
 export const AHEAD = {
   title: "Still ahead of you",
   empty: "Nothing else on this week.",
+  /** A day is named by the heaviest thing on it. Naming all of them turns
+   *  this into the backlog the whole product refuses to be. */
+  dayLine: (heaviest: string, others: number): string =>
+    others === 0 ? heaviest : `${heaviest}, and ${others} more`,
+  hours: (h: number): string => (h < 1 ? "under an hour" : `${Math.round(h)}h`),
+  /** Today shows the next few days; the whole run belongs on its own screen. */
+  more: "See the weeks ahead",
 } as const;
 
-/* ── OWNER: A (engine & app) · the decisions, kept ─────────── */
+/* ── Thong · the decisions, kept ─────────────────────────────────────── */
 export const ASKS = {
   eyebrow: "Decision history",
   title: "What you were asked",
@@ -199,7 +268,7 @@ export const ASKS = {
 } as const;
 
 
-/* ── OWNER: A (engine & app) · showing the working ─────────── */
+/* ── Thong · showing the working ─────────────────────────────────────── */
 export const METHOD = {
   eyebrow: "The method",
   title: "How this works",
@@ -238,7 +307,7 @@ export const METHOD = {
 } as const;
 
 
-/* ── OWNER: A (engine & app) · time that is already yours ────── */
+/* ── Thong · time that is already yours ──────────────────────────────── */
 export const RECOVER = {
   eyebrow: "Recovery",
   title: "Somewhere to put the time down",
@@ -273,7 +342,7 @@ export const RECOVER = {
 } as const;
 
 
-/* ── OWNER: A (engine & app) · same hours, different answer ──── */
+/* ── Ku · same hours, different answer ───────────────────────────────── */
 export const COMPARE = {
   title: "Two students, one week each.",
   lead: "One of them is closer to breaking. Before you look at anything else — which?",
@@ -299,11 +368,23 @@ export const COMPARE = {
   askPlaceholder: "eh can you cover my shift this friday 3pm-11pm?",
   askCost: (pct: number, week: string): string =>
     `${pct}% of a usual week in ${week}`,
+  askBeyond: "Too far ahead to price",
+  /** What we made of the message, before either number appears.
+   *  A figure without its input is unfalsifiable, and unfalsifiable is
+   *  exactly the impression this screen is trying not to leave. */
+  askReadTitle: "What we read from that",
+  askRead: (when: string, hours: number, kind: string): string =>
+    `${hours}${hours === 1 ? " hour" : " hours"} of ${kind.toLowerCase()}, on ${when}.`,
+  /** The parser found nothing it recognised, so every field below is ours.
+   *  Saying so is the difference between a demonstration and a magic trick. */
+  askGuessed:
+    "Nothing in that message was something we recognised, so all of it is our guess. Try naming a day and a time.",
+  askProblemTitle: "We can't price that one",
   back: "Today",
 } as const;
 
 
-/* ── OWNER: A (engine & app) · the weeks you can still change ── */
+/* ── Thong · the weeks you can still change ──────────────────────────── */
 export const WEEK = {
   title: "The weeks ahead",
   lead: "Everything already on your calendar, weighed the same way as this week.",
@@ -349,7 +430,7 @@ export const WEEK = {
   backToToday: "Today",
 } as const;
 
-/* ── OWNER: A (engine & app) · paste it, don't type it ──────────── */
+/* ── Ku · paste it, don't type it ────────────────────────────────────── */
 export const ADD = {
   trigger: "Add something",
   title: "What have you taken on?",
@@ -364,10 +445,31 @@ export const ADD = {
     title: "What is it",
     date: "When",
     hours: "How long",
+    /** Thong's addition, kept: the category chips were an unlabelled group,
+     *  which is a row of buttons with no question attached to them. */
     category: "What kind of thing?",
     intensity: "How much does this take out of you?",
   },
   intensityScale: ["Barely", "A little", "Some", "A lot", "Everything"],
+
+  /**
+   * Why this cannot be added yet.
+   *
+   * The old submit handler read a blank or zero hours box and quietly wrote
+   * a one-hour commitment. The student never typed one, never saw one, and
+   * the week moved anyway. Worded for logging something rather than for
+   * pricing a request — there is no forecast on this screen, so the ceiling
+   * the request sheet has does not apply here.
+   */
+  problems: {
+    "hours-missing": "How long it takes is blank, so there is nothing to weigh.",
+    "hours-tiny": "How long it takes has to be more than zero.",
+    "hours-absurd":
+      "That is longer than a day. If it runs across several days, add one for each day.",
+    "date-missing": "The date isn't one we can read.",
+    "date-past": "That day has already gone. Add something that is still ahead of you.",
+  } as Record<string, string>,
+  cannotAdd: "Not quite yet",
   categories: {
     class: "Class",
     assignment: "Coursework",
@@ -380,36 +482,77 @@ export const ADD = {
   } as Record<string, string>,
   submit: "Add it",
   cancel: "Close",
-  invalid: "Check the date and hours before adding this.",
   untitled: "Something",
 } as const;
 
-/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
+/* ── Ku · the request, priced before you answer ──────────────────────── */
 export const NO_BUTTON = {
   trigger: "Someone's asking me for something",
-  step1Title: "What are they asking?",
-  step2Title: "How heavy is it, roughly?",
-  step3Title: "Here's what saying yes costs",
-  weights: [
-    { key: "light", label: "Light", hint: "an hour or two" },
-    { key: "medium", label: "Medium", hint: "half a day" },
-    { key: "heavy", label: "Heavy", hint: "a day or more" },
-  ],
+
+  /* ---- step one: the message, already read ---- */
+  step1Title: "What they're asking",
+  step2Title: "Here's what saying yes costs",
+  /** Nothing here is on anyone's calendar and nothing was received from
+   *  anywhere. Every surface showing it has to say so. */
+  sampleLabel: "sample message",
+  messageLabel: "What they sent",
+  readTitle: "What we read from it",
+  readLead:
+    "We filled this in from the message. Anything wrong is yours to correct — the price follows whatever is in these boxes, not what we guessed.",
+  swap: "Use a different message",
+  swapCancel: "Keep this one",
+  swapLabel: "Paste what they sent you",
+  swapPlaceholder: "eh can you cover my shift this friday 3pm-11pm?",
+  restore: "Back to the sample",
+  next: "See what it costs",
+  back: "Back to the message",
+
+  /* ---- when we will not produce a number ---- */
+  /**
+   * A forecast we cannot honestly compute is refused, not softened. Saying
+   * "this fits" about a request four months away is not caution, it is a
+   * wrong answer delivered confidently — the weeks we can see genuinely do
+   * not contain it, so there is nothing for it to fit into.
+   */
+  cantPriceTitle: "We can't price this one",
+  problems: {
+    "hours-missing": "How long it takes is blank, so there is nothing to weigh.",
+    "hours-tiny": "How long it takes has to be more than zero.",
+    "hours-absurd":
+      "That is longer than a day. If it really runs across several days, add it as one commitment per day.",
+    "date-missing": "The date isn't a date we can read.",
+    "date-past":
+      "That day has already been and gone, so there is no decision left to make about it.",
+    "date-beyond":
+      "That is further out than the four weeks we can see, so we have no week to measure it against. Ask again when it is closer and the answer will mean something.",
+  } as Record<string, string>,
+  fixHint: "Fix it above and the forecast comes back.",
+
+  /* ---- the reply ---- */
   tones: [
     { key: "soften", label: "Soften it" },
     { key: "renegotiate", label: "Offer less" },
     { key: "firm", label: "Hold firm" },
   ],
+  replyTitle: "If the answer is no",
   copyAction: "Copy reply",
   copied: "Copied",
-  copyFailed: "Could not copy. The reply is still selectable above.",
+  /** The clipboard fails in plain HTTP, in some in-app browsers, and whenever
+   *  the tab is not focused. Claiming success when the buffer is empty is
+   *  worse than not offering the button. */
+  copyFailed: "Couldn't copy — select the text above and copy it yourself.",
+  copyManualHint: "Nothing was sent. This is yours to send, or not.",
+
   decisionTitle: "What did you do?",
   /** A yes weighs exactly as much as a no here. A tool that only ever
    *  validates declining is just a different voice telling you what to do. */
   saidYes: "I said yes",
   saidNo: "I said no",
-  logged: "Kept.",
-  alreadyLogged: "Decision kept. Close this sheet to continue.",
+  /** Saying yes puts it on the week. Saying so is the difference between a
+   *  record and a decision. */
+  acceptedNote: "Added to your week, and kept in what you were asked.",
+  declinedNote: "Kept in what you were asked. Nothing was added.",
+  undo: "Change my answer",
   verdict: {
     fits: "This fits.",
     tight: "This would make it tight.",
@@ -418,11 +561,28 @@ export const NO_BUTTON = {
 } as const;
 
 /** "accepting this puts you at 118% of a usual week in week 11" */
-/* ── OWNER: A (engine & app) ──────────────────────────────────────── */
 export const priceLine = (pct: number, weekLabel: string): string =>
   `Saying yes puts you at ${pct}% of a usual week in ${weekLabel}.`;
 
-/* ── OWNER: B (landing & design) ──────────────────────────────────── */
+/**
+ * The same figure with its starting point attached: "week 11 goes from 128%
+ * to 132%".
+ *
+ * The after-figure alone is unreadable — 132% of a usual week sounds severe
+ * until you know the week was already at 128% before anyone asked, at which
+ * point the honest reading is that this request is not what made the week
+ * hard. Withholding the before-figure would let a four-point change carry
+ * the weight of the whole overload, which is exactly the kind of quiet
+ * exaggeration this product cannot afford.
+ */
+export const beforeAfterLine = (
+  before: number,
+  after: number,
+  weekLabel: string,
+): string =>
+  `${weekLabel.charAt(0).toUpperCase()}${weekLabel.slice(1)} is at ${before}% of a usual week already. Saying yes makes it ${after}%.`;
+
+/* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const HOW = {
   title: "How Pikul works",
   body: "Pikul borrows a model athletes use to avoid overtraining: your last seven days, weighed against your own rolling month. Not a target, not a grade — your own normal. Everything you carry converts to one measure, so a shift, an assignment and a family weekend can finally be compared.",
