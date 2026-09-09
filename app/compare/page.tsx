@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { CarryBar } from "@/components/app/CarryBar";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { BAND, COMPARE, PRODUCT } from "@/lib/copy";
+import { BAND, COMPARE } from "@/lib/copy";
 import { computeCarry } from "@/lib/engine/acwr";
 import { toISODate } from "@/lib/engine/dates";
 import { priceCommitment } from "@/lib/engine/forecast";
@@ -85,19 +85,8 @@ export default function ComparePage() {
   const revealed = picked !== null;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-3xl px-5 pb-24 pt-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {COMPARE.back}
-        </Link>
-      </header>
-
+    <AppShell>
+      <main className="mx-auto min-h-screen w-full max-w-3xl px-5 pb-28 pt-10">
       <Reveal className="mt-10">
         <h1 className="font-display text-h1">{COMPARE.title}</h1>
         <p className="mt-4 text-lead text-ink-muted">{COMPARE.lead}</p>
@@ -223,6 +212,7 @@ export default function ComparePage() {
           </motion.section>
         )}
       </AnimatePresence>
-    </main>
+      </main>
+    </AppShell>
   );
 }

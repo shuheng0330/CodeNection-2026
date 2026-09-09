@@ -29,6 +29,24 @@ export const PRODUCT = {
   tagline: "You're carrying more than usual.",
 } as const;
 
+/* ── OWNER: Thong (shared app navigation) ────────────────────────── */
+export const NAV = {
+  appLabel: "Your week",
+  primaryLabel: "Pikul",
+  secondaryLabel: "More from Pikul",
+  mobileLabel: "Pikul pages",
+  skip: "Skip to content",
+  today: "Today",
+  week: "Week",
+  recover: "Recover",
+  asks: "Asks",
+  more: "More",
+  moreTitle: "More from Pikul",
+  compare: "Compare weeks",
+  method: "How it works",
+  closeMore: "Close more pages",
+} as const;
+
 type BandCopy = {
   /** the sentence shown on /today */
   line: string;

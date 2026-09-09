@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { METHOD, PRODUCT } from "@/lib/copy";
+import { METHOD } from "@/lib/copy";
 
 export const metadata: Metadata = {
   title: "How Pikul works",
@@ -26,19 +26,8 @@ export const metadata: Metadata = {
  */
 export default function MethodPage() {
   return (
-    <main className="mx-auto min-h-screen w-full max-w-2xl px-5 pb-24 pt-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {METHOD.back}
-        </Link>
-      </header>
-
+    <AppShell>
+      <main className="mx-auto min-h-screen w-full max-w-2xl px-5 pb-28 pt-10">
       <Reveal className="mt-10">
         <h1 className="font-display text-h1">{METHOD.title}</h1>
         <p className="mt-4 text-lead text-ink-muted">{METHOD.lead}</p>
@@ -76,6 +65,7 @@ export default function MethodPage() {
         <p className="font-display text-xl text-ink">{METHOD.privacyTitle}</p>
         <p className="mt-3 text-ink-muted">{METHOD.privacy}</p>
       </Reveal>
-    </main>
+      </main>
+    </AppShell>
   );
 }

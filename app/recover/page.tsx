@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { PRODUCT, RECOVER } from "@/lib/copy";
+import { RECOVER } from "@/lib/copy";
 import { suggestPutDown } from "@/lib/engine/putdown";
 import { freeBlocks, nextDayIsClear } from "@/lib/engine/recover";
 import { useCarry } from "@/lib/store";
@@ -46,19 +47,8 @@ export default function RecoverPage() {
   const chosenLabel = RECOVER.choices.find((c) => c.key === choice)?.label ?? "";
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-24 pt-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {RECOVER.back}
-        </Link>
-      </header>
-
+    <AppShell>
+      <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-28 pt-10">
       <Reveal className="mt-10">
         <h1 className="font-display text-h1">{RECOVER.title}</h1>
       </Reveal>
@@ -138,6 +128,7 @@ export default function RecoverPage() {
           </div>
         </Reveal>
       )}
-    </main>
+      </main>
+    </AppShell>
   );
 }

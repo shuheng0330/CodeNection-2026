@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import Link from "next/link";
+import { useMemo } from "react";
 import { addDays, format } from "date-fns";
 import { AddCommitmentSheet } from "@/components/app/AddCommitmentSheet";
 import { AreaBreakdown } from "@/components/app/AreaBreakdown";
@@ -9,8 +8,9 @@ import { CarryBar } from "@/components/app/CarryBar";
 import { NoButton } from "@/components/app/NoButton";
 import { PutDownCard } from "@/components/app/PutDownCard";
 import { WeightChip } from "@/components/app/WeightChip";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { AHEAD, AREAS, BAND, PRODUCT, WEEK } from "@/lib/copy";
+import { AHEAD, AREAS, BAND } from "@/lib/copy";
 import { toISODate } from "@/lib/engine/dates";
 import { putDownReason, suggestPutDown, whenLabel } from "@/lib/engine/putdown";
 import { useCarry, usePikul } from "@/lib/store";
@@ -24,15 +24,6 @@ export default function TodayPage() {
   const hydrated = useHydrated();
   const reset = usePikul((s) => s.reset);
   const setPersona = usePikul((s) => s.setPersona);
-
-  // Deep links exist so the demo can be restarted mid-sentence without
-  // anyone clearing localStorage by hand in front of a judge.
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search);
-    if (q.get("reset") === "1") reset();
-    const p = q.get("persona");
-    if (p && PERSONAS.some((x) => x.id === p)) setPersona(p);
-  }, [reset, setPersona]);
 
   const { persona, asOf, events, carry, handedBack } = useCarry();
 
@@ -57,46 +48,11 @@ export default function TodayPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-24 pt-10 lg:max-w-6xl lg:px-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <div className="flex items-baseline gap-5">
-          <Link
-            href="/asks"
-            className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
-          >
-            Asks
-          </Link>
-          <Link
-            href="/method"
-            className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
-          >
-            How it works
-          </Link>
-          <Link
-            href="/recover"
-            className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
-          >
-            Recover
-          </Link>
-          <Link
-            href="/compare"
-            className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
-          >
-            Compare
-          </Link>
-          <Link
-            href="/week"
-            className="text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
-          >
-            {WEEK.title}
-          </Link>
-          <p className="text-sm text-ink-faint">{format(asOf, "EEEE, d MMM")}</p>
-        </div>
-      </header>
-
+    <AppShell>
+      <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-28 pt-8 lg:max-w-6xl lg:px-10 lg:pt-10">
+        <p className="text-right text-sm text-ink-faint">
+          {format(asOf, "EEEE, d MMM")}
+        </p>
       <div className="lg:grid lg:grid-cols-2 lg:gap-x-14">
         {/* ---- see, explain, act ---- */}
         <div className="lg:pt-4">
@@ -186,6 +142,7 @@ export default function TodayPage() {
           </section>
         </div>
       </div>
-    </main>
+      </main>
+    </AppShell>
   );
 }

@@ -3,8 +3,9 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { ASKS, PRODUCT } from "@/lib/copy";
+import { ASKS } from "@/lib/copy";
 import { usePikul } from "@/lib/store";
 import { useHydrated } from "@/lib/useHydrated";
 
@@ -44,19 +45,8 @@ export default function AsksPage() {
   if (!hydrated) return <div className="min-h-screen bg-linen" />;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-24 pt-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {ASKS.back}
-        </Link>
-      </header>
-
+    <AppShell>
+      <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-28 pt-10">
       <Reveal className="mt-10">
         <h1 className="font-display text-h1">{ASKS.title}</h1>
         <p className="mt-4 text-lead text-ink-muted">{ASKS.lead}</p>
@@ -126,6 +116,7 @@ export default function AsksPage() {
           </Reveal>
         </>
       )}
-    </main>
+      </main>
+    </AppShell>
   );
 }
