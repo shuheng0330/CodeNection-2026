@@ -106,7 +106,7 @@ function Panel({
   return (
     <section
       aria-label={WEEK.weekSummary(week.label, week.hours)}
-      className={`rounded-3xl border p-5 transition-colors ${
+      className={`overflow-hidden rounded-3xl border py-5 transition-colors sm:p-5 ${
         containsSelection
           ? "border-dusk/45 bg-dusk-100/35"
           : isPeak
@@ -114,7 +114,7 @@ function Panel({
             : "border-hairline bg-surface"
       }`}
     >
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex items-baseline justify-between gap-3 px-5 sm:px-0">
         <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
           {week.label}
         </p>
@@ -122,7 +122,7 @@ function Panel({
       </div>
 
       <div
-        className="mt-4 grid h-28 grid-cols-7 items-end gap-1"
+        className="mt-4 grid h-28 grid-cols-7 items-end gap-0 sm:gap-1"
         role="group"
         aria-label={WEEK.daysLabel(week.label)}
       >
@@ -138,7 +138,7 @@ function Panel({
         ))}
       </div>
 
-      <p className="mt-4 text-sm text-ink-faint">
+      <p className="mt-4 px-5 text-sm text-ink-faint sm:px-0">
         {isPeak ? WEEK.heaviestWeek : WEEK.selectHint}
       </p>
     </section>

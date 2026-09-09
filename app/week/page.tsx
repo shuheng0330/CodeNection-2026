@@ -36,7 +36,7 @@ export default function WeekPage() {
 
   return (
     <AppShell>
-      <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-28 pt-10 lg:max-w-6xl lg:px-10">
+      <main className="mx-auto min-h-screen w-full max-w-lg px-4 pb-28 pt-10 sm:px-5 lg:max-w-6xl lg:px-10">
       <Reveal className="mt-10">
         <h1 className="font-display text-h1">{WEEK.title}</h1>
         <p className="mt-4 max-w-xl text-lead text-ink-muted">{WEEK.lead}</p>

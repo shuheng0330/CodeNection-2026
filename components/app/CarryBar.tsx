@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import type { BandKey } from "@/lib/engine/types";
-import { TODAY } from "@/lib/copy";
+import { BAND, TODAY } from "@/lib/copy";
 
 const TONE: Record<BandKey, string> = {
   light: "bg-sage",
@@ -25,7 +25,11 @@ export function CarryBar({ ratio, band }: { ratio: number; band: BandKey }) {
   const usualTo = ((1.1 - 0.5) / 1.3) * 100;
 
   return (
-    <div className="w-full">
+    <div
+      className="w-full"
+      role="img"
+      aria-label={TODAY.carryBarLabel(BAND[band].short)}
+    >
       <div className="relative h-12 w-full rounded-full bg-raised">
         {/* the comfortable band */}
         <div

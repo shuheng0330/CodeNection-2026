@@ -38,15 +38,18 @@ Updated 9 September 2026.
 - Deployed commit `5124274` to Vercel at `https://pikul-codenection-2026.vercel.app` with no environment variables.
 - Verified all seven public routes plus reset and persona deep links return HTTP 200.
 - Verified the public landing → Today → Week path in a fresh browser surface and recorded a repeatable demo/deployment runbook.
+- Completed the full route matrix at compact, tablet and desktop-equivalent widths with no horizontal overflow.
+- Added bounded release fixes for sheet focus behavior, clipboard fallback, atomic one-time decisions, add validation, put-down confirmation, CarryBar text alternatives and mobile touch targets.
+- Verified invalid input blocking, decision deduplication, atomic acceptance, put-down cancel/confirm and mobile target sizes in the browser.
 - `npm run verify` passes: voice gate, lint, 74 Vitest tests and the Next.js production build.
 
 ## Next actions
 
 - Team kickoff: confirm availability, official deadline/form, mentor status, sample contract and visual references.
-- Continue route QA and bounded fixes before Friday 11 September, 15:00 MYT; connect automatic Git deployment after the release branch is agreed and merged.
+- Redeploy the bounded QA fixes and run the public smoke path; connect automatic Git deployment after the release branch is agreed and merged.
 - Complete final integration/QA/fixes Friday 15:00–18:00 and freeze by 11 September, 18:00 MYT.
 - Joint README, diagrams, evidence, slides, recording and early submission.
 
 ## Validation limits
 
-Shared navigation, the living week view and supporting routes have been validated locally and on the Vercel deployment, but not yet on a physical Android device using mobile data. Automatic Git deployment is intentionally deferred until the team agrees and merges the production branch. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
+Shared navigation, the living week view and supporting routes have been validated locally and on the earlier Vercel deployment. The bounded QA fixes are ready for redeployment but have not yet been checked on a physical Android device using mobile data. Automatic Git deployment is intentionally deferred until the team agrees and merges the production branch. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
