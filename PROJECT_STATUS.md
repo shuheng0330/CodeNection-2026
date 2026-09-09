@@ -26,6 +26,10 @@ Updated 9 September 2026.
 - Centralised `?reset=1` and `?persona=...` demo-query behaviour in the shell.
 - Removed repeated route headers while keeping the landing page outside the product shell.
 - Verified all six product routes at desktop and mobile widths, including direct loading, active states, More navigation, persona selection, reset and horizontal overflow.
+- Turned the four-week horizon into a living view with 28 keyboard-accessible day selectors on one shared load scale.
+- Defaulted the week view to the heaviest upcoming day and added a truthful detail panel sourced from existing commitments.
+- Kept the heavy-cluster explanation as the single priority signal above the inspectable horizon.
+- Verified pointer and Enter-key day selection in the browser at a compact viewport.
 - `npm run verify` passes: voice gate, lint, 74 Vitest tests and the Next.js production build.
 
 ## Next actions
@@ -37,4 +41,4 @@ Updated 9 September 2026.
 
 ## Validation limits
 
-Shared navigation has been validated locally but not yet on a deployed URL or physical Android device. No commit or deployment was created in this task. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
+Shared navigation and the living week view have been validated locally but not yet on a deployed URL or physical Android device. No commit or deployment was created in this task. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
