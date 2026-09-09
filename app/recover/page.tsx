@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
+import { AppPage, AppPageIntro } from "@/components/app/shell/AppPage";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { PRODUCT, RECOVER } from "@/lib/copy";
+import { RECOVER } from "@/lib/copy";
 import { suggestPutDown } from "@/lib/engine/putdown";
 import { freeBlocks, nextDayIsClear } from "@/lib/engine/recover";
 import { useCarry } from "@/lib/store";
@@ -46,98 +48,101 @@ export default function RecoverPage() {
   const chosenLabel = RECOVER.choices.find((c) => c.key === choice)?.label ?? "";
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-24 pt-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {RECOVER.back}
-        </Link>
-      </header>
+    <AppShell>
+      <AppPage>
+        <Reveal>
+          <AppPageIntro
+            eyebrow={RECOVER.eyebrow}
+            title={RECOVER.title}
+            lead={RECOVER.lead}
+          />
+        </Reveal>
 
-      <Reveal className="mt-10">
-        <h1 className="font-display text-h1">{RECOVER.title}</h1>
-      </Reveal>
+        {best ? (
+          <div className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-start">
+            <Reveal delay={0.08}>
+              <section className="rounded-3xl border border-dusk/25 bg-dusk-100/60 p-6 shadow-soft sm:p-8">
+                <p className="text-micro uppercase tracking-[0.08em] text-dusk">
+                  {RECOVER.found}
+                </p>
+                <h2 className="mt-3 max-w-xl font-display text-h2 text-ink">
+                  {RECOVER.foundLine(dayName)}
+                </h2>
+                <p className="mt-3 max-w-xl text-ink-muted">
+                  {nextDayIsClear(best)
+                    ? RECOVER.clearAfter(nextName)
+                    : RECOVER.busyAfter}
+                </p>
+              </section>
+            </Reveal>
 
-      {best ? (
-        <>
-          <Reveal delay={0.08} className="mt-8">
-            <div className="rounded-3xl border border-dusk/25 bg-dusk-100/60 p-6 shadow-soft">
-              <p className="text-micro uppercase tracking-[0.08em] text-dusk">
-                {RECOVER.found}
-              </p>
-              <p className="mt-3 font-display text-2xl text-ink">
-                {RECOVER.foundLine(dayName)}
-              </p>
-              <p className="mt-2 text-ink-muted">
-                {nextDayIsClear(best)
-                  ? RECOVER.clearAfter(nextName)
-                  : RECOVER.busyAfter}
-              </p>
-            </div>
+            <Reveal delay={0.14}>
+              <section className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+                <h2 className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                  {RECOVER.planTitle}
+                </h2>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {RECOVER.choices.map((item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() =>
+                        setChoice(choice === item.key ? null : item.key)
+                      }
+                      aria-pressed={choice === item.key}
+                      className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors ${
+                        choice === item.key
+                          ? "border-dusk bg-dusk text-white"
+                          : "border-dusk/30 text-ink-muted hover:bg-dusk-100"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div aria-live="polite" className="min-h-20">
+                  {choice && (
+                    <p className="mt-6 font-display text-xl text-dusk">
+                      {RECOVER.planLine(dayName, chosenLabel)}
+                    </p>
+                  )}
+                </div>
+              </section>
+            </Reveal>
+          </div>
+        ) : (
+          <Reveal delay={0.08} className="mt-10 max-w-3xl">
+            <section className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+              <h2 className="font-display text-h2 text-ink">{RECOVER.none}</h2>
+              {suggestion ? (
+                <>
+                  <p className="mt-3 max-w-xl text-lead text-ink-muted">
+                    {RECOVER.noneFix(suggestion.event.title, suggestion.when)}
+                  </p>
+                  <Link
+                    href="/today"
+                    className="mt-6 inline-flex min-h-11 items-center rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
+                  >
+                    {RECOVER.noneAction}
+                  </Link>
+                </>
+              ) : (
+                <p className="mt-3 max-w-xl text-ink-muted">{RECOVER.noneHard}</p>
+              )}
+            </section>
           </Reveal>
+        )}
 
-          <Reveal delay={0.14} className="mt-10">
+        {best && (
+          <Reveal delay={0.2} className="mt-10 max-w-3xl border-t border-hairline pt-8">
             <h2 className="text-micro uppercase tracking-[0.08em] text-ink-faint">
-              {RECOVER.planTitle}
-            </h2>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {RECOVER.choices.map((c) => (
-                <button
-                  key={c.key}
-                  onClick={() => setChoice(choice === c.key ? null : c.key)}
-                  aria-pressed={choice === c.key}
-                  className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors ${
-                    choice === c.key
-                      ? "border-dusk bg-dusk text-white"
-                      : "border-dusk/30 text-ink-muted hover:bg-dusk-100"
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
-            </div>
-
-            {choice && (
-              <p className="mt-6 font-display text-xl text-dusk">
-                {RECOVER.planLine(dayName, chosenLabel)}
-              </p>
-            )}
-          </Reveal>
-
-          <Reveal delay={0.2} className="mt-12 border-t border-hairline pt-8">
-            <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
               {RECOVER.noteTitle}
-            </p>
+            </h2>
             <p className="mt-3 text-ink-muted">{RECOVER.note}</p>
           </Reveal>
-        </>
-      ) : (
-        <Reveal delay={0.08} className="mt-8">
-          <div className="rounded-3xl border border-hairline bg-surface p-6">
-            <p className="font-display text-2xl text-ink">{RECOVER.none}</p>
-            {suggestion ? (
-              <>
-                <p className="mt-3 text-lead text-ink-muted">
-                  {RECOVER.noneFix(suggestion.event.title, suggestion.when)}
-                </p>
-                <Link
-                  href="/today"
-                  className="mt-6 inline-flex min-h-11 items-center rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
-                >
-                  {RECOVER.noneAction}
-                </Link>
-              </>
-            ) : (
-              <p className="mt-3 text-ink-muted">{RECOVER.noneHard}</p>
-            )}
-          </div>
-        </Reveal>
-      )}
-    </main>
+        )}
+      </AppPage>
+    </AppShell>
   );
 }

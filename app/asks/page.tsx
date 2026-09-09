@@ -3,8 +3,10 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
+import { AppPage, AppPageIntro } from "@/components/app/shell/AppPage";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { ASKS, PRODUCT } from "@/lib/copy";
+import { ASKS } from "@/lib/copy";
 import { usePikul } from "@/lib/store";
 import { useHydrated } from "@/lib/useHydrated";
 
@@ -44,88 +46,91 @@ export default function AsksPage() {
   if (!hydrated) return <div className="min-h-screen bg-linen" />;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-lg px-5 pb-24 pt-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {ASKS.back}
-        </Link>
-      </header>
-
-      <Reveal className="mt-10">
-        <h1 className="font-display text-h1">{ASKS.title}</h1>
-        <p className="mt-4 text-lead text-ink-muted">{ASKS.lead}</p>
-      </Reveal>
-
-      {asks.length === 0 ? (
-        <Reveal delay={0.08} className="mt-10">
-          <div className="rounded-3xl border border-hairline bg-surface p-6">
-            <p className="text-ink-muted">{ASKS.empty}</p>
-            <Link
-              href="/today"
-              className="mt-5 inline-flex min-h-11 items-center rounded-full bg-clay-600 px-6 py-3 font-medium text-white transition-colors hover:bg-clay-500"
-            >
-              {ASKS.emptyAction}
-            </Link>
-          </div>
+    <AppShell>
+      <AppPage>
+        <Reveal>
+          <AppPageIntro
+            eyebrow={ASKS.eyebrow}
+            title={ASKS.title}
+            lead={ASKS.lead}
+          />
         </Reveal>
-      ) : (
-        <>
-          <Reveal delay={0.08} className="mt-10 grid grid-cols-2 gap-3">
-            <div className="rounded-3xl border border-hairline bg-surface p-5">
-              <p className="tnum font-display text-h2 text-ink">
-                {ASKS.hours(totals.yes)}
-              </p>
-              <p className="mt-1 text-sm text-ink-muted">{ASKS.tookOn}</p>
-            </div>
-            <div className="rounded-3xl border border-dusk/25 bg-dusk-100/60 p-5">
-              <p className="tnum font-display text-h2 text-dusk">
-                {ASKS.hours(totals.no)}
-              </p>
-              <p className="mt-1 text-sm text-ink-muted">{ASKS.handedBack}</p>
-            </div>
-          </Reveal>
 
-          <Reveal delay={0.14} className="mt-8">
-            <ul className="grid gap-2">
-              {asks.map((a) => (
-                <li
-                  key={a.id}
-                  className="rounded-2xl border border-hairline bg-surface px-4 py-4"
+        {asks.length === 0 ? (
+          <Reveal delay={0.08} className="mt-10 max-w-2xl">
+            <section className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
+              <p className="max-w-xl text-ink-muted">{ASKS.empty}</p>
+              <Link
+                href="/today"
+                className="mt-6 inline-flex min-h-11 items-center rounded-full bg-clay-600 px-6 py-3 font-medium text-white transition-colors hover:bg-clay-500"
+              >
+                {ASKS.emptyAction}
+              </Link>
+            </section>
+          </Reveal>
+        ) : (
+          <div className="mt-10 grid gap-8 lg:grid-cols-[20rem_minmax(0,1fr)] lg:items-start">
+            <Reveal delay={0.08}>
+              <aside className="grid gap-3 sm:grid-cols-2 lg:sticky lg:top-8 lg:grid-cols-1">
+                <div className="rounded-3xl border border-hairline bg-surface p-5">
+                  <p className="tnum font-display text-h2 text-ink">
+                    {ASKS.hours(totals.yes)}
+                  </p>
+                  <p className="mt-1 text-sm text-ink-muted">{ASKS.tookOn}</p>
+                </div>
+                <div className="rounded-3xl border border-dusk/25 bg-dusk-100/60 p-5">
+                  <p className="tnum font-display text-h2 text-dusk">
+                    {ASKS.hours(totals.no)}
+                  </p>
+                  <p className="mt-1 text-sm text-ink-muted">{ASKS.keptFree}</p>
+                </div>
+                <div className="mt-2 border-t border-hairline pt-6 sm:col-span-2 lg:col-span-1">
+                  <p className="text-sm leading-relaxed text-ink-muted">{ASKS.note}</p>
+                  <button
+                    type="button"
+                    onClick={clearAsks}
+                    className="mt-4 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                  >
+                    {ASKS.clear}
+                  </button>
+                </div>
+              </aside>
+            </Reveal>
+
+            <Reveal delay={0.14}>
+              <section aria-labelledby="ask-history-title">
+                <h2
+                  id="ask-history-title"
+                  className="text-micro uppercase tracking-[0.08em] text-ink-faint"
                 >
-                  <div className="flex items-baseline justify-between gap-4">
-                    <p className="min-w-0 truncate font-medium">{a.title}</p>
-                    <p className="shrink-0 text-sm text-ink-faint">
-                      {a.decision === "yes" ? ASKS.yes : ASKS.no}
-                    </p>
-                  </div>
-                  <p className={`tnum mt-2 text-sm ${VERDICT_TONE[a.verdict]}`}>
-                    {ASKS.cost(a.pct, a.weekLabel)}
-                  </p>
-                  <p className="mt-1 text-sm text-ink-faint">
-                    {ASKS.hours(a.hours)} · {format(parseISO(a.at), "d MMM")}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={0.2} className="mt-10 border-t border-hairline pt-8">
-            <p className="text-ink-muted">{ASKS.note}</p>
-            <button
-              onClick={clearAsks}
-              className="mt-5 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
-            >
-              {ASKS.clear}
-            </button>
-          </Reveal>
-        </>
-      )}
-    </main>
+                  {ASKS.historyTitle}
+                </h2>
+                <ul className="mt-4 grid gap-3">
+                  {asks.map((ask) => (
+                    <li
+                      key={ask.id}
+                      className="rounded-2xl border border-hairline bg-surface px-5 py-5"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <p className="min-w-0 font-medium">{ask.title}</p>
+                        <p className="shrink-0 rounded-full bg-raised px-3 py-1 text-xs text-ink-muted">
+                          {ask.decision === "yes" ? ASKS.yes : ASKS.no}
+                        </p>
+                      </div>
+                      <p className={`tnum mt-3 text-sm ${VERDICT_TONE[ask.verdict]}`}>
+                        {ASKS.cost(ask.pct, ask.weekLabel)}
+                      </p>
+                      <p className="mt-1 text-sm text-ink-faint">
+                        {ASKS.hours(ask.hours)} · {format(parseISO(ask.at), "d MMM")}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </Reveal>
+          </div>
+        )}
+      </AppPage>
+    </AppShell>
   );
 }

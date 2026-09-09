@@ -1,15 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { format, parseISO } from "date-fns";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { CarryBar } from "@/components/app/CarryBar";
+import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
-import { BAND, COMPARE, PRODUCT } from "@/lib/copy";
+import { ADD, BAND, COMPARE, NO_BUTTON } from "@/lib/copy";
 import { computeCarry } from "@/lib/engine/acwr";
 import { toISODate } from "@/lib/engine/dates";
 import { priceCommitment } from "@/lib/engine/forecast";
 import { thisWeekHours, usualWeekHours } from "@/lib/engine/horizon";
+import { checkRequest } from "@/lib/engine/validate";
 import type { LoadEvent } from "@/lib/engine/types";
 import { extract } from "@/lib/parse/extract";
 import { seedEvents, stableAsOf } from "@/lib/seed/cache";
@@ -27,7 +29,9 @@ import { useHydrated } from "@/lib/useHydrated";
  * stick: being wrong is more memorable than being told.
  *
  * Nothing here is arranged. Both weeks come out of the same deterministic
- * generator, and the ask is whatever the viewer types.
+ * generator, the ask is whatever the viewer types, and what we made of that
+ * message is shown before either price is — a figure whose input is hidden
+ * cannot be argued with, and this screen lives or dies on being arguable.
  */
 export default function ComparePage() {
   const hydrated = useHydrated();
@@ -61,18 +65,36 @@ export default function ComparePage() {
 
   const ask = useMemo(() => {
     if (!raw.trim()) return null;
-    const d = extract(raw, asOf);
-    const candidate: LoadEvent = {
-      id: "ask",
-      date: d.date.value,
-      category: d.category.value,
-      title: d.title.value,
-      hours: d.hours.value,
-      intensity: d.intensity.value,
-      source: "user",
-    };
+
+    const draft = extract(raw, asOf);
+    const check = checkRequest(
+      {
+        title: draft.title.value,
+        date: draft.date.value,
+        hours: draft.hours.value,
+        category: draft.category.value,
+        intensity: draft.intensity.value,
+      },
+      asOf,
+    );
+
+    // Everything below was invented when this is true. Two numbers derived
+    // entirely from our own defaults are a statement about the defaults, not
+    // about the message, and the screen says so rather than showing them.
+    const readNothing =
+      draft.date.from === "guessed" &&
+      draft.hours.from === "guessed" &&
+      draft.category.from === "guessed";
+
+    if (!check.event) {
+      return { draft, readNothing, problems: check.problems, priced: null };
+    }
+
+    const candidate: LoadEvent = { ...check.event, id: "ask", source: "user" };
     return {
-      candidate,
+      draft,
+      readNothing,
+      problems: [],
       priced: pair.map((p) => ({
         persona: p.persona,
         price: priceCommitment(p.events, candidate, asOf, CURRENT_WEEK),
@@ -85,144 +107,177 @@ export default function ComparePage() {
   const revealed = picked !== null;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-3xl px-5 pb-24 pt-10">
-      <header className="flex items-baseline justify-between">
-        <Link href="/" className="font-display text-xl">
-          {PRODUCT.name}
-        </Link>
-        <Link
-          href="/today"
-          className="text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink hover:underline"
-        >
-          {COMPARE.back}
-        </Link>
-      </header>
+    <AppShell>
+      {/* pb-28 on a phone clears the shell's fixed bottom bar. */}
+      <main className="mx-auto w-full max-w-lg px-5 pb-28 pt-8 lg:max-w-5xl lg:px-10 lg:pb-20 lg:pt-10">
+        <Reveal className="mt-10 max-w-2xl">
+          <h1 className="text-balance font-display text-h1">{COMPARE.title}</h1>
+          <p className="mt-4 text-lead text-ink-muted">{COMPARE.lead}</p>
+        </Reveal>
 
-      <Reveal className="mt-10">
-        <h1 className="font-display text-h1">{COMPARE.title}</h1>
-        <p className="mt-4 text-lead text-ink-muted">{COMPARE.lead}</p>
-      </Reveal>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          {pair.map((p) => {
+            const chosen = picked === p.persona.id;
+            const right = p.persona.id === inTrouble.persona.id;
+            return (
+              <button
+                key={p.persona.id}
+                onClick={() => !revealed && setPicked(p.persona.id)}
+                disabled={revealed}
+                aria-pressed={chosen}
+                className={`rounded-3xl border p-6 text-left transition-colors ${
+                  revealed && right
+                    ? "border-clay-600 bg-clay-100/50"
+                    : chosen
+                      ? "border-ink/30 bg-raised"
+                      : "border-hairline bg-surface"
+                } ${revealed ? "cursor-default" : "hover:bg-raised"}`}
+              >
+                <p className="font-display text-2xl">{p.persona.name}</p>
+                <p className="mt-1 text-sm text-ink-faint">{p.persona.course}</p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        {pair.map((p) => {
-          const chosen = picked === p.persona.id;
-          const right = p.persona.id === inTrouble.persona.id;
-          return (
-            <button
-              key={p.persona.id}
-              onClick={() => !revealed && setPicked(p.persona.id)}
-              disabled={revealed}
-              aria-pressed={chosen}
-              className={`rounded-3xl border p-6 text-left transition-colors ${
-                revealed && right
-                  ? "border-clay-600 bg-clay-100/50"
-                  : chosen
-                    ? "border-ink/30 bg-raised"
-                    : "border-hairline bg-surface"
-              } ${revealed ? "cursor-default" : "hover:bg-raised"}`}
-            >
-              <p className="font-display text-2xl">{p.persona.name}</p>
-              <p className="mt-1 text-sm text-ink-faint">{p.persona.course}</p>
+                <p className="tnum mt-6 font-display text-display leading-none text-ink">
+                  {Math.round(p.hours)}h
+                </p>
+                <p className="mt-1 text-micro uppercase tracking-[0.08em] text-ink-faint">
+                  {COMPARE.hoursThisWeek}
+                </p>
 
-              <p className="tnum mt-6 font-display text-display leading-none text-ink">
-                {Math.round(p.hours)}h
-              </p>
-              <p className="mt-1 text-micro uppercase tracking-[0.08em] text-ink-faint">
-                {COMPARE.hoursThisWeek}
-              </p>
-
-              <AnimatePresence>
-                {revealed && (
-                  <motion.div
-                    initial={still ? false : { opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={spring.settle}
-                    className="mt-6"
-                  >
-                    <CarryBar ratio={p.carry.ratio} band={p.carry.band} />
-                    <p className="mt-5 font-display text-xl text-ink">
-                      {BAND[p.carry.band].line}
-                    </p>
-                    <p className="mt-2 text-sm text-ink-muted">
-                      {COMPARE.usualLine(p.usual)}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-          );
-        })}
-      </div>
-
-      {!revealed && (
-        <p className="mt-6 text-center text-sm text-ink-faint">{COMPARE.prompt}</p>
-      )}
-
-      <AnimatePresence>
-        {revealed && (
-          <motion.section
-            initial={still ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={spring.settle}
-            className="mt-10"
-          >
-            <div className="rounded-3xl border border-dusk/25 bg-dusk-100/50 p-6">
-              <p className="font-display text-h2">
-                {COMPARE.answer(inTrouble.persona.name)}
-              </p>
-              <p className="mt-3 text-lead text-ink-muted">
-                {COMPARE.punchline(
-                  lighter.persona.name,
-                  lighter.hours,
-                  heavier.persona.name,
-                  heavier.hours,
-                )}
-              </p>
-              <p className="mt-4 text-sm text-ink-faint">{COMPARE.method}</p>
-            </div>
-
-            {/* Now let them supply the ask, so nobody can say we picked it. */}
-            <div className="mt-10">
-              <h2 className="font-display text-h2">{COMPARE.askTitle}</h2>
-              <p className="mt-3 text-ink-muted">{COMPARE.askLead}</p>
-              <textarea
-                value={raw}
-                onChange={(e) => setRaw(e.target.value)}
-                rows={2}
-                placeholder={COMPARE.askPlaceholder}
-                aria-label={COMPARE.askLead}
-                className="mt-4 w-full resize-none rounded-2xl border border-hairline bg-surface px-4 py-3 text-ink placeholder:text-ink-faint"
-              />
-
-              {ask && (
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {ask.priced.map(({ persona, price }) => (
-                    <div
-                      key={persona.id}
-                      className="rounded-2xl border border-hairline bg-surface px-4 py-4"
+                <AnimatePresence>
+                  {revealed && (
+                    <motion.div
+                      initial={still ? false : { opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={spring.settle}
+                      className="mt-6"
                     >
-                      <p className="font-medium">{persona.name}</p>
-                      <p className="tnum mt-2 font-display text-2xl text-clay-600">
-                        {COMPARE.askCost(price.worst.pctOfUsual, price.worst.label)}
+                      <CarryBar ratio={p.carry.ratio} band={p.carry.band} />
+                      <p className="mt-5 font-display text-xl text-ink">
+                        {BAND[p.carry.band].line}
                       </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                      <p className="mt-2 text-sm text-ink-muted">
+                        {COMPARE.usualLine(p.usual)}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
+            );
+          })}
+        </div>
 
-            <button
-              onClick={() => {
-                setPicked(null);
-                setRaw("");
-              }}
-              className="mt-8 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
-            >
-              {COMPARE.again}
-            </button>
-          </motion.section>
+        {!revealed && (
+          <p className="mt-6 text-center text-sm text-ink-faint">{COMPARE.prompt}</p>
         )}
-      </AnimatePresence>
-    </main>
+
+        <AnimatePresence>
+          {revealed && (
+            <motion.div
+              initial={still ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={spring.settle}
+              className="mt-10 lg:grid lg:grid-cols-2 lg:items-start lg:gap-10"
+            >
+              <section
+                aria-labelledby="answer-title"
+                className="rounded-3xl border border-dusk/25 bg-dusk-100/50 p-6"
+              >
+                <h2 id="answer-title" className="font-display text-h2">
+                  {COMPARE.answer(inTrouble.persona.name)}
+                </h2>
+                <p className="mt-3 text-lead text-ink-muted">
+                  {COMPARE.punchline(
+                    lighter.persona.name,
+                    lighter.hours,
+                    heavier.persona.name,
+                    heavier.hours,
+                  )}
+                </p>
+                <p className="mt-4 text-sm text-ink-faint">{COMPARE.method}</p>
+              </section>
+
+              {/* Now let them supply the ask, so nobody can say we picked it. */}
+              <section aria-labelledby="ask-title" className="mt-10 lg:mt-0">
+                <h2 id="ask-title" className="font-display text-h2">
+                  {COMPARE.askTitle}
+                </h2>
+                <p className="mt-3 text-ink-muted">{COMPARE.askLead}</p>
+                <textarea
+                  value={raw}
+                  onChange={(e) => setRaw(e.target.value)}
+                  rows={2}
+                  placeholder={COMPARE.askPlaceholder}
+                  aria-label={COMPARE.askLead}
+                  className="mt-4 w-full resize-none rounded-2xl border border-hairline bg-surface px-4 py-3 text-ink placeholder:text-ink-faint"
+                />
+
+                {ask && (
+                  <div className="mt-5">
+                    {/* ---- what we made of it, before any number ---- */}
+                    <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                      {COMPARE.askReadTitle}
+                    </p>
+                    {ask.readNothing ? (
+                      <p className="mt-2 text-ink-muted">{COMPARE.askGuessed}</p>
+                    ) : (
+                      <p className="mt-2 text-ink">
+                        {COMPARE.askRead(
+                          format(parseISO(ask.draft.date.value), "EEEE d MMM"),
+                          ask.draft.hours.value,
+                          ADD.categories[ask.draft.category.value],
+                        )}
+                      </p>
+                    )}
+
+                    {/* ---- and only then, what it costs each of them ---- */}
+                    {ask.priced ? (
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        {ask.priced.map(({ persona, price }) => (
+                          <div
+                            key={persona.id}
+                            className="rounded-2xl border border-hairline bg-surface px-4 py-4"
+                          >
+                            <p className="font-medium">{persona.name}</p>
+                            <p className="tnum mt-2 font-display text-2xl text-clay-600">
+                              {price.landing
+                                ? COMPARE.askCost(
+                                    price.landing.pctOfUsual,
+                                    price.landing.label,
+                                  )
+                                : COMPARE.askBeyond}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mt-4 rounded-2xl border border-hairline bg-surface px-4 py-4">
+                        <p className="font-medium">{COMPARE.askProblemTitle}</p>
+                        <ul className="mt-2 grid gap-1.5">
+                          {ask.problems.map((p) => (
+                            <li key={p} className="text-sm text-ink-muted">
+                              {NO_BUTTON.problems[p]}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  onClick={() => {
+                    setPicked(null);
+                    setRaw("");
+                  }}
+                  className="mt-8 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                >
+                  {COMPARE.again}
+                </button>
+              </section>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+    </AppShell>
   );
 }
