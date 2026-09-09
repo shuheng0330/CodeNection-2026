@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, DM_Sans } from "next/font/google";
+import { createBrandMetadata } from "@/lib/brand-metadata";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -15,17 +16,9 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Pikul — you're carrying more than usual",
-  description:
-    "Pikul weighs everything you carry — assignments, shifts, commute, family — against your own normal, and tells you the one thing worth putting down.",
-  openGraph: {
-    title: "Pikul — you're carrying more than usual",
-    description:
-      "It's never one big thing. Pikul watches the four weeks behind you, not just this one.",
-    type: "website",
-  },
-};
+export const metadata: Metadata = createBrandMetadata(
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL,
+);
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

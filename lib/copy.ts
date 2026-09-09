@@ -108,11 +108,11 @@ export const BAND: Record<BandKey, BandCopy> = {
 /* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const HERO = {
   eyebrow: "Pikul · to shoulder a load",
-  headline: "It's never one big thing.",
-  headline2: "It's everything you're carrying at once.",
+  headline: "Your week is more",
+  headline2: "than your timetable.",
   headlineAccent: "carrying",
-  sub: "It's everything at once, and nobody notices until it's too late. Pikul weighs what you're carrying against your own normal — not against anyone else's.",
-  cta: "See what you're carrying",
+  sub: "Assignments, shifts, commuting, family. See your week against your own normal—and find one thing to put down.",
+  cta: "Try a sample week",
   ctaSecondary: "How it works",
   restingCaption: "about your usual",
   heavyCaption: "heavier than usual for you",
@@ -124,8 +124,8 @@ export const HERO = {
 export const QUIETLY = {
   a: "No single week broke you.",
   b: "It was the four before it.",
-  c: "Pikul watches the four.",
-  note: "Your last seven days, weighed against the month behind them.",
+  c: "Your normal. Nobody else's.",
+  note: "A full week can feel familiar to one student and unusually heavy to another. Pikul compares your last seven days with the month behind them, so your own experience is the starting point.",
 } as const;
 
 /* ── Ku · Today ──────────────────────────────────────────────────────── */
@@ -592,20 +592,56 @@ export const beforeAfterLine = (
 
 /* ── Lim · landing & brand ───────────────────────────────────────────── */
 export const HOW = {
-  title: "How Pikul works",
-  body: "Pikul borrows a model athletes use to avoid overtraining: your last seven days, weighed against your own rolling month. Not a target, not a grade — your own normal. Everything you carry converts to one measure, so a shift, an assignment and a family weekend can finally be compared.",
+  title: "A little perspective. A little room.",
+  body: "Start with a sample student's week. See what's adding up, consider the next request, and decide what works for you.",
   points: [
     {
-      t: "One measure for everything",
-      d: "An 8-hour shift, a group project and a 90-minute commute finally sit on the same scale — so they can be traded against each other.",
+      t: "See your week",
+      d: "Look at everything you're carrying together, compared with your own usual month.",
     },
     {
-      t: "Measured against you",
-      d: "The same week is not the same load for two people. Pikul compares you to your own month, never to anyone else.",
+      t: "Consider the request",
+      d: "See how a new commitment would change the weeks ahead, before you say yes.",
     },
     {
-      t: "No prediction model",
-      d: "The forecast is your own calendar projected forward through the same maths. Nothing is guessed.",
+      t: "Make room",
+      d: "Decide what you can take on, or hand back something negotiable. What you do with that time is up to you.",
     },
   ],
+} as const;
+
+/* OWNER: B (landing & design) — illustrative landing content */
+export const LANDING = {
+  pause: "Pause animation",
+  resume: "Resume animation",
+  released: "One negotiable commitment handed back",
+  skip: "Skip to content",
+  audience: "For students carrying more than classes",
+  openDemo: "Open demo",
+  demoNote: "Sample data · no account needed · resets the demo",
+  sceneTitle: "A student's week",
+  example: "Illustrative example",
+  sceneCaption: "Different commitments. One person carrying them.",
+  commitments: [
+    { category: "Coursework", title: "The group assignment", detail: "Slides, edits, one more meeting" },
+    { category: "Commuting", title: "The journey there", detail: "Campus, work, and back again" },
+    { category: "Family", title: "Showing up at home", detail: "The things a timetable misses" },
+    { category: "Work", title: "An extra shift", detail: "Another yes in an already full week" },
+  ],
+  baselineEyebrow: "A week needs context",
+  monthLabel: "The month behind you",
+  weekLabel: "Your last 7 days",
+  chartDescription: "Illustrative pattern: the last seven days carry more than the earlier days. Pikul uses your own commitments for the comparison in the app.",
+  putdownEyebrow: "Make a little room",
+  putdownTitle: "One thing you can put down.",
+  putdownBody: "You don't need another list of things to fix. When your week is heavy, Pikul looks for one negotiable commitment you could hand back, like an extra shift or an optional event.",
+  protected: "Classes, coursework, health needs and family responsibilities stay protected. The choice is always yours.",
+  reliefExample: "Illustrative example · handing back an existing commitment",
+  shiftTitle: "The extra Saturday shift",
+  shiftDetail: "8 hours · a negotiable commitment",
+  hours: "8h",
+  hoursLabel: "reclaimed from your week",
+  reliefNote: "If you hand this shift back, those eight hours are yours to use. Rest, see someone, or leave them unplanned.",
+  howEyebrow: "How it works",
+  event: "CodeNection 2026 · Lifestyle track",
 } as const;
