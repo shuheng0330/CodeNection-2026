@@ -48,6 +48,18 @@ export interface RequestCheck {
 /** A day has 24 hours. Anything longer is a typo, not a commitment. */
 const MAX_HOURS = 24;
 
+/**
+ * How far out this particular caller can honestly go.
+ *
+ * A request has to land inside the four weeks the forecast can see, because
+ * the whole point of the screen is a number. Putting something on your own
+ * calendar has no such limit — a commitment in December is a perfectly
+ * ordinary thing to write down, it simply will not appear in a forecast that
+ * only reaches four weeks. Passing "any" says that out loud instead of
+ * borrowing the request flow's ceiling by accident.
+ */
+export type Horizon = number | "any";
+
 /** The last day the forecast can see. An ask after this is not "far away",
  *  it is outside what we are able to measure — a different statement. */
 export function horizonEnd(asOf: Date, weeks: number = FORECAST_WEEKS): string {
@@ -60,7 +72,7 @@ const clampIntensity = (n: number): Intensity =>
 export function checkRequest(
   draft: RequestDraft,
   asOf: Date,
-  weeks: number = FORECAST_WEEKS,
+  horizon: Horizon = FORECAST_WEEKS,
 ): RequestCheck {
   const problems: RequestProblem[] = [];
 
@@ -71,7 +83,9 @@ export function checkRequest(
 
   if (!dateOk) problems.push("date-missing");
   else if (draft.date < today) problems.push("date-past");
-  else if (draft.date > horizonEnd(asOf, weeks)) problems.push("date-beyond");
+  else if (horizon !== "any" && draft.date > horizonEnd(asOf, horizon)) {
+    problems.push("date-beyond");
+  }
 
   // ---- how long ----
   // Number("") is 0 and Number(" ") is 0, so an empty box would otherwise

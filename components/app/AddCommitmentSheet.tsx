@@ -5,7 +5,8 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ADD } from "@/lib/copy";
 import { toISODate } from "@/lib/engine/dates";
-import type { Intensity, LoadCategory } from "@/lib/engine/types";
+import { checkRequest } from "@/lib/engine/validate";
+import type { LoadCategory } from "@/lib/engine/types";
 import { extract } from "@/lib/parse/extract";
 import { sheetMotion } from "@/lib/motion";
 import { useFocusTrap } from "@/lib/useFocusTrap";
@@ -35,6 +36,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
   const addEvent = usePikul((s) => s.addEvent);
   const still = useReducedMotion();
   const titleId = useId();
+  const problemsId = useId();
 
   const draft = useMemo(() => extract(raw, asOf), [raw, asOf]);
 
@@ -44,6 +46,26 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
   const isGuess = (k: FieldKey): boolean =>
     edited[k] === undefined && draft[k].from === "guessed";
   const set = (k: FieldKey, v: string) => setEdited((e) => ({ ...e, [k]: v }));
+
+  const title = value("title");
+  const date = value("date");
+  const hours = value("hours");
+  const category = value("category") as LoadCategory;
+  const intensity = value("intensity");
+
+  /**
+   * "any", because this screen makes no forecast.
+   *
+   * The request sheet has to refuse anything outside the four weeks it can
+   * price. Writing a commitment on your own calendar has no such ceiling —
+   * something in December is an ordinary thing to record, it simply will not
+   * appear in a forecast that only reaches four weeks. Everything else is
+   * checked exactly as it is there.
+   */
+  const check = useMemo(
+    () => checkRequest({ title, date, hours, category, intensity }, asOf, "any"),
+    [title, date, hours, category, intensity, asOf],
+  );
 
   const repaste = (text: string) => {
     setRaw(text);
@@ -62,15 +84,17 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
   // open raises the Android keyboard over the sheet before anyone has read it.
   const sheetRef = useFocusTrap<HTMLDivElement>({ active: open, onClose: close });
 
+  /**
+   * Nothing is invented on the way in.
+   *
+   * This used to read the hours box, find a blank or a zero, and write a
+   * one-hour commitment anyway. The student never typed that hour, never saw
+   * it, and their week moved because of it. The check either produces the
+   * event or it produces reasons, and there is no third path.
+   */
   const submit = () => {
-    const hours = Number(value("hours"));
-    addEvent({
-      date: value("date"),
-      category: value("category") as LoadCategory,
-      title: value("title").trim() || ADD.untitled,
-      hours: Number.isFinite(hours) && hours > 0 ? hours : 1,
-      intensity: Number(value("intensity")) as Intensity,
-    });
+    if (!check.event) return;
+    addEvent({ ...check.event, title: check.event.title || ADD.untitled });
     close();
   };
 
@@ -93,7 +117,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
             />
             <motion.div
               ref={sheetRef}
-              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-10 shadow-lift outline-none sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
+              className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-0 shadow-lift outline-none sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
               {...sheetMotion(!!still)}
               role="dialog"
               aria-modal="true"
@@ -133,7 +157,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
               <div className="mt-7 grid gap-5">
                 <Row label={ADD.fields.title} guessed={false}>
                   <input
-                    value={value("title")}
+                    value={title}
                     onChange={(e) => set("title", e.target.value)}
                     className="w-full rounded-2xl border border-hairline px-4 py-3"
                   />
@@ -143,7 +167,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                   <Row label={ADD.fields.date} guessed={isGuess("date")}>
                     <input
                       type="date"
-                      value={value("date")}
+                      value={date}
                       min={toISODate(asOf)}
                       onChange={(e) => set("date", e.target.value)}
                       className="w-full rounded-2xl border border-hairline px-4 py-3"
@@ -155,7 +179,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                       inputMode="decimal"
                       min={0.5}
                       step={0.5}
-                      value={value("hours")}
+                      value={hours}
                       onChange={(e) => set("hours", e.target.value)}
                       className="tnum w-full rounded-2xl border border-hairline px-4 py-3"
                     />
@@ -168,9 +192,9 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                       <button
                         key={c}
                         onClick={() => set("category", c)}
-                        aria-pressed={value("category") === c}
+                        aria-pressed={category === c}
                         className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors ${
-                          value("category") === c
+                          category === c
                             ? "border-clay-600 bg-clay-100 text-clay-700"
                             : "border-hairline text-ink-muted hover:bg-raised"
                         }`}
@@ -189,9 +213,9 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                         <button
                           key={level}
                           onClick={() => set("intensity", level)}
-                          aria-pressed={value("intensity") === level}
+                          aria-pressed={intensity === level}
                           className={`min-h-11 flex-1 rounded-2xl border px-1 py-2 text-xs transition-colors ${
-                            value("intensity") === level
+                            intensity === level
                               ? "border-clay-600 bg-clay-100 text-clay-700"
                               : "border-hairline text-ink-muted hover:bg-raised"
                           }`}
@@ -204,18 +228,43 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                 </Row>
               </div>
 
-              <button
-                onClick={submit}
-                className="mt-7 min-h-11 w-full rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-500"
-              >
-                {ADD.submit}
-              </button>
-              <button
-                onClick={close}
-                className="mt-3 min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
-              >
-                {ADD.cancel}
-              </button>
+              {/* The action, pinned — the same treatment the request sheet
+                  gets, and for the same reason: this form is taller than a
+                  phone, so its one button was below the fold on open. The
+                  reasons sit above it in reading order, and the button points
+                  at them, so nobody meets a dead control with no explanation
+                  for why it is dead. */}
+              <div className="sticky bottom-0 -mx-6 mt-7 border-t border-hairline bg-surface px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-4">
+                {!check.ok && (
+                  <div id={problemsId} className="mb-3" role="status">
+                    <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                      {ADD.cannotAdd}
+                    </p>
+                    <ul className="mt-1.5 grid gap-1">
+                      {check.problems.map((p) => (
+                        <li key={p} className="text-sm text-ink-muted">
+                          {ADD.problems[p]}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <button
+                  onClick={submit}
+                  disabled={!check.ok}
+                  aria-describedby={check.ok ? undefined : problemsId}
+                  className="min-h-11 w-full rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-500 disabled:cursor-not-allowed disabled:border disabled:border-hairline disabled:bg-raised disabled:text-ink-faint"
+                >
+                  {ADD.submit}
+                </button>
+                <button
+                  onClick={close}
+                  className="min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
+                >
+                  {ADD.cancel}
+                </button>
+              </div>
             </motion.div>
           </>
         )}

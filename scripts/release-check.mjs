@@ -303,6 +303,89 @@ console.log("\nAccepting, declining and changing your mind");
   await page.close();
 }
 
+// ── adding something, and being stopped from adding nonsense ─────────
+console.log("\nAdding a commitment refuses bad input instead of inventing one");
+{
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1280, height: 900 });
+  await page.goto(`${BASE}/today?reset=1`, { waitUntil: "load" });
+  await ready(page);
+
+  /** React tracks the input's value internally, so setting .value directly
+   *  is ignored. Go through the prototype setter and fire the event React
+   *  actually listens for. */
+  const typeInto = (selector, text) =>
+    page.evaluate(
+      (sel, v) => {
+        const el = document.querySelector(sel);
+        if (!el) return false;
+        const desc = Object.getOwnPropertyDescriptor(
+          Object.getPrototypeOf(el),
+          "value",
+        );
+        desc.set.call(el, v);
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        return true;
+      },
+      selector,
+      text,
+    );
+
+  const submitState = () =>
+    page.evaluate(() => {
+      const b = [...document.querySelectorAll("button")].find(
+        (el) => el.textContent?.trim() === "Add it",
+      );
+      const dialog = b?.closest('[role="dialog"]');
+      const reasons = dialog
+        ? [...dialog.querySelectorAll('[role="status"] li')].map((li) =>
+            li.textContent.trim(),
+          )
+        : [];
+      return { disabled: Boolean(b?.disabled), reasons };
+    });
+
+  await clickText(page, "Add something");
+  await pause(700);
+
+  const before = await readStore(page);
+
+  // An emptied hours box used to be read as zero and written as one hour.
+  await typeInto('[role="dialog"] input[type="number"]', "");
+  await pause(400);
+  let state = await submitState();
+  check(state.disabled, "a blank duration cannot be added");
+  check(state.reasons.length > 0, "and it says why", state.reasons.join(" | "));
+
+  await clickText(page, "Add it");
+  await pause(400);
+  check(
+    (await readStore(page)).userEvents === before.userEvents,
+    "pressing add anyway changes nothing",
+  );
+
+  await typeInto('[role="dialog"] input[type="number"]', "0");
+  await pause(400);
+  check((await submitState()).disabled, "zero hours cannot be added either");
+
+  await typeInto('[role="dialog"] input[type="number"]', "30");
+  await pause(400);
+  check((await submitState()).disabled, "nor can something longer than a day");
+
+  await typeInto('[role="dialog"] input[type="number"]', "3");
+  await pause(400);
+  state = await submitState();
+  check(!state.disabled, "a sensible duration can");
+
+  await clickText(page, "Add it");
+  await pause(600);
+  check(
+    (await readStore(page)).userEvents === before.userEvents + 1,
+    "and adds exactly one commitment",
+  );
+  await page.close();
+}
+
 // ── the hand-back preview ────────────────────────────────────────────
 console.log("\nThe hand-back preview saves nothing until it is confirmed");
 {

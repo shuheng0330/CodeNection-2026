@@ -97,6 +97,28 @@ describe("checkRequest — when", () => {
   it("ends the horizon on a Sunday, because weeks are priced whole", () => {
     expect(new Date(`${horizonEnd(asOf)}T00:00:00`).getDay()).toBe(0);
   });
+
+  it("lets a caller with no forecast to give say so", () => {
+    // Writing a December commitment on your own calendar is ordinary. It
+    // simply will not show up in a forecast that reaches four weeks, which
+    // is a different statement from the date being wrong.
+    const far = toISODate(addDays(asOf, 120));
+    expect(checkRequest(draft({ date: far }), asOf, "any").ok).toBe(true);
+    expect(checkRequest(draft({ date: far }), asOf).ok).toBe(false);
+  });
+
+  it("still refuses a day that has gone, however far out it can see", () => {
+    const gone = toISODate(addDays(asOf, -1));
+    expect(checkRequest(draft({ date: gone }), asOf, "any").problems).toContain(
+      "date-past",
+    );
+  });
+
+  it("still refuses nonsense hours with no horizon", () => {
+    expect(checkRequest(draft({ hours: "0" }), asOf, "any").problems).toContain(
+      "hours-tiny",
+    );
+  });
 });
 
 describe("checkRequest — what comes out", () => {

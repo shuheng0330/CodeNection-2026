@@ -411,6 +411,25 @@ export const ADD = {
     intensity: "How much does this take out of you?",
   },
   intensityScale: ["Barely", "A little", "Some", "A lot", "Everything"],
+
+  /**
+   * Why this cannot be added yet.
+   *
+   * The old submit handler read a blank or zero hours box and quietly wrote
+   * a one-hour commitment. The student never typed one, never saw one, and
+   * the week moved anyway. Worded for logging something rather than for
+   * pricing a request — there is no forecast on this screen, so the ceiling
+   * the request sheet has does not apply here.
+   */
+  problems: {
+    "hours-missing": "How long it takes is blank, so there is nothing to weigh.",
+    "hours-tiny": "How long it takes has to be more than zero.",
+    "hours-absurd":
+      "That is longer than a day. If it runs across several days, add one for each day.",
+    "date-missing": "The date isn't one we can read.",
+    "date-past": "That day has already gone. Add something that is still ahead of you.",
+  } as Record<string, string>,
+  cannotAdd: "Not quite yet",
   categories: {
     class: "Class",
     assignment: "Coursework",

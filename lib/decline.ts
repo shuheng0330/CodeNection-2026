@@ -6,15 +6,17 @@
  * of a judge. The hard part of saying no was never the wording, it was
  * knowing you were allowed to.
  */
+/**
+ * The four shapes an ask comes in. A type now, not a menu.
+ *
+ * These used to carry labels so the student could pick one — which was
+ * really us asking them to classify a message on our behalf, in our
+ * vocabulary. The parser reads a category out of what was actually sent and
+ * the request sheet maps that onto one of these, so nobody has to answer a
+ * question about our data model before finding out what a shift costs.
+ */
 export type AskKind = "shift" | "project" | "favour" | "event";
 export type Tone = "soften" | "renegotiate" | "firm";
-
-export const ASK_KINDS: { key: AskKind; label: string }[] = [
-  { key: "shift", label: "Cover a shift" },
-  { key: "project", label: "Take on group work" },
-  { key: "favour", label: "Do them a favour" },
-  { key: "event", label: "Come to something" },
-];
 
 const T: Record<AskKind, Record<Tone, string>> = {
   shift: {

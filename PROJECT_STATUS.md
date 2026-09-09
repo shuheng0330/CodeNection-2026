@@ -55,6 +55,8 @@ It currently passes. What it covers:
   booking the shift once.
 - Accept, decline and change-your-mind, checked against what is actually in
   storage rather than what the screen says.
+- Adding a commitment: a blank, zero or longer-than-a-day duration cannot be
+  submitted, says why, and changes nothing if the button is pressed anyway.
 - The hand-back preview: opening it and cancelling it both save nothing.
 
 **Cross-owner change, announced here rather than assumed.** The back link
@@ -81,3 +83,17 @@ cannot be run headlessly and stay manual.
 - The carry bar's track disappeared into the highlighted card on `/compare` —
   both are warm neutrals within a few percent of each other. The track now
   carries a hairline.
+- Adding a commitment silently invented a duration. The submit handler read a
+  blank or zero hours box and wrote a one-hour commitment: the student never
+  typed that hour, never saw it, and their week moved because of it. The two
+  input paths now hold the same standard — the request sheet and the add sheet
+  both refuse and explain rather than coerce. The add sheet has no forecast, so
+  it allows a date beyond four weeks where the request sheet cannot.
+
+### Removed
+
+`components/app/WeightChip.tsx` and `ASK_KINDS` in `lib/decline.ts` are gone;
+nothing rendered or imported either after Today's upcoming-days list and the
+request sheet were rebuilt. Checked against every remote branch first — the
+only other references were in two files already rewritten in this lane. The
+file map in PHASE_PLAN.md is updated to match.
