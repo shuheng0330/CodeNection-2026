@@ -70,7 +70,8 @@ function HangingCard({ index, sag, active, released, running, reduced, item }: {
   const desktopY = useTransform(sag, value => 28 + 4 * t * (1 - t) * value);
   const mobileY = useTransform(sag, value => 28 + 0.75 * value);
   const lift = useSpring(0, spring.settle);
-  const target = released ? -30 : active ? 0 : -12;
+  const opacity = useTransform(lift, [-55, -12], [0, 1]);
+  const target = released ? -60 : active ? 0 : -12;
   useEffect(() => {
     if (reduced) lift.jump(0);
     else if (running) lift.set(target);
@@ -78,7 +79,7 @@ function HangingCard({ index, sag, active, released, running, reduced, item }: {
     return () => lift.stop();
   }, [running, reduced, target, lift]);
   return <motion.div className={`${styles.hangingAnchor} ${styles[`anchor${index}`]}`} style={{ "--desktop-y": desktopY, "--mobile-y": mobileY } as MotionStyle}>
-    <motion.div style={{ y: lift }}>
+    <motion.div style={{ y: lift, opacity: index === 3 ? opacity : 1 }} aria-hidden={released || undefined}>
       <span className={styles.hanger} aria-hidden="true" />
       <div className={`${styles.hangingCard} ${index === 3 ? styles.shiftCard : ""}`} data-released={released}>
         <span className={styles.cardCategory}>{item.category}</span>

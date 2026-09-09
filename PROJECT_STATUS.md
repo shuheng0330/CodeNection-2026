@@ -71,3 +71,21 @@ The earlier planning-only validation paragraph is historical. The checks above d
 - Local requests returned HTTP 200 for `/`, `/favicon.ico`, `/apple-icon.png` and `/opengraph-image.png`. Full-size and 400×210 sharing-image inspection passed; enlarged nearest-neighbour reviews confirmed the icon silhouette remains recognisable at 16px and 32px.
 - Final `npm run verify` passed after the documentation update: voice gate, lint, 10 test files / 80 tests, TypeScript and production build. The production build prerendered the Apple icon and Open Graph image routes.
 - No confirmed deployment URL is recorded in `PHASE_PLAN.md` or the required project documents. Metadata therefore uses `VERCEL_PROJECT_PRODUCTION_URL`/`VERCEL_URL` at deployment and localhost during local development. The production origin and external platform link-preview caches remain unverified until the deployment URL is supplied and deployed.
+
+## Hero text and shift exit verification — 9 September 2026
+
+- Added the one-time hero text entrance and shortened supporting copy. The extra-shift card and hanger now lift/fade completely away during release and return on reset.
+- npm run verify passed: voice gate, lint, 10 test files / 80 tests, TypeScript and production build.
+- Port 3000 was serving an older production process. Started the fresh production build at localhost:3001 for verification. Browser sampling confirmed opacity 0 at the released stage, opacity 1 after reset, and no desktop horizontal overflow over a full cycle. Screenshot: C:/Users/User/.codex/visualizations/2026/09/08/01a08121-815e-7c70-87c1-ecbf9bd97538/hero-shift-removed.png.
+- Same codex/lim-landing branch and worktree. Changes left uncommitted and unpushed; prior responsive/reduced-motion validation limits still apply.
+
+## Landing-only QA and cleanup — 9 September 2026
+
+- Preserved the existing uncommitted hero entrance, shorter copy, shift removal and documentation changes on `codex/lim-landing`. Added only removal of confirmed-unreferenced landing CSS and this QA record; no commit or push was made.
+- Built the current tree and served the fresh production output on `http://localhost:3217`, without using the older processes on ports 3000 or 3101. The existing Next.js package-lock/output-tracing-root warning remained non-blocking.
+- At 360, 390, 768, 1024 and 1440 CSS pixels, automated DOM measurements and visual inspection found no horizontal overflow, overflowing text, card overlap or hidden action. Target heights remained 44px or greater. The 360px actions stack; 390px and wider retain their intended grouping.
+- Verified the hero text enters once and remains settled after leaving and returning. Pause held the stage and stopped playback; resume advanced it. The extra-shift wrapper reached opacity 0, translated to -60px, set `aria-hidden`, then returned to opacity 1 without `aria-hidden` on the next cycle. Lower-section headings and steps remained settled when revisited.
+- Keyboard traversal reached the skip link, brand, header action, primary action, explanation link and pause control with visible clay focus outlines. The explanation link reached `#how`; the sample link reached `/today?reset=1` and rendered the expected seeded Today heading.
+- True browser 200% zoom was not exposed by the in-app browser. A 720×450 CSS-pixel reflow proxy for a 1440×900 window at 200% had no horizontal overflow and kept all actions rendered. Reduced-motion emulation was unavailable; the active environment reported no reduced-motion preference, so only source/CSS handling was reviewed. Opening another in-app tab did not make the source document hidden (`visibilityState` stayed `visible`), so hidden-tab suspension remains unverified in a real browser.
+- Captured final 1440×900 desktop and 390×844 mobile viewport screenshots in the QA session. Real-device testing remains outside this pass.
+- Final `npm run verify` passed after the CSS cleanup: voice gate, lint, 10 test files / 80 tests, TypeScript and production build.

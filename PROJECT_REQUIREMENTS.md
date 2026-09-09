@@ -42,3 +42,11 @@ This revision supersedes the split-hero and static put-down motion requirements 
 - The sharing image contains only the Pikul wordmark, approved headline, a short factual supporting line and an abstract carrying-rope illustration. It does not contain screenshots, workload figures or judging claims.
 - Open Graph and Twitter metadata use the same image with dimensions and descriptive alternative text. Twitter uses a large-image card. Do not define a root canonical URL inherited by every route.
 - The project documents still do not contain a confirmed production URL. Until Thong records one, metadata resolves the deployment origin from Vercel’s production URL environment value and uses localhost only for local builds. External crawler previews remain a deployment check.
+
+## Hero text and visible release refinement — 9 September 2026
+
+The hero eyebrow, headline and shorter supporting copy enter once, while actions remain immediately visible. During the rope release, the extra-shift card and hanger lift and fade out completely, returning during reset. Reduced-motion users retain the settled illustration.
+
+## Landing QA acceptance — 9 September 2026
+
+The landing page must remain readable without horizontal overflow, clipped copy, card collisions or hidden actions at 360, 390, 768, 1024 and 1440 CSS pixels. The hero entrance plays once; the extra-shift card becomes fully absent visually and to assistive technology during release, returns on the next cycle, and follows pause/resume. Lower entrances do not replay after leaving and returning. Sample/reset and explanation links remain functional. This pass adds no feature, redesign, engine or store requirement.

@@ -20,9 +20,11 @@ export default function Home() {
       </header>
       <section id="hero" aria-labelledby="hero-title" className={styles.hero}>
         <div>
+          <RevealGroup>
           <p className={styles.eyebrow}>{LANDING.audience}</p>
           <h1 id="hero-title">{HERO.headline}{" "}<span>{HERO.headline2}</span></h1>
           <p className={styles.lead}>{HERO.sub}</p>
+          </RevealGroup>
           <div className={styles.actions}>
             <Link href="/today?reset=1" className={styles.primary}>{HERO.cta}<span aria-hidden="true"> ↗</span></Link>
             <a href="#how" className={styles.secondary}>{HERO.ctaSecondary}<span aria-hidden="true"> ↓</span></a>

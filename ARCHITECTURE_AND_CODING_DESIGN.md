@@ -50,3 +50,11 @@ RevealGroup is a small client wrapper accepting server-rendered children, option
 Next.js file conventions serve `app/favicon.ico`, `app/apple-icon.png` and `app/opengraph-image.png`. The ICO contains 16px, 32px and 48px RGBA PNG frames; the Apple icon is 180×180; and the sharing image is 1200×630. `app/opengraph-image.alt.txt` supplies the file-convention Open Graph alternative text, while the metadata object supplies the same text for Twitter. The single Open Graph and Twitter image references are verified in rendered HTML.
 
 `scripts/generate-brand-assets.py` reproducibly generates the assets from the existing Linen & Clay values and the Latin Fraunces/DM Sans font files emitted by `next/font` into `.next`. It requires a completed Next.js build before regeneration and uses the existing local Pillow tooling; it adds no application dependency or runtime work.
+
+## Hero entrance and shift exit refinement — 9 September 2026
+
+The hero text reuses RevealGroup without wrapping the actions. The shift card opacity derives from its existing lift MotionValue, reaching zero before the -60px release endpoint. This keeps fading and movement paused/resumed together without another timer. The released card is excluded from the accessibility tree; its space remains reserved. Reduced motion jumps the lift to zero and restores visibility.
+
+## Landing QA cleanup — 9 September 2026
+
+The production landing was rechecked against the current CSS Module at all five release widths. Selectors for the superseded static card stack and earlier marker-based motion scene had no remaining TypeScript or TSX references and were removed from `components/landing/landing.module.css`. Current wide-rope, card, entrance, responsive and reduced-motion rules remain unchanged. No shared token, engine, store, route or dependency changed.

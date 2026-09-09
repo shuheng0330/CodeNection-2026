@@ -73,7 +73,7 @@ export const HERO = {
   headline: "Your week is more",
   headline2: "than your timetable.",
   headlineAccent: "carrying",
-  sub: "Assignments, shifts, commuting, family. It all adds up. Pikul helps you see what you're carrying, compared with your own normal, and find one thing you can put down.",
+  sub: "Assignments, shifts, commuting, family. See your week against your own normal—and find one thing to put down.",
   cta: "Try a sample week",
   ctaSecondary: "How it works",
   restingCaption: "about your usual",
