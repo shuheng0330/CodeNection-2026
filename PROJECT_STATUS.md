@@ -236,3 +236,19 @@ inline copy of the same focus logic, and it is the copy without `inert`.
 **Also worth a look, not touched here.** `app/(app)/layout.tsx` mounts
 AppShell but the `(app)` group contains no pages, so it is dead code. Any page
 moved into it while still self-mounting AppShell would render two shells.
+
+## Selectable hand-back commitment — 10 September 2026
+
+- Kept Pikul's highest-weight safe commitment as the default recommendation and
+  added an optional **Choose a different commitment** control on Today.
+- The revealed radio group contains only commitments already allowed by the
+  hand-back rules: negotiable categories, within seven days, at least three
+  hours, and only while the current week is heavy.
+- Selecting another item updates the hours/day preview, and confirmation stores
+  that exact commitment ID. Cancel still writes nothing; undo restores the item
+  and resets the next offer to Pikul's recommendation.
+- This is a bounded cross-owner extension to Ku's decision component and engine;
+  protected commitments and `/asks` decision history are unchanged.
+- `npm run verify` passed with 14 files and 143 tests. The browser release check
+  passed all existing checks plus default selection, alternate selection, exact
+  persisted ID, cancel and undo coverage.

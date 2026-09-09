@@ -41,6 +41,37 @@ export interface PutDown {
   when: string;
 }
 
+/**
+ * Every commitment the student may safely choose to hand back, ordered with
+ * Pikul's recommendation first. The UI can reveal this bounded set without
+ * weakening the rules that protect owed work or inventing trivial relief.
+ */
+export function eligiblePutDowns(
+  events: LoadEvent[],
+  asOf: Date,
+  ratio: number,
+): PutDown[] {
+  if (ratio < BAND_EDGES.busy) return [];
+
+  const from = toISODate(asOf);
+  const to = toISODate(addDays(asOf, 7));
+
+  return events
+    .filter(
+      (event) =>
+        event.date >= from &&
+        event.date <= to &&
+        NEGOTIABLE.has(event.category) &&
+        event.hours >= MIN_HOURS_BACK,
+    )
+    .sort((a, b) => eventLoad(b) - eventLoad(a))
+    .map((event) => ({
+      event,
+      hoursBack: event.hours,
+      when: whenLabel(event.date, asOf),
+    }));
+}
+
 export function whenLabel(date: string, asOf: Date): string {
   const d = parseISO(date);
   if (isSameDay(d, asOf)) return "today";
@@ -58,23 +89,7 @@ export function suggestPutDown(
   asOf: Date,
   ratio: number,
 ): PutDown | null {
-  if (ratio < BAND_EDGES.busy) return null;
-
-  const from = toISODate(asOf);
-  const to = toISODate(addDays(asOf, 7));
-
-  const negotiable = events
-    .filter((e) => e.date >= from && e.date <= to && NEGOTIABLE.has(e.category))
-    .sort((a, b) => eventLoad(b) - eventLoad(a));
-
-  const worthwhile = negotiable.find((e) => e.hours >= MIN_HOURS_BACK);
-  if (!worthwhile) return null;
-
-  return {
-    event: worthwhile,
-    hoursBack: worthwhile.hours,
-    when: whenLabel(worthwhile.date, asOf),
-  };
+  return eligiblePutDowns(events, asOf, ratio)[0] ?? null;
 }
 
 /** Why there is nothing to suggest — the empty state has to say something
