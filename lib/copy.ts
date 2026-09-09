@@ -173,12 +173,14 @@ export const AHEAD = {
 
 /* ── OWNER: A (engine & app) · the decisions, kept ─────────── */
 export const ASKS = {
+  eyebrow: "Decision history",
   title: "What you were asked",
   lead: "Every request you priced, and what you decided. Both answers count the same.",
   empty: "Nothing yet. The next time someone asks you for something, price it first.",
   emptyAction: "Try it",
   tookOn: "took on",
-  handedBack: "handed back",
+  keptFree: "kept free",
+  historyTitle: "Each decision",
   hours: (h: number): string => `${Math.round(h)}h`,
   /** "118% of a usual week in week 11" */
   cost: (pct: number, week: string): string => `${pct}% of a usual week in ${week}`,
@@ -194,6 +196,7 @@ export const ASKS = {
 
 /* ── OWNER: A (engine & app) · showing the working ─────────── */
 export const METHOD = {
+  eyebrow: "The method",
   title: "How this works",
   lead: "No model, no guessing, and nothing about you leaves your phone. Here is the whole of it.",
   steps: [
@@ -232,7 +235,9 @@ export const METHOD = {
 
 /* ── OWNER: A (engine & app) · time that is already yours ────── */
 export const RECOVER = {
+  eyebrow: "Recovery",
   title: "Somewhere to put the time down",
+  lead: "Find time that is already yours, then decide what you want to protect it for.",
   found: "The quietest day you have coming",
   /** "Saturday is the quietest day in your next ten." */
   foundLine: (day: string): string =>

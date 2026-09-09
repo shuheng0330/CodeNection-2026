@@ -30,15 +30,20 @@ Updated 9 September 2026.
 - Defaulted the week view to the heaviest upcoming day and added a truthful detail panel sourced from existing commitments.
 - Kept the heavy-cluster explanation as the single priority signal above the inspectable horizon.
 - Verified pointer and Enter-key day selection in the browser at a compact viewport.
+- Added one shared supporting-page frame and intro hierarchy for Recover, Asks and Method.
+- Gave Recover and Asks responsive desktop compositions while preserving their compact mobile flow and existing state behavior.
+- Corrected declined-request totals from “handed back” to “kept free,” matching the decision semantics in the delivery plan.
+- Improved supporting-page semantics with labelled sections, a live recovery-choice result and a valid ordered Method list.
+- Verified Recover’s no-room and quiet-day states, keyboard choice selection, empty and populated Ask histories, and the Method reading flow in the browser.
 - `npm run verify` passes: voice gate, lint, 74 Vitest tests and the Next.js production build.
 
 ## Next actions
 
 - Team kickoff: confirm availability, official deadline/form, mentor status, sample contract and visual references.
-- Implement selected frontend scope; review progress Thursday evening and continue development until Friday 11 September, 15:00 MYT.
+- Prepare deployment/demo links, then continue route QA and bounded fixes before Friday 11 September, 15:00 MYT.
 - Complete final integration/QA/fixes Friday 15:00–18:00 and freeze by 11 September, 18:00 MYT.
 - Joint README, diagrams, evidence, slides, recording and early submission.
 
 ## Validation limits
 
-Shared navigation and the living week view have been validated locally but not yet on a deployed URL or physical Android device. No commit or deployment was created in this task. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
+Shared navigation, the living week view and supporting routes have been validated locally but not yet on a deployed URL or physical Android device. No commit or deployment was created in this task. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.

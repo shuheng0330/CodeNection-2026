@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppPage, AppPageIntro } from "@/components/app/shell/AppPage";
 import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
 import { METHOD } from "@/lib/copy";
@@ -27,45 +28,63 @@ export const metadata: Metadata = {
 export default function MethodPage() {
   return (
     <AppShell>
-      <main className="mx-auto min-h-screen w-full max-w-2xl px-5 pb-28 pt-10">
-      <Reveal className="mt-10">
-        <h1 className="font-display text-h1">{METHOD.title}</h1>
-        <p className="mt-4 text-lead text-ink-muted">{METHOD.lead}</p>
-      </Reveal>
+      <AppPage reading>
+        <Reveal>
+          <AppPageIntro
+            eyebrow={METHOD.eyebrow}
+            title={METHOD.title}
+            lead={METHOD.lead}
+          />
+        </Reveal>
 
-      <ol className="mt-12 grid gap-5">
-        {METHOD.steps.map((s, i) => (
-          <Reveal key={s.t} delay={i * 0.05}>
-            <li className="rounded-3xl border border-hairline bg-surface p-6">
-              <p className="font-display text-xl">{s.t}</p>
-              <p className="mt-3 text-ink-muted">{s.d}</p>
-            </li>
-          </Reveal>
-        ))}
-      </ol>
-
-      <Reveal className="mt-12">
-        <h2 className="font-display text-h2">{METHOD.limitsTitle}</h2>
-        <ul className="mt-5 grid gap-4">
-          {METHOD.limits.map((l) => (
-            <li key={l} className="flex gap-3 text-ink-muted">
-              <span aria-hidden className="mt-2 h-1 w-4 shrink-0 rounded-full bg-clay-500" />
-              <span>{l}</span>
+        <ol className="mt-12 grid gap-5">
+          {METHOD.steps.map((step, index) => (
+            <li key={step.t}>
+              <Reveal delay={index * 0.05}>
+                <article className="grid gap-4 rounded-3xl border border-hairline bg-surface p-6 sm:grid-cols-[3rem_minmax(0,1fr)] sm:p-8">
+                  <p
+                    aria-hidden
+                    className="tnum font-display text-2xl text-clay-600"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <div>
+                    <h2 className="font-display text-xl">{step.t}</h2>
+                    <p className="mt-3 leading-relaxed text-ink-muted">{step.d}</p>
+                  </div>
+                </article>
+              </Reveal>
             </li>
           ))}
-        </ul>
-      </Reveal>
+        </ol>
 
-      <Reveal className="mt-12 rounded-3xl border border-hairline bg-raised/50 p-6">
-        <p className="font-display text-xl">{METHOD.refTitle}</p>
-        <p className="mt-3 text-ink-muted">{METHOD.ref}</p>
-      </Reveal>
+        <Reveal className="mt-14 rounded-3xl border border-hairline bg-raised/50 p-6 sm:p-8">
+          <h2 className="font-display text-h2">{METHOD.limitsTitle}</h2>
+          <ul className="mt-6 grid gap-5">
+            {METHOD.limits.map((limit) => (
+              <li key={limit} className="flex gap-4 leading-relaxed text-ink-muted">
+                <span
+                  aria-hidden
+                  className="mt-3 h-1 w-5 shrink-0 rounded-full bg-clay-500"
+                />
+                <span>{limit}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
 
-      <Reveal className="mt-8 rounded-3xl border border-dusk/25 bg-dusk-100/50 p-6">
-        <p className="font-display text-xl text-ink">{METHOD.privacyTitle}</p>
-        <p className="mt-3 text-ink-muted">{METHOD.privacy}</p>
-      </Reveal>
-      </main>
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <Reveal className="h-full rounded-3xl border border-hairline bg-surface p-6">
+            <h2 className="font-display text-xl">{METHOD.refTitle}</h2>
+            <p className="mt-3 leading-relaxed text-ink-muted">{METHOD.ref}</p>
+          </Reveal>
+
+          <Reveal className="h-full rounded-3xl border border-dusk/25 bg-dusk-100/50 p-6">
+            <h2 className="font-display text-xl text-ink">{METHOD.privacyTitle}</h2>
+            <p className="mt-3 leading-relaxed text-ink-muted">{METHOD.privacy}</p>
+          </Reveal>
+        </div>
+      </AppPage>
     </AppShell>
   );
 }
