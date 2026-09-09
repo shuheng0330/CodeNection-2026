@@ -351,14 +351,22 @@ export const COMPARE = {
   reveal: "Show me",
   again: "Try it again",
   answer: (name: string): string => `${name} is.`,
-  /** the sentence the whole product exists to make true */
+  /**
+   * The sentence the whole product exists to make true.
+   *
+   * Subtract the figures on the cards, not the raw ones. Rounding last made
+   * this read "32 hours more" above two cards showing 53h and 84h, because
+   * 84.49 − 52.98 rounds up where 84 − 53 does not. Small, and precisely the
+   * kind of thing a judge checks with their own arithmetic on a screen whose
+   * entire argument is that the numbers are trustworthy.
+   */
   punchline: (
     lighterName: string,
     lighterHours: number,
     heavierName: string,
     heavierHours: number,
   ): string =>
-    `${heavierName} is carrying ${Math.round(heavierHours - lighterHours)} hours more than ${lighterName}, and it is an ordinary week for ${heavierName}.`,
+    `${heavierName} is carrying ${Math.round(heavierHours) - Math.round(lighterHours)} hours more than ${lighterName}, and it is an ordinary week for ${heavierName}.`,
   usualLine: (hours: number): string =>
     `An ordinary week for them is about ${Math.round(hours)} hours.`,
   method:

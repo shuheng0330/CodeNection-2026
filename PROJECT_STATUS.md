@@ -138,7 +138,7 @@ living Week, the supporting-route frame, the deployment — is kept as-is.
 | Sheet focus management | Ku's `lib/useFocusTrap.ts` | `useModalDialog` does not set `inert`, so background controls stay in the tab order; it has no `focusin` recovery, no scrollbar-gutter compensation, focuses the first control rather than the heading, and cannot re-focus on a step change. |
 | Atomic accept/decline | Ku's store | `main`'s `decideAsk` has no idempotency: the only guard is component state that resets when the sheet is reopened, so close-and-reopen books the same shift twice. The gate asks for close/reopen to be tested. Ku's dedupes on `intentId` inside the store and has 13 tests. |
 | Which week a decision records | Ku's | `main` stored `price.worst` — the heaviest week in the horizon, not the week the request lands in. |
-| Add-commitment validation | Ku's `lib/engine/validate.ts` | Shared by three call sites and covered by 21 tests, rather than inline in one component. |
+| Add-commitment validation | Ku's `lib/engine/validate.ts` | Shared by three call sites and covered by 18 tests, rather than inline in one component. |
 | Put-down confirmation | Ku's preview | Superset: names the hours freed, the day that actually opens up, and that this week's reading will not change. |
 | CarryBar label | Both | Ku's per-band sentence plus Thong's explanation of what the shaded area is. |
 | Category and intensity grouping | Thong's `ChoiceRow` | A `<fieldset>`/`<legend>` is what a group of choices is; a `<label>` can only name one control. |
