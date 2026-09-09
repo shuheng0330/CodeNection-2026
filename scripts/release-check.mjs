@@ -402,11 +402,33 @@ console.log("\nThe hand-back preview saves nothing until it is confirmed");
   await pause(500);
   check((await readStore(page)).putDownId === null, "cancelling changes nothing");
 
+  await clickText(page, "Choose a different commitment");
+  await pause(400);
+  const choices = await page.evaluate(() =>
+    [...document.querySelectorAll('input[name="put-down-choice"]')].map((input) => ({
+      checked: input.checked,
+      id: input.value,
+    })),
+  );
+  check(choices.length > 1, "the recommendation can reveal other safe choices");
+  check(choices[0]?.checked, "Pikul's recommendation stays selected by default");
+
+  const chosenId = await page.evaluate(() => {
+    const input = document.querySelectorAll('input[name="put-down-choice"]')[1];
+    input?.click();
+    return input?.value ?? null;
+  });
+  await pause(400);
+  check(Boolean(chosenId), "a different commitment can be selected");
+
   await clickText(page, "Hand it back");
   await pause(500);
   await clickText(page, "Hand it back");
   await pause(600);
-  check((await readStore(page)).putDownId !== null, "confirming does");
+  check(
+    (await readStore(page)).putDownId === chosenId,
+    "confirming hands back the selected commitment",
+  );
 
   await clickText(page, "Actually, keep it");
   await pause(500);
