@@ -4,7 +4,7 @@
 
 - Production: <https://pikul-codenection-2026.vercel.app>
 - Vercel project: `pikul-codenection-2026`
-- First verified release commit: `5124274`
+- Current QA release commit: `775d516`
 
 The app needs no account, backend, API key, or environment variable.
 

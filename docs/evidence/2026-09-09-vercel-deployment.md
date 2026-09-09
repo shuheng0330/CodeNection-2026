@@ -1,19 +1,19 @@
 # Vercel deployment verification
 
-Date: 9 September 2026  
-Commit: `5124274`  
+Date: 9 September 2026
+Commit: `775d516`
 Production URL: <https://pikul-codenection-2026.vercel.app>
 
 ## Deployment record
 
 - Vercel project: `pikul-codenection-2026`
-- Production deployment ID: `dpl_8W31miiVZYFVFEidQY67GEp2GLzb`
+- Production deployment ID: `dpl_4gwYQRN7TUKvZDyBqnLCSSh4vGBZ`
 - Framework preset: Next.js
 - Node.js: 22.x
 - Environment variables: none
 - Vercel build completed all ten static pages and reported the deployment ready.
 
-The first upload used the project default of “Other” and produced no application output. The framework was corrected to Next.js, output detection was restored, and a new production deployment completed successfully.
+The first upload used the project default of “Other” and produced no application output. The framework was corrected to Next.js, output detection was restored, and the QA release was deployed successfully.
 
 ## Public smoke check
 

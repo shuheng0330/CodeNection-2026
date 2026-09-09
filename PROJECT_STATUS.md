@@ -35,7 +35,7 @@ Updated 9 September 2026.
 - Corrected declined-request totals from “handed back” to “kept free,” matching the decision semantics in the delivery plan.
 - Improved supporting-page semantics with labelled sections, a live recovery-choice result and a valid ordered Method list.
 - Verified Recover’s no-room and quiet-day states, keyboard choice selection, empty and populated Ask histories, and the Method reading flow in the browser.
-- Deployed commit `5124274` to Vercel at `https://pikul-codenection-2026.vercel.app` with no environment variables.
+- Deployed commit `775d516` to Vercel at `https://pikul-codenection-2026.vercel.app` with no environment variables.
 - Verified all seven public routes plus reset and persona deep links return HTTP 200.
 - Verified the public landing → Today → Week path in a fresh browser surface and recorded a repeatable demo/deployment runbook.
 - Completed the full route matrix at compact, tablet and desktop-equivalent widths with no horizontal overflow.
@@ -52,4 +52,4 @@ Updated 9 September 2026.
 
 ## Validation limits
 
-Shared navigation, the living week view and supporting routes have been validated locally and on the earlier Vercel deployment. The bounded QA fixes are ready for redeployment but have not yet been checked on a physical Android device using mobile data. Automatic Git deployment is intentionally deferred until the team agrees and merges the production branch. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
+Shared navigation, the living week view and supporting routes have been validated locally and on the current Vercel deployment. They have not yet been checked on a physical Android device using mobile data. Automatic Git deployment is intentionally deferred until the team agrees and merges the production branch. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
