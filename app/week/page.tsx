@@ -53,7 +53,7 @@ export default function WeekPage() {
       </Reveal>
 
       <Reveal delay={0.14} className="mt-10">
-        <WeekPanels weeks={weeks} />
+        <WeekPanels weeks={weeks} events={events} />
       </Reveal>
 
       <Reveal delay={0.2} className="mx-auto mt-12 max-w-lg">

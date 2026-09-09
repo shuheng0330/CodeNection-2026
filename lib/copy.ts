@@ -297,6 +297,16 @@ export const COMPARE = {
 export const WEEK = {
   title: "The weeks ahead",
   lead: "Everything already on your calendar, weighed the same way as this week.",
+  livingTitle: "Pick a day. See what is in it.",
+  livingLead:
+    "Four weeks on the same scale, so a tall day means the same thing in every panel.",
+  sharedScale: "One shared scale",
+  selectHint: "Choose a day to open it.",
+  heaviestWeek: "Your heaviest week ahead.",
+  selectedDay: "Selected day",
+  alreadyCarried: "Already carried",
+  dayEmpty: "Nothing is planned for this day.",
+  noHorizon: "There are no weeks to show yet.",
   empty: "Nothing on this week.",
   wallLabel: "Worth knowing about now",
   /** "Week 11 is the one to watch — seven things land across four days." */
@@ -308,6 +318,24 @@ export const WEEK = {
     "None of it is optional, so the thing that helps is not adding anything to it.",
   quiet: "Nothing ahead looks unusual for you.",
   hoursLabel: (h: number): string => `${Math.round(h)}h`,
+  eventHours: (h: number): string =>
+    h < 1 ? "under an hour" : `${Number.isInteger(h) ? h : h.toFixed(1)}h`,
+  weekSummary: (label: string, hours: number): string =>
+    `${label}, ${Math.round(hours)} hours`,
+  daysLabel: (label: string): string => `Days in ${label}`,
+  dayLabel: (date: string, hours: number, past: boolean): string =>
+    `${date}, ${Math.round(hours)} hours${past ? ", already carried" : ""}`,
+  dayDetailsLabel: (date: string): string => `Commitments for ${date}`,
+  categories: {
+    class: "Class",
+    assignment: "Assignment",
+    shift: "Shift",
+    commute: "Commute",
+    family: "Family",
+    social: "Social",
+    club: "Club",
+    admin: "Admin",
+  },
   backToToday: "Today",
 } as const;
 
