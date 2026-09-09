@@ -41,7 +41,11 @@ This revision supersedes the split-hero and static put-down motion requirements 
 - Provide a Linen & Clay favicon with 16px, 32px and 48px frames, a matching 180px Apple touch icon, and one static 1200×630 sharing image using Fraunces and DM Sans.
 - The sharing image contains only the Pikul wordmark, approved headline, a short factual supporting line and an abstract carrying-rope illustration. It does not contain screenshots, workload figures or judging claims.
 - Open Graph and Twitter metadata use the same image with dimensions and descriptive alternative text. Twitter uses a large-image card. Do not define a root canonical URL inherited by every route.
-- The project documents still do not contain a confirmed production URL. Until Thong records one, metadata resolves the deployment origin from Vercel’s production URL environment value and uses localhost only for local builds. External crawler previews remain a deployment check.
+- The confirmed production URL is <https://pikul-codenection-2026.vercel.app>.
+  Vercel is connected to `shuheng0330/Pikul`, with `main` as the production
+  branch. Metadata resolves the production origin from Vercel's deployment
+  environment and uses localhost only for local builds. External crawler
+  previews remain a deployment check.
 
 ## Hero text and visible release refinement — 9 September 2026
 

@@ -4,7 +4,9 @@
 
 - Production: <https://pikul-codenection-2026.vercel.app>
 - Vercel project: `pikul-codenection-2026`
-- Current QA release commit: `775d516`
+- Production branch: `main`
+- Current production commit: `4cfb5c7`
+- Connected repository: <https://github.com/shuheng0330/Pikul>
 
 The app needs no account, backend, API key, or environment variable.
 
@@ -32,10 +34,18 @@ The app needs no account, backend, API key, or environment variable.
 
 ## Repeatable deployment
 
-From the project root, with Vercel authentication available:
+Vercel is connected to GitHub with `main` as the production branch. Normal
+production releases use the reviewed Git workflow:
 
 ```powershell
-npx --yes vercel@latest deploy --prod --yes --project pikul-codenection-2026 --logs
+git switch main
+git pull origin main
+# Merge a reviewed feature branch or pull request, then:
+git push origin main
 ```
 
-Run `npm run verify` before deploying. After deployment, check every route from a signed-out browser and repeat the short operator path. Connect automatic Git deployments only after the team merges the release candidate to its agreed production branch; connecting it now could replace this branch's preview with the older `main` branch.
+Run `npm run verify` before merging. A push to another branch creates a preview;
+only `main` updates production. After deployment, confirm the source commit in
+Vercel, check every route from a signed-out browser, and repeat the short
+operator path. The Vercel CLI remains an emergency fallback, not the normal
+release path.
