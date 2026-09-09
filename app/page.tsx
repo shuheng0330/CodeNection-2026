@@ -3,6 +3,8 @@ import { BuildsQuietly } from "@/components/landing/BuildsQuietly";
 import { CommitmentScene } from "@/components/landing/CommitmentScene";
 import { PutDownPrinciple } from "@/components/landing/PutDownPrinciple";
 import { GrainOverlay } from "@/components/landing/GrainOverlay";
+import { AnimatedSteps } from "@/components/landing/AnimatedSteps";
+import { RevealGroup } from "@/components/landing/RevealGroup";
 import { HERO, HOW, LANDING, PRODUCT } from "@/lib/copy";
 import styles from "@/components/landing/landing.module.css";
 
@@ -32,17 +34,12 @@ export default function Home() {
       <BuildsQuietly />
       <PutDownPrinciple />
       <section id="how" aria-labelledby="how-title" className={styles.how}>
-        <div className={styles.sectionHeading}>
+        <RevealGroup className={styles.sectionHeading}>
           <p className={styles.eyebrow}>{LANDING.howEyebrow}</p>
           <h2 id="how-title">{HOW.title}</h2>
           <p className={styles.lead}>{HOW.body}</p>
-        </div>
-        <ol className={styles.steps}>
-          {HOW.points.map((point, i) => <li key={point.t}>
-            <span className={styles.stepNumber} aria-hidden="true">0{i + 1}</span>
-            <h3>{point.t}</h3><p>{point.d}</p>
-          </li>)}
-        </ol>
+        </RevealGroup>
+        <AnimatedSteps />
         <Link href="/today?reset=1" className={styles.primary}>{HERO.cta}<span aria-hidden="true"> ↗</span></Link>
       </section>
       <footer className={styles.footer}>

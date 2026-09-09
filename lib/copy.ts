@@ -384,6 +384,9 @@ export const HOW = {
 
 /* OWNER: B (landing & design) — illustrative landing content */
 export const LANDING = {
+  pause: "Pause animation",
+  resume: "Resume animation",
+  released: "One negotiable commitment handed back",
   skip: "Skip to content",
   audience: "For students carrying more than classes",
   openDemo: "Open demo",

@@ -74,3 +74,67 @@
  .how { padding-block:52px; } .steps { grid-template-columns:1fr; gap:26px; margin-top:28px; } .steps h3 { margin-top:10px; } .footer>p:last-child { margin-left:0; flex-basis:100%; }
 }
 @media(prefers-reduced-motion:reduce) { .primary { transition:none; } }
+
+/* Motion stays inside reserved artwork; no animated layout dimensions. */
+.motionScene { border-radius:28px; padding:26px; overflow:hidden; }
+.motionScene .sceneTop { padding:0 0 8px; position:relative; }
+.fields { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:-1; }
+.fields span { position:absolute; width:80%; height:65%; border-radius:50%; background:radial-gradient(ellipse,var(--color-clay-100),transparent 70%); top:-12%; left:-15%; animation:field-settle 1.8s ease-out both; }
+.fields span+span { background:radial-gradient(ellipse,var(--color-dusk-100),transparent 70%); top:35%; left:45%; animation-delay:.12s; }
+@keyframes field-settle { from { transform:translateY(12px) scale(.94); opacity:.35; } to { transform:none; opacity:1; } }
+.ropeStage { display:block; width:100%; height:auto; aspect-ratio:480/230; color:var(--color-clay-600); overflow:hidden; }
+.normalMarker { fill:var(--color-surface); stroke:var(--color-hairline); }
+.extraMarker { fill:var(--color-clay-100); stroke:var(--color-clay-600); }
+.markerText { fill:var(--color-ink); font-size:14px; }
+.motionLabels { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:0; margin:0; list-style:none; }
+.motionLabels li { display:flex; gap:9px; align-items:flex-start; padding:12px; border:1px solid var(--color-hairline); border-radius:14px; background:var(--color-surface); min-width:0; }
+.motionLabels p { font-size:14px; line-height:1.45; margin:4px 0; }
+.markerKey { display:grid; place-items:center; width:22px; height:22px; flex-shrink:0; border-radius:50%; font-size:11px; background:var(--color-clay-100); color:var(--color-clay-700); }
+.motionLabels .releasedLabel { border-color:var(--color-dusk); background:var(--color-dusk-100); }
+.sceneControls { margin-top:18px; }
+.sceneAction { width:100%; min-height:52px; padding:12px 16px; border-radius:999px; background:var(--color-clay-700); color:white; font-size:13px; line-height:1.5; cursor:pointer; }
+.sceneAction:disabled { background:var(--color-ink-muted); cursor:default; }
+.sceneAction:not(:disabled):hover { background:var(--color-ink); }
+.sceneResult { display:flex; align-items:center; justify-content:center; min-height:48px; margin-top:8px; color:var(--color-dusk); text-align:center; font-size:12px; line-height:1.5; }
+@media(max-width:1023px) { .motionScene { padding:20px; } .motionLabels { grid-template-columns:1fr; gap:9px; } .motionLabels li { padding:9px 12px; } }
+@media(max-width:767px) { .motionScene { border-radius:22px; padding:20px; } .motionScene .sceneTop { font-size:9px; } }
+@media(prefers-reduced-motion:reduce) { .fields span { animation:none; } }
+
+.releasedLabel .cardCategory, .releasedLabel .cardDetail { color: var(--color-ink); }
+
+/* Wide story: HTML cards stay legible instead of scaling with the SVG. */
+.hero { display:block; padding-block:56px 48px; text-align:center; }
+.hero h1 { max-width:900px; margin-inline:auto; }
+.hero .lead { max-width:660px; margin-inline:auto; }
+.hero .actions { justify-content:center; }
+.wideScene { margin:38px 0 0; position:relative; }
+.wideScene .sceneTop { padding:0 0 12px; }
+.hangingStage { position:relative; height:300px; margin-inline:8px; }
+.wideRope { position:absolute; top:0; left:0; width:100%; height:200px; color:var(--color-clay-600); overflow:visible; }
+.hangingAnchor { position:absolute; top:0; width:22%; transform:translate(-50%,calc(var(--desktop-y, 80) * 1px)); text-align:left; }
+.anchor0 { left:12.5%; }.anchor1 { left:37.5%; }.anchor2 { left:62.5%; }.anchor3 { left:87.5%; }
+.hanger { display:block; width:1px; height:24px; margin-inline:auto; background:var(--color-clay-500); }
+.hangingCard { padding:17px 18px; min-height:126px; background:var(--color-surface); border:1px solid var(--color-hairline); border-radius:16px; box-shadow:var(--shadow-soft); }
+.hangingCard p { font-family:var(--font-display); font-size:21px; line-height:1.2; margin:7px 0; }
+.hangingCard .cardDetail { display:block; line-height:1.5; }
+.shiftCard { background:var(--color-clay-100); border-color:var(--color-clay-500); }
+.shiftCard[data-released=true] { background:var(--color-dusk-100); border-color:var(--color-dusk); }
+.shiftCard .cardCategory,.shiftCard .cardDetail { color:var(--color-ink); }
+.wideCaption { font-family:var(--font-display); font-size:24px; min-height:64px; display:flex; align-items:center; justify-content:center; }
+.playbackSlot { height:48px; display:flex; justify-content:center; }
+.playback { padding:10px 18px; min-height:44px; color:var(--color-ink-muted); font-size:12px; text-decoration:underline; text-underline-offset:4px; cursor:pointer; }
+.stepNumber { display:inline-block; }
+@media(max-width:1023px) { .hangingCard { padding:14px 12px; min-height:146px; } .hangingCard p { font-size:19px; } }
+@media(max-width:767px) {
+ .hero { padding-block:36px 32px; }
+ .wideScene { margin-top:30px; }
+ .hangingStage { height:530px; margin-inline:0; }
+ .hangingAnchor { width:46%; transform:translate(-50%,calc(var(--mobile-y, 92) * 1px)); }
+ .anchor0,.anchor2 { left:25%; }.anchor1,.anchor3 { left:75%; }
+ .anchor2 .hanger,.anchor3 .hanger { height:240px; }
+ .anchor0,.anchor1 { z-index:1; }
+ .hangingCard { min-height:162px; padding:14px 12px; }
+ .hangingCard p { font-size:19px; }
+ .wideCaption { font-size:21px; min-height:72px; }
+ .wideScene .sceneTop { font-size:9px; padding-inline:0; }
+}

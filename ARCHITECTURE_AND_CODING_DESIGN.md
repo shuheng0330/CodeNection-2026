@@ -24,3 +24,21 @@ npm run verify runs voice gate, lint, Vitest and production build. Changed calcu
 Thursday evening is a readiness checkpoint. Agreed feature development continues Friday until the 15:00 merge target, followed by final integration/QA/fixes until the 18:00 MYT code freeze on 11 September. Record release commit/deployment before screenshots and filming. Planned architecture above has not been implemented in this documentation task.
 
 Read relevant bundled Next.js guides in node_modules/next/dist/docs before writing application code, as required by AGENTS.md.
+
+## Implemented landing composition — 9 September 2026
+
+The homepage now composes server-rendered CommitmentScene, BuildsQuietly and PutDownPrinciple components. Styles are isolated in components/landing/landing.module.css, preserving global tokens and app screens. Copy changes remain in landing-owned blocks of lib/copy.ts. The 280vh sticky animation was replaced by a normal-flow illustrative chart with a text equivalent; the hero is immediately readable. Existing CarryLine and other animation helpers are retained for later work but are no longer mounted by this landing composition.
+
+Navigation uses existing reset links and the #how anchor, with no state/API changes. Reduced-motion support for this static composition follows from removal of timed reveals and an explicit CSS rule disabling its hover transition. Browser-level preference emulation remains unverified. npm run verify passed on the implemented commit (74 tests, lint, voice gate, TypeScript and production build).
+
+## Landing motion implementation — 9 September 2026
+
+CommitmentScene is now a client island with an approximately two-second timer sequence, a spring MotionValue, four decorative markers and local intro/ready/released state. ropeMotion contains illustration-only curve geometry and frame timing; tests live in lib/landing-motion.test.ts to follow the existing test-discovery convention. Timers are cleaned up; leaving during introduction settles the ready state. Release/replay never touches the store.
+
+AnimatedMonth uses a once-only one-third visibility trigger and a short scaleY stagger. AnimatedSteps observes the group on desktop and each item on mobile, remembering completed entrances across breakpoint changes. Both render visible initial HTML and settle styles during cleanup. Reduced-motion handling uses a landing-local useSyncExternalStore subscription to matchMedia so preference changes also settle active animations; background fields use a finite CSS entrance with a reduced-motion override. Local CSS reserves the scene/control/result area. PutDownPrinciple and the surrounding page remain server components.
+
+## Wide rope implementation revision — 9 September 2026
+
+CommitmentScene now runs an eight-stage, nine-second local timeline. Remaining stage time is retained when paused; document visibility and viewport visibility gate playback. Rope and card lift MotionValues use the existing spring tokens and explicitly stop/resume together. Readable HTML cards follow the SVG curve through responsive CSS custom properties, using four desktop anchors or two mobile columns with staggered hanger lengths. Illustration and caption/control dimensions are reserved. The server renders settled cards; a reactive reduced-motion subscription disables playback.
+
+RevealGroup is a small client wrapper accepting server-rendered children, optional className and div/figure semantics. Each wrapper observes its own 35% entry and animates child transforms with spring.settle and opacity over 650ms, with a 150ms stagger. AnimatedSteps applies a 180ms desktop step stagger and 120ms internal sequence, observing individual steps on mobile. Cleanup restores complete content. This supersedes the earlier static PutDownPrinciple description. No public app API or dependency changes were introduced.

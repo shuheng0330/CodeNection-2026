@@ -20,3 +20,17 @@ Pikul is a frontend workload prototype for Malaysian university students, using 
 ## Acceptance and limits
 
 Use PHASE_PLAN.md's release gate and visual/user checks. Estimates require team availability confirmation. The team leader verifies current official submission rules. This task finalised documentation only; application implementation, browser validation, tests, and deployment verification remain pending.
+
+## Lim task 1 — implemented 9 September 2026
+
+The approved landing composition is implemented in commit 83b09f4 on codex/lim-landing: responsive split hero, readable illustrative commitment cards, a normal-flow month/week explanation, the eight-hour put-down example, and three explanatory steps. Sample actions use the existing /today?reset=1 flow. Landing examples are explicitly illustrative and are not the later shared engine fixture.
+
+No dependency, API, store, engine, app-screen or shared-token changes were required. Interactive decision preview, identity assets and motion improvements remain separate tasks. Current validation is recorded in PROJECT_STATUS.md; the earlier documentation-only statement describes the planning revision, not this implementation.
+
+## Landing motion — implemented 9 September 2026
+
+The approved motion pass restores an illustrative spring-driven rope introduction, user-triggered hand-back and replay. The chart grows once on entry; the three explanation steps reveal as a desktop group or independently on mobile. Labels and navigation remain readable without animation or JavaScript. No workload calculations, app state, routes or dependencies changed. Exact verification and remaining manual checks are recorded in PROJECT_STATUS.md.
+
+## Wide rope and section motion revision — 9 September 2026
+
+This revision supersedes the split-hero and static put-down motion requirements above. The hero uses centred copy/actions and a wide rope with four readable HTML commitment cards. A nine-second illustrative weight/relief loop has Pause/Resume controls and suspends off-screen or in a hidden tab. Mobile uses two rows with longer hangers. Reduced motion renders a settled illustration with no automatic playback. Lower headings, the put-down example and step children receive once-only staggered entrances, without replay controls. Existing routes, sample/reset behaviour and app state remain unchanged.
