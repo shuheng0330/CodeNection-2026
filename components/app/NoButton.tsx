@@ -10,6 +10,7 @@ import type { LoadEvent } from "@/lib/engine/types";
 import { CURRENT_WEEK } from "@/lib/seed/generateSemester";
 import { spring } from "@/lib/motion";
 import { usePikul } from "@/lib/store";
+import { useModalDialog } from "@/components/app/shell/useModalDialog";
 
 type Heft = keyof typeof ASK_WEIGHTS;
 
@@ -33,9 +34,11 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
   const [kind, setKind] = useState<AskKind>("shift");
   const [heft, setHeft] = useState<Heft>("heavy");
   const [tone, setTone] = useState<Tone>("soften");
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">(
+    "idle",
+  );
   const [decided, setDecided] = useState<"yes" | "no" | null>(null);
-  const logAsk = usePikul((s) => s.logAsk);
+  const decideAsk = usePikul((s) => s.decideAsk);
 
   // The ask lands next week — the week that is already loaded before anyone asks.
   const candidate: LoadEvent = useMemo(
@@ -44,7 +47,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
       date: format(addDays(asOf, 9), "yyyy-MM-dd"),
       category:
         kind === "shift" ? "shift" : kind === "project" ? "assignment" : "social",
-      title: "What they are asking",
+      title: ASK_KINDS.find((item) => item.key === kind)?.label ?? "Request",
       hours: ASK_WEIGHTS[heft].hours,
       intensity: ASK_WEIGHTS[heft].intensity,
       source: "user",
@@ -61,16 +64,19 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
     setOpen(false);
     setTimeout(() => {
       setStep(0);
-      setCopied(false);
+      setCopyState("idle");
       setDecided(null);
     }, 300);
   };
+  const { triggerRef, dialogRef, onKeyDown } = useModalDialog(open, close);
 
   const draft = draftDecline(kind, tone);
 
   return (
     <>
       <button
+        ref={triggerRef}
+        type="button"
         onClick={() => setOpen(true)}
         className="w-full rounded-full bg-clay-600 px-6 py-4 font-medium text-white shadow-soft transition-colors hover:bg-clay-500"
       >
@@ -88,6 +94,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               onClick={close}
             />
             <motion.div
+              ref={dialogRef}
               className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-y-auto rounded-t-[28px] border-t border-hairline bg-surface p-6 pb-10 shadow-lift sm:bottom-8 sm:mx-auto sm:max-w-lg sm:rounded-[28px]"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
@@ -95,6 +102,8 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               transition={spring.ui}
               role="dialog"
               aria-modal="true"
+              aria-labelledby="no-button-title"
+              onKeyDown={onKeyDown}
             >
               <div className="mx-auto mb-6 h-1.5 w-10 rounded-full bg-hairline" />
 
@@ -149,10 +158,12 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                       {NO_BUTTON.tones.map((t) => (
                         <button
                           key={t.key}
+                          type="button"
                           onClick={() => {
                             setTone(t.key as Tone);
-                            setCopied(false);
+                            setCopyState("idle");
                           }}
+                          aria-pressed={tone === t.key}
                           className={`flex-1 rounded-full border px-3 py-2 text-sm transition-colors ${
                             tone === t.key
                               ? "border-clay-600 bg-clay-100 text-clay-700"
@@ -164,19 +175,34 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                       ))}
                     </div>
 
-                    <div className="mt-4 rounded-2xl border border-hairline bg-raised/60 p-4">
+                    <div
+                      id="decline-reply"
+                      className="mt-4 rounded-2xl border border-hairline bg-raised/60 p-4"
+                    >
                       <p className="text-ink">{draft}</p>
                     </div>
 
                     <button
-                      onClick={() => {
-                        navigator.clipboard?.writeText(draft);
-                        setCopied(true);
+                      type="button"
+                      aria-describedby="decline-reply"
+                      onClick={async () => {
+                        try {
+                          if (!navigator.clipboard?.writeText) throw new Error();
+                          await navigator.clipboard.writeText(draft);
+                          setCopyState("copied");
+                        } catch {
+                          setCopyState("failed");
+                        }
                       }}
                       className="mt-3 w-full rounded-full bg-clay-600 px-6 py-3.5 font-medium text-white transition-colors hover:bg-clay-500"
                     >
-                      {copied ? NO_BUTTON.copied : NO_BUTTON.copyAction}
+                      {copyState === "copied"
+                        ? NO_BUTTON.copied
+                        : NO_BUTTON.copyAction}
                     </button>
+                    <p aria-live="polite" className="mt-2 min-h-5 text-sm text-rust">
+                      {copyState === "failed" ? NO_BUTTON.copyFailed : ""}
+                    </p>
 
                     {/* The decision is the point, and it is worth keeping.
                         Both answers are recorded the same way. */}
@@ -188,22 +214,36 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         {(["yes", "no"] as const).map((d) => (
                           <button
                             key={d}
+                            type="button"
+                            disabled={decided !== null}
                             onClick={() => {
+                              if (decided) return;
                               setDecided(d);
-                              logAsk({
-                                title: ASK_KINDS.find((k) => k.key === kind)!.label,
-                                hours: ASK_WEIGHTS[heft].hours,
-                                pct: price.worst.pctOfUsual,
-                                weekLabel: price.worst.label,
-                                verdict: price.verdict,
-                                decision: d,
-                              });
+                              decideAsk(
+                                {
+                                  title: candidate.title,
+                                  hours: candidate.hours,
+                                  pct: price.worst.pctOfUsual,
+                                  weekLabel: price.worst.label,
+                                  verdict: price.verdict,
+                                  decision: d,
+                                },
+                                d === "yes"
+                                  ? {
+                                      date: candidate.date,
+                                      category: candidate.category,
+                                      title: candidate.title,
+                                      hours: candidate.hours,
+                                      intensity: candidate.intensity,
+                                    }
+                                  : undefined,
+                              );
                             }}
                             aria-pressed={decided === d}
                             className={`min-h-11 flex-1 rounded-full border px-4 py-2.5 text-sm transition-colors ${
                               decided === d
                                 ? "border-ink bg-ink text-linen"
-                                : "border-hairline text-ink-muted hover:bg-raised"
+                                : "border-hairline text-ink-muted hover:bg-raised disabled:cursor-not-allowed disabled:opacity-55"
                             }`}
                           >
                             {d === "yes" ? NO_BUTTON.saidYes : NO_BUTTON.saidNo}
@@ -211,7 +251,9 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         ))}
                       </div>
                       {decided && (
-                        <p className="mt-3 text-sm text-ink-faint">{NO_BUTTON.logged}</p>
+                        <p aria-live="polite" className="mt-3 text-sm text-ink-faint">
+                          {NO_BUTTON.alreadyLogged}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -219,6 +261,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
               )}
 
               <button
+                type="button"
                 onClick={close}
                 className="mt-5 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
               >
@@ -239,7 +282,9 @@ function Step({ title, children }: { title: string; children: React.ReactNode })
       animate={{ opacity: 1, x: 0 }}
       transition={spring.settle}
     >
-      <h2 className="font-display text-h2">{title}</h2>
+      <h2 id="no-button-title" className="font-display text-h2">
+        {title}
+      </h2>
       <div className="mt-5">{children}</div>
     </motion.div>
   );
@@ -256,7 +301,9 @@ function Choice({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={`rounded-2xl border px-4 py-3.5 text-left transition-colors ${
         active ? "border-clay-600 bg-clay-100" : "border-hairline hover:bg-raised"
       }`}
@@ -269,6 +316,7 @@ function Choice({
 function Next({ onClick, label = "Next" }: { onClick: () => void; label?: string }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className="mt-6 w-full rounded-full bg-ink px-6 py-3.5 font-medium text-linen transition-opacity hover:opacity-90"
     >

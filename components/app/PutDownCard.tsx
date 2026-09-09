@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { PUT_DOWN, putDownLine, reclaimedLine } from "@/lib/copy";
 import type { PutDown, PutDownReason } from "@/lib/engine/putdown";
@@ -31,6 +32,7 @@ export function PutDownCard({
   const pickUpAgain = usePikul((s) => s.pickUpAgain);
   const recovery = usePikul((s) => s.recovery);
   const setRecovery = usePikul((s) => s.setRecovery);
+  const [confirming, setConfirming] = useState(false);
 
   // ---- after: the time is back, and it belongs to them ----
   if (handedBack) {
@@ -110,12 +112,41 @@ export function PutDownCard({
         <p className="mt-2 text-ink-muted">
           {putDownLine(suggestion.hoursBack, suggestion.when)}
         </p>
-        <button
-          onClick={() => putDown(suggestion.event.id)}
-          className="mt-5 min-h-11 w-full rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
-        >
-          {PUT_DOWN.action}
-        </button>
+        {confirming ? (
+          <div className="mt-5 rounded-2xl border border-dusk/30 bg-surface/70 p-4">
+            <p className="font-medium text-ink">{PUT_DOWN.confirmTitle}</p>
+            <p className="mt-2 text-sm text-ink-muted">
+              {suggestion.event.title} · {putDownLine(suggestion.hoursBack, suggestion.when)}
+            </p>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirming(false);
+                  putDown(suggestion.event.id);
+                }}
+                className="min-h-11 rounded-full bg-dusk px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              >
+                {PUT_DOWN.confirmAction}
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirming(false)}
+                className="min-h-11 rounded-full border border-dusk/30 px-5 py-3 text-sm font-medium text-ink-muted transition-colors hover:bg-dusk-100"
+              >
+                {PUT_DOWN.cancelAction}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setConfirming(true)}
+            className="mt-5 min-h-11 w-full rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
+          >
+            {PUT_DOWN.action}
+          </button>
+        )}
       </motion.div>
     );
   }

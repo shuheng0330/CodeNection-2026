@@ -112,6 +112,8 @@ export const QUIETLY = {
 export const TODAY = {
   weekLabel: "This week",
   usualBandLabel: "your usual",
+  carryBarLabel: (position: string): string =>
+    `Your week is ${position}. The shaded area marks your usual.`,
 } as const;
 
 /* ── OWNER: A (engine & app) · where the week actually went ─────── */
@@ -134,6 +136,9 @@ export const AREAS = {
 export const PUT_DOWN = {
   title: "One thing worth putting down",
   action: "Hand it back",
+  confirmTitle: "Hand this back?",
+  confirmAction: "Yes, hand it back",
+  cancelAction: "No, keep it",
   undo: "Actually, keep it",
   doneTitle: "Handed back",
   /** Saying nothing is also information: it says the week is heavy for
@@ -359,6 +364,7 @@ export const ADD = {
     title: "What is it",
     date: "When",
     hours: "How long",
+    category: "What kind of thing?",
     intensity: "How much does this take out of you?",
   },
   intensityScale: ["Barely", "A little", "Some", "A lot", "Everything"],
@@ -374,6 +380,7 @@ export const ADD = {
   } as Record<string, string>,
   submit: "Add it",
   cancel: "Close",
+  invalid: "Check the date and hours before adding this.",
   untitled: "Something",
 } as const;
 
@@ -395,12 +402,14 @@ export const NO_BUTTON = {
   ],
   copyAction: "Copy reply",
   copied: "Copied",
+  copyFailed: "Could not copy. The reply is still selectable above.",
   decisionTitle: "What did you do?",
   /** A yes weighs exactly as much as a no here. A tool that only ever
    *  validates declining is just a different voice telling you what to do. */
   saidYes: "I said yes",
   saidNo: "I said no",
   logged: "Kept.",
+  alreadyLogged: "Decision kept. Close this sheet to continue.",
   verdict: {
     fits: "This fits.",
     tight: "This would make it tight.",

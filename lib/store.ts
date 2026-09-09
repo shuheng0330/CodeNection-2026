@@ -40,7 +40,10 @@ interface PikulState {
   putDown: (id: string) => void;
   pickUpAgain: () => void;
   setRecovery: (key: string | null) => void;
-  logAsk: (a: Omit<Ask, "id" | "at">) => void;
+  decideAsk: (
+    ask: Omit<Ask, "id" | "at">,
+    accepted?: Omit<LoadEvent, "id" | "source">,
+  ) => void;
   clearAsks: () => void;
   reset: () => void;
 }
@@ -78,12 +81,18 @@ export const usePikul = create<PikulState>()(
       putDown: (putDownId) => set({ putDownId, recovery: null }),
       pickUpAgain: () => set({ putDownId: null, recovery: null }),
       setRecovery: (recovery) => set({ recovery }),
-      logAsk: (a) =>
+      decideAsk: (ask, accepted) =>
         set((s) => ({
           asks: [
-            { ...a, id: nextId(), at: new Date().toISOString() },
+            { ...ask, id: nextId(), at: new Date().toISOString() },
             ...s.asks,
           ],
+          userEvents: accepted
+            ? [
+                ...s.userEvents,
+                { ...accepted, id: nextId(), source: "user" as const },
+              ]
+            : s.userEvents,
         })),
       clearAsks: () => set({ asks: [] }),
       reset: () => set({ personaId: DEFAULT_PERSONA.id, ...empty() }),

@@ -128,7 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <div className="min-w-0">
         <header className="flex min-h-16 items-center justify-between border-b border-hairline bg-linen/90 px-5 backdrop-blur-sm lg:hidden">
-          <Link href="/" className="font-display text-xl">
+          <Link href="/" className="inline-flex min-h-11 items-center font-display text-xl">
             {PRODUCT.name}
           </Link>
           <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
