@@ -1,6 +1,6 @@
 # Project requirements
 
-Updated 8 September 2026. Authoritative delivery scope: PHASE_PLAN.md, final consolidated plan.
+Updated 9 September 2026. Authoritative delivery scope: PHASE_PLAN.md, final consolidated plan.
 
 ## Product and delivery
 
@@ -34,3 +34,11 @@ The approved motion pass restores an illustrative spring-driven rope introductio
 ## Wide rope and section motion revision — 9 September 2026
 
 This revision supersedes the split-hero and static put-down motion requirements above. The hero uses centred copy/actions and a wide rope with four readable HTML commitment cards. A nine-second illustrative weight/relief loop has Pause/Resume controls and suspends off-screen or in a hidden tab. Mobile uses two rows with longer hangers. Reduced motion renders a settled illustration with no automatic playback. Lower headings, the put-down example and step children receive once-only staggered entrances, without replay controls. Existing routes, sample/reset behaviour and app state remain unchanged.
+
+## Brand metadata and sharing identity — 9 September 2026
+
+- Use “Pikul — Your week is more than your timetable.” and the approved product description consistently for document, Open Graph and Twitter metadata.
+- Provide a Linen & Clay favicon with 16px, 32px and 48px frames, a matching 180px Apple touch icon, and one static 1200×630 sharing image using Fraunces and DM Sans.
+- The sharing image contains only the Pikul wordmark, approved headline, a short factual supporting line and an abstract carrying-rope illustration. It does not contain screenshots, workload figures or judging claims.
+- Open Graph and Twitter metadata use the same image with dimensions and descriptive alternative text. Twitter uses a large-image card. Do not define a root canonical URL inherited by every route.
+- The project documents still do not contain a confirmed production URL. Until Thong records one, metadata resolves the deployment origin from Vercel’s production URL environment value and uses localhost only for local builds. External crawler previews remain a deployment check.

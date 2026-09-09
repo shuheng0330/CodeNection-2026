@@ -1,6 +1,6 @@
 # Architecture and coding design
 
-Updated 8 September 2026. Implementation ownership and release criteria: PHASE_PLAN.md.
+Updated 9 September 2026. Implementation ownership and release criteria: PHASE_PLAN.md.
 
 ## Current architecture
 
@@ -42,3 +42,11 @@ AnimatedMonth uses a once-only one-third visibility trigger and a short scaleY s
 CommitmentScene now runs an eight-stage, nine-second local timeline. Remaining stage time is retained when paused; document visibility and viewport visibility gate playback. Rope and card lift MotionValues use the existing spring tokens and explicitly stop/resume together. Readable HTML cards follow the SVG curve through responsive CSS custom properties, using four desktop anchors or two mobile columns with staggered hanger lengths. Illustration and caption/control dimensions are reserved. The server renders settled cards; a reactive reduced-motion subscription disables playback.
 
 RevealGroup is a small client wrapper accepting server-rendered children, optional className and div/figure semantics. Each wrapper observes its own 35% entry and animates child transforms with spring.settle and opacity over 650ms, with a 150ms stagger. AnimatedSteps applies a 180ms desktop step stagger and 120ms internal sequence, observing individual steps on mobile. Cleanup restores complete content. This supersedes the earlier static PutDownPrinciple description. No public app API or dependency changes were introduced.
+
+## Brand metadata and static identity assets — 9 September 2026
+
+`lib/brand-metadata.ts` owns the shared title, description, image alternative text and a typed metadata factory. `app/layout.tsx` remains the root metadata export and supplies `VERCEL_PROJECT_PRODUCTION_URL`, falling back to `VERCEL_URL` and then local development. No canonical URL is defined. This keeps route-specific canonical decisions available to their route segments and avoids identifying every app route as the homepage.
+
+Next.js file conventions serve `app/favicon.ico`, `app/apple-icon.png` and `app/opengraph-image.png`. The ICO contains 16px, 32px and 48px RGBA PNG frames; the Apple icon is 180×180; and the sharing image is 1200×630. `app/opengraph-image.alt.txt` supplies the file-convention Open Graph alternative text, while the metadata object supplies the same text for Twitter. The single Open Graph and Twitter image references are verified in rendered HTML.
+
+`scripts/generate-brand-assets.py` reproducibly generates the assets from the existing Linen & Clay values and the Latin Fraunces/DM Sans font files emitted by `next/font` into `.next`. It requires a completed Next.js build before regeneration and uses the existing local Pillow tooling; it adds no application dependency or runtime work.

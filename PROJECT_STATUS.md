@@ -1,6 +1,6 @@
 # Project status
 
-Updated 8 September 2026.
+Updated 9 September 2026.
 
 ## Confirmed from source inspection
 
@@ -62,3 +62,12 @@ The earlier planning-only validation paragraph is historical. The checks above d
 - Browser-level hidden-tab and reduced-motion emulation, true 200% zoom and exhaustive frame-by-frame checks at every viewport remain manual validation. Sample/reset URLs are unchanged; the earlier functional reset check remains the recorded evidence. No claim of new full app-screen validation is made.
 - Artifacts outside the repository: C:/Users/User/.codex/visualizations/2026/09/08/01a08121-815e-7c70-87c1-ecbf9bd97538/wide-rope-desktop.png, wide-rope-mobile.png and wide-rope-motion.gif. The GIF is a short browser screenshot-frame recording.
 - Same worktree and codex/lim-landing branch. Existing changes preserved; no commit or push.
+
+## Brand metadata and sharing identity completion — 9 September 2026
+
+- Work remains in the same worktree on `codex/lim-landing`. The tree was clean before this task; changes are left uncommitted and unpushed for review.
+- Added a three-frame 16/32/48px RGBA favicon, matching 180px Apple touch icon, and a static 1200×630 Open Graph PNG. The assets use the existing Linen & Clay palette; the sharing image uses the project’s Fraunces and DM Sans font output.
+- Updated root document, Open Graph and Twitter metadata to the approved title and description. The rendered page contains one Open Graph image, one Twitter image, a `summary_large_image` card, dimensions and matching descriptive alternative text. No root canonical tag is emitted.
+- Local requests returned HTTP 200 for `/`, `/favicon.ico`, `/apple-icon.png` and `/opengraph-image.png`. Full-size and 400×210 sharing-image inspection passed; enlarged nearest-neighbour reviews confirmed the icon silhouette remains recognisable at 16px and 32px.
+- Final `npm run verify` passed after the documentation update: voice gate, lint, 10 test files / 80 tests, TypeScript and production build. The production build prerendered the Apple icon and Open Graph image routes.
+- No confirmed deployment URL is recorded in `PHASE_PLAN.md` or the required project documents. Metadata therefore uses `VERCEL_PROJECT_PRODUCTION_URL`/`VERCEL_URL` at deployment and localhost during local development. The production origin and external platform link-preview caches remain unverified until the deployment URL is supplied and deployed.
