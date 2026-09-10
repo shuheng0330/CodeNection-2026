@@ -121,6 +121,10 @@ describe("the promise the landing page makes", () => {
   // wrong first: the next rewrite of this section put "health needs" straight
   // back, in a new sentence a test naming a single key would have waved
   // through.
+  // `protected` is currently unrendered — the refresh folded the claim into
+  // `putdownBody` — so only the second of these is on screen today. Both are
+  // checked anyway: the string is still in copy.ts and reaches a page the
+  // moment anyone puts it back.
   const CLAIMS = [LANDING.protected, LANDING.putdownBody];
 
   const NAMED: [string, LoadCategory][] = [

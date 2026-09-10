@@ -406,3 +406,9 @@ through the next sentence that makes the same promise, and that is exactly
 what happened within a day. `putdown.test.ts` now checks every landing string
 that claims something is protected, against `suggestPutDown` itself. Confirmed
 it fails on the incoming wording before the fix was kept.
+
+One loose end for Lim: `LANDING.protected` no longer has a caller. The
+refresh moved the claim into `putdownBody` and left the old string behind, so
+the sentence a reader now sees is `putdownBody` alone. The dead key is still
+guarded — it costs nothing and it is in copy.ts where someone will find it —
+but it should probably just be deleted.
