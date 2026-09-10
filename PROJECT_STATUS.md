@@ -231,3 +231,15 @@ Final verification after the border adjustment: npm run verify passed (voice gat
 - Production browser inspection at localhost:3003 confirmed the revised desktop composition and no horizontal overflow at 360/390/768/1024/1440px. Saved landing-simplified-desktop.png and landing-simplified-mobile.png under C:/Users/User/.codex/visualizations/2026/09/08/01a08121-815e-7c70-87c1-ecbf9bd97538/.
 - Verification immediately after the layout changes passed: voice gate, lint, 144 tests, TypeScript and production build. Zoom and reduced-motion browser limitations remain as previously recorded.
 - On continuation the active branch is feature/icon-and-title-refresh, with additional icon/metadata changes from other work. These were preserved; no checkout, commit or push was performed.
+
+Fresh verification on continuation also passed: voice gate, lint, 144 tests, TypeScript and production build, including the current icon changes. git diff --check passed.
+
+## Consistent entrance timing — 10 September 2026
+
+Added the shared RevealGroup entrance to decision-preview headings and request details. Unified AnimatedSteps with the same 12px rise, 650ms opacity transition, 150ms stagger and 35% visibility threshold. Put-down and closing headings already use that wrapper. Interactive result changes retain their short feedback fade rather than restarting a section entrance. Mobile steps remain independently observed. Final npm run verify passed: voice gate, lint, 144 tests, TypeScript and production build; git diff --check passed. This pass was source/build verified; no new browser motion recording or preference-emulation claim is made. Existing changes preserved, no commit or push.
+
+## Missing forecast entrance correction — 10 September 2026
+
+The earlier consistency change omitted the right forecast panel. Added its once-only RevealGroup with a stable target around the keyed choice feedback. Verified current source at localhost:3004 in the browser: twelve sampled frames show forecast opacity increasing from 0.15 to 1 and translateY settling from 12px to zero. Declining and scrolling away/back left entrance opacity at 1 and transform none; the selected result remained correct. No claim that a static screenshot alone proves motion. Existing changes preserved; no commit or push.
+
+Correction verification: npm run verify passed (voice gate, lint, 144 tests, TypeScript and production build).

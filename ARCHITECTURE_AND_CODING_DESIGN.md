@@ -66,3 +66,9 @@ DecisionPreview is a landing client island with local choice and announcement st
 ## Simplified landing composition — 10 September 2026
 
 The request/forecast columns share one bordered surface, with a vertical desktop divider and horizontal mobile divider. Reply space stays reserved across preview selections. PutDownPrinciple retains its existing reveal wrapper but removes the secondary example figure. Local CSS provides a compact heading/body composition and tighter closing-section spacing; app state and forecast logic are unchanged.
+
+## Landing entrance consistency — 10 September 2026
+
+RevealGroup exports landingEntrance settings used by both its child reveal and AnimatedSteps, removing separate timing values. DecisionPreview now reuses RevealGroup for its heading and request details. No nested reveal is added to the interactive result, preventing a second entrance from replaying when selecting a choice. Existing cleanup, visible server markup and reduced-motion handling are preserved.
+
+The decision forecast now has a stable RevealGroup around its controls/result wrappers. The keyed selection-feedback element sits inside a stable entrance target, so switching choices cannot remount/replay the entrance or compete for opacity on the same node.

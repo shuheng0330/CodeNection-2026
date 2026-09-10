@@ -8,6 +8,7 @@ import { draftDecline } from "@/lib/decline";
 import { LANDING_DECISION as COPY, HERO } from "@/lib/copy";
 import { previewOutcome, type PreviewChoice } from "./previewOutcome";
 import styles from "./landing.module.css";
+import { RevealGroup } from "./RevealGroup";
 
 export function DecisionPreview() {
   const [demo, setDemo] = useState<DecisionDemo | null>(null);
@@ -26,23 +27,27 @@ export function DecisionPreview() {
     setAnnouncement(`${next === "accept" ? COPY.accept : COPY.decline}: ${result.hoursText}. ${result.selected === null ? COPY.unavailable : `${result.selected}% ${COPY.usual}.`}`);
   }
   return <section className={styles.decision} aria-labelledby="decision-title">
+    <RevealGroup>
     <p className={styles.eyebrow}>{COPY.eyebrow}</p>
     <h2 id="decision-title">{COPY.title}</h2>
     <p className={styles.lead}>{COPY.description}</p>
+    </RevealGroup>
     <div className={styles.decisionGrid}>
       {demo && outcome ? <>
-        <div className={styles.requestCard}>
+        <RevealGroup className={styles.requestCard}>
           <p className={styles.eyebrow}>{demo.persona.name} · {COPY.sample}</p>
           <blockquote className={styles.requestMessage}>“{demo.message}”</blockquote>
           <p className={styles.requestTitle}>{demo.candidate.title}</p>
           <p className={styles.requestDetail}>{format(parseISO(demo.candidate.date), "EEE, d MMM yyyy")} · {demo.candidate.hours} {COPY.hours}</p>
           <p className={styles.requestNote}>{COPY.proposed}</p>
-        </div>
+        </RevealGroup>
         <div className={styles.previewCard} data-choice={choice}>
+          <RevealGroup>
           <div className={styles.previewChoices} role="group" aria-label={COPY.choiceLabel}>
             <button type="button" aria-pressed={choice === "accept"} onClick={() => select("accept")}>{COPY.accept}</button>
             <button type="button" aria-pressed={choice === "decline"} onClick={() => select("decline")}>{COPY.decline}</button>
           </div>
+          <div>
           <div key={choice} className={announcement ? styles.previewChanged : undefined}>
             <p className={styles.forecastWeek}>{outcome.week ?? COPY.forecast}</p>
             {outcome.before !== null ? <div className={styles.forecastValues}>
@@ -55,6 +60,8 @@ export function DecisionPreview() {
               <blockquote>{draftDecline("shift", "soften")}</blockquote>
             </div>
           </div>
+          </div>
+          </RevealGroup>
         </div>
       </> : <p className={styles.previewFallback}>{COPY.fallback}</p>}
     </div>

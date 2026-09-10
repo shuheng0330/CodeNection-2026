@@ -58,3 +58,9 @@ Added a sample-request preview after the baseline section and before the existin
 ## Landing simplification — 10 September 2026
 
 The decision preview is the main interactive section, presented in one shared container with an internal divider. The blue put-down section is condensed to a heading and short explanation that protects essential responsibilities; the repeated eight-hour illustration is removed. How it works retains its three steps and closing CTA without the repeated introductory paragraph.
+
+## Consistent landing entrances — 10 September 2026
+
+Before you say yes, Make a little room and How it works use the same once-only text entrance: 12px rise, 650ms fade, 150ms stagger and 35% visibility trigger. The request details follow the same pattern. Decision controls stay immediately usable, and selection feedback remains a separate short fade. Mobile steps retain independent visibility triggers.
+
+The consistent-entrance scope includes the forecast panel as well as the heading and request text; preview choice feedback remains separate.
