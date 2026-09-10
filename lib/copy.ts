@@ -641,7 +641,7 @@ export const LANDING = {
   putdownEyebrow: "Make a little room",
   putdownTitle: "One thing you can put down.",
   putdownBody: "You don't need another list of things to fix. When your week is heavy, Pikul looks for one negotiable commitment you could hand back, like an extra shift or an optional event.",
-  protected: "Classes, coursework, health needs and family responsibilities stay protected. The choice is always yours.",
+  protected: "Classes, coursework, commuting and family responsibilities stay protected. The choice is always yours.",
   reliefExample: "Illustrative example · handing back an existing commitment",
   shiftTitle: "The extra Saturday shift",
   shiftDetail: "8 hours · a negotiable commitment",

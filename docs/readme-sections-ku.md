@@ -4,11 +4,11 @@ For Thong to integrate. My assigned sections are product flow, method,
 limitations, architecture, setup and dependencies. Lim's problem/audience/design
 sections and Thong's ideation/evidence/roadmap sections slot around these.
 
-Everything below is checked against the code as merged in PR #12. Two things
-need a human before this ships: the citations in **The method** are named from
-memory and should be confirmed against the actual papers, and the accessibility
-sentence in **What it cannot do** must stay accurate to whatever manual testing
-we have actually completed by then.
+Everything below is checked against the code as merged in PR #16, and the
+citations in **The method** are now confirmed against PubMed rather than named
+from memory. One thing still needs a human: the accessibility sentence in
+**What it cannot do** must stay accurate to whatever manual testing we have
+actually completed by the time this ships.
 
 ---
 
@@ -94,15 +94,34 @@ yet", not "you have no load".
 commitments already in the calendar. It is not a forecast of how you will feel.
 It is what you have already agreed to, added up.
 
-The provenance: the acute-to-chronic workload ratio comes from athlete
-monitoring, popularised in that field by Gabbett, and session-RPE from Foster.
-It is also genuinely contested there — the best-known objection, associated with
-Lolli and with Impellizzeri and colleagues, is that the recent window sits inside
-the longer one it is divided by, which couples the two mathematically and can
-manufacture correlations that are not really there. We think it is still the most
-honest simple signal available for this, and we would rather a reader knew the
-objection than found it later. *(Before submission: confirm these citations
-against the actual papers rather than shipping them from memory.)*
+**Where it comes from, and who argues with it.** Session-RPE — duration times
+intensity — is Foster's, set out in the overtraining-monitoring paper and then
+validated as a method against heart rate. The acute-to-chronic ratio is the
+tool athlete monitoring built on top of it, and Gabbett's 2016 paper is the one
+that made it widely used; his suggested band, 0.8 to 1.3, is where our own first
+two edges come from, which is not a coincidence and we would rather say so.
+
+It is also genuinely contested in its own field. Lolli and colleagues showed
+that the conventional calculation is mathematically coupled — the recent window
+is part of the longer window it is divided by — which can manufacture
+correlations that are not really there. Impellizzeri and colleagues went further
+and questioned the idea itself, including whether the choice of 7 and 28 days has
+any physiological justification. Both objections apply to us. We think this is
+still the most honest simple signal available for a student's week, and we would
+much rather a reader met the objection here than found it afterwards.
+
+- Foster C. Monitoring training in athletes with reference to overtraining
+  syndrome. *Med Sci Sports Exerc.* 1998;30(7):1164–8.
+- Foster C, Florhaug JA, Franklin J, et al. A new approach to monitoring exercise
+  training. *J Strength Cond Res.* 2001;15(1):109–15.
+- Gabbett TJ. The training-injury prevention paradox: should athletes be training
+  smarter and harder? *Br J Sports Med.* 2016;50(5):273–80.
+- Lolli L, Batterham AM, Hawkins R, et al. Mathematical coupling causes spurious
+  correlation within the conventional acute-to-chronic workload ratio
+  calculations. *Br J Sports Med.* 2019;53(15):921–2.
+- Impellizzeri FM, Tenan MS, Kempton T, Novak A, Coutts AJ. Acute:chronic
+  workload ratio: conceptual issues and fundamental pitfalls. *Int J Sports
+  Physiol Perform.* 2020;15(6):907–13.
 
 ## What it cannot do
 
@@ -156,7 +175,7 @@ or `lib/`. Your week lives in your own browser and nowhere else.
 Three decisions worth explaining:
 
 **The engine is pure and separately tested.** `lib/engine` has no React import
-and no knowledge of the screen. That is what makes 135 tests possible and it is
+and no knowledge of the screen. That is what makes 145 tests possible and it is
 why the maths can be argued with independently of the interface.
 
 **Every user-facing string lives in one file.** Not for translation — for
@@ -183,7 +202,7 @@ Node 22. No environment variables and nothing to configure.
 
 To check it the way we do before a release:
 
-    npm run verify       # voice gate, lint, 135 tests, production build
+    npm run verify       # voice gate, lint, 145 tests, production build
 
     npm run build && npm start
     npm run check:release   # in a second terminal

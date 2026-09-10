@@ -7,6 +7,7 @@ import {
   whenLabel,
 } from "./putdown";
 import type { Intensity, LoadCategory, LoadEvent } from "./types";
+import { LANDING } from "../copy";
 
 const asOf = new Date(2026, 8, 9); // Wednesday 9 Sep 2026
 const HEAVY = 1.4;
@@ -106,6 +107,40 @@ describe("eligiblePutDowns", () => {
     expect(eligiblePutDowns([ev("2026-09-12", "shift", 8, 5)], asOf, CALM)).toEqual(
       [],
     );
+  });
+});
+
+describe("the promise the landing page makes", () => {
+  // The landing page names, in prose, the things Pikul will never ask you to
+  // drop. That sentence is a claim about this engine, and it shipped saying
+  // "health needs" — a category that has never existed in the model — while
+  // leaving out commuting, which the engine really does protect. Nobody could
+  // have caught that by reading either file alone.
+  const NAMED: [string, LoadCategory][] = [
+    ["Classes", "class"],
+    ["coursework", "assignment"],
+    ["commuting", "commute"],
+    ["family", "family"],
+  ];
+
+  it("names something the engine actually protects, and nothing it does not", () => {
+    for (const [phrase, category] of NAMED) {
+      expect(LANDING.protected.toLowerCase()).toContain(phrase.toLowerCase());
+      expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).toBeNull();
+    }
+  });
+
+  it("leaves out every category the engine is willing to offer back", () => {
+    const offered: [string, LoadCategory][] = [
+      ["shift", "shift"],
+      ["social", "social"],
+      ["club", "club"],
+      ["errand", "admin"],
+    ];
+    for (const [phrase, category] of offered) {
+      expect(LANDING.protected.toLowerCase()).not.toContain(phrase);
+      expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).not.toBeNull();
+    }
   });
 });
 

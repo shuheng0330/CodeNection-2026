@@ -252,3 +252,49 @@ moved into it while still self-mounting AppShell would render two shells.
 - `npm run verify` passed with 14 files and 143 tests. The browser release check
   passed all existing checks plus default selection, alternate selection, exact
   persisted ID, cancel and undo coverage.
+
+## Accuracy pass, 10 September 2026 (Ku's lane)
+
+**Cross-owner correction, announced here rather than assumed.** The landing
+page's put-down section promised that "Classes, coursework, health needs and
+family responsibilities stay protected." There is no health category in the
+model and never has been, and the sentence left out commuting, which the engine
+really does refuse to offer back. The protected set in `lib/engine/putdown.ts`
+is class, assignment, commute and family; the negotiable set is shift, social,
+club and admin. One string in Lim's block of `lib/copy.ts` now says commuting
+instead of health needs.
+
+The sentence is a claim about the engine sitting in a different file from the
+engine, which is why nobody caught it by reading either one. `putdown.test.ts`
+now asserts both halves against `suggestPutDown` directly: every phrase the
+landing names must be a category the engine refuses, and no category the engine
+is willing to offer may appear in that sentence. Confirmed it fails on the old
+wording before keeping the fix.
+
+**Citations confirmed.** The method section of `docs/readme-sections-ku.md` had
+its sources named from memory and flagged as needing a human. All four are now
+checked against PubMed and carry journal, year, volume and pages: Foster 1998
+(Med Sci Sports Exerc 30(7):1164-8) and Foster et al. 2001 (J Strength Cond Res
+15(1):109-15) for session-RPE, Gabbett 2016 (Br J Sports Med 50(5):273-80) for
+the ratio, Lolli et al. 2019 (Br J Sports Med 53(15):921-2) for mathematical
+coupling and Impellizzeri et al. 2020 (Int J Sports Physiol Perform
+15(6):907-13) for the conceptual objection. Gabbett's suggested 0.8-1.3 band is
+where our own first two edges come from; the draft now says so rather than
+leaving the resemblance unexplained.
+
+**Verified on this commit.** `npm run verify` passes: voice gate, lint, 145
+tests, production build. `npm run check:release` passes against a production
+build, including Thong's new put-down chooser.
+
+### Noticed, not fixed — other owners' calls
+
+- `components/landing/CarryLine.tsx` has no importers since the landing
+  redesign. It hardcodes "Cover Danish's shift, Saturday, 8 hours" while the
+  shared fixture is "Cover Kelly's shift" next Friday, so it should be deleted
+  rather than left for someone to re-import.
+- `HERO.headlineAccent` ("carrying") is no longer in either headline line, so
+  nothing renders it.
+- `.vitest/json/output.json` is committed. It is generated test output and
+  belongs in `.gitignore`.
+- `components/app/shell/useModalDialog.ts` still has no callers, and AppShell's
+  More sheet still carries its own copy of the focus logic without `inert`.
