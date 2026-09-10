@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-export const BRAND_TITLE =
-  "Pikul — Your week is more than your timetable.";
+export const BRAND_TITLE = "Pikul";
 export const BRAND_DESCRIPTION =
   "See assignments, shifts, commuting and family together. Compare your week with your own normal, and find room for what matters.";
 export const BRAND_IMAGE_ALT =

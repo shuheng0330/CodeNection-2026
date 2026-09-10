@@ -102,3 +102,63 @@
  .wideCaption { font-size:21px; min-height:72px; }
  .wideScene .sceneTop { font-size:9px; padding-inline:0; }
 }
+
+.decision { width:min(100% - 80px,1200px); margin:0 auto; padding-block:30px 70px; }
+.decisionGrid { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin:30px 0 24px; min-height:480px; }
+.requestCard,.previewCard { padding:30px; border:1px solid var(--color-hairline); border-radius:24px; background:var(--color-surface); min-width:0; }
+.requestCard { background:var(--color-raised); }
+.requestMessage { font-family:var(--font-display); font-size:clamp(24px,2.3vw,34px); line-height:1.35; margin:32px 0; }
+.requestTitle { font-weight:600; font-size:16px; }
+.requestDetail,.requestNote { color:var(--color-ink-muted); font-size:13px; line-height:1.6; margin-top:10px; }
+.requestNote { margin-top:28px; max-width:350px; }
+.previewChoices { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.previewChoices button { min-height:48px; padding:10px; border:2px solid var(--color-hairline); border-radius:12px; font-size:13px; cursor:pointer; }
+.previewChoices button[aria-pressed=true] { border:2px solid var(--color-clay-700); background:var(--color-clay-100); font-weight:600; }
+.previewCard[data-choice=decline] .previewChoices button[aria-pressed=true] { border-color:var(--color-dusk); background:var(--color-dusk-100); }
+.forecastWeek { font-size:12px; color:var(--color-ink-muted); margin:26px 0 14px; }
+.forecastValues { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.forecastValues p { font-size:12px; min-height:36px; }
+.forecastValues strong { display:block; font-family:var(--font-display); font-weight:400; font-size:clamp(34px,3.5vw,50px); line-height:1.2; }
+.forecastValues span { display:block; color:var(--color-ink-muted); font-size:11px; margin-top:6px; }
+.selectedForecast,.previewHours { color:var(--color-clay-700); }
+.previewCard[data-choice=decline] .selectedForecast,.previewCard[data-choice=decline] .previewHours { color:var(--color-dusk); }
+.previewHours { font-size:18px; font-weight:500; margin:22px 0; }
+.replySlot { border-top:1px solid var(--color-hairline); padding-top:16px; min-height:130px; font-size:13px; line-height:1.65; user-select:text; }
+.replyLabel { color:var(--color-ink-muted); font-size:11px; margin-bottom:8px; }
+.forecastUnavailable { min-height:120px; line-height:1.6; }
+.previewFallback { color:var(--color-ink-muted); padding-block:24px; max-width:450px; line-height:1.7; }
+.srOnly { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+.previewChanged { animation:preview-change .2s ease-out; }
+@keyframes preview-change { from { opacity:.45; } to { opacity:1; } }
+@media(max-width:767px) {
+ .decision { width:calc(100% - 40px); padding-block:10px 42px; }
+ .decisionGrid { grid-template-columns:1fr; gap:18px; min-height:850px; }
+ .requestCard,.previewCard { padding:22px 18px; }
+ .requestMessage { margin-block:20px; }
+ .previewChoices button { font-size:12px; }
+ .forecastValues { gap:12px; }
+}
+@media(prefers-reduced-motion:reduce) { .previewChanged { animation:none; } }
+
+/* A single decision surface followed by a quieter closing sequence. */
+.decisionGrid { gap:0; min-height:420px; border:1px solid var(--color-hairline); border-radius:24px; overflow:hidden; background:var(--color-surface); }
+.requestCard,.previewCard { border:0; border-radius:0; padding:26px; }
+.requestCard { border-right:1px solid var(--color-hairline); }
+.requestMessage { margin:24px 0; }
+.replySlot { min-height:105px; }
+.putdown { display:block; padding:36px 44px; }
+.putdown>div { display:grid; grid-template-columns:1fr 1.2fr; column-gap:48px; align-items:start; }
+.putdown .eyebrow { grid-column:1 / -1; margin-bottom:16px; }
+.putdown .lead { margin-top:0; max-width:none; color:var(--color-ink); font-size:16px; }
+.how { padding-block:56px; }
+.how h2 { font-size:clamp(28px,2.5vw,36px); }
+.how .steps { margin-block:28px; }
+@media(max-width:767px) {
+ .decisionGrid { min-height:760px; }
+ .requestCard,.previewCard { padding:22px 18px; }
+ .requestCard { border-right:0; border-bottom:1px solid var(--color-hairline); }
+ .putdown { padding:28px 24px; }
+ .putdown>div { display:block; }
+ .putdown .lead { margin-top:18px; }
+ .how { padding-block:40px; }
+}
