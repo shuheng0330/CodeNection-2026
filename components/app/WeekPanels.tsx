@@ -6,6 +6,7 @@ import { CalendarDays } from "lucide-react";
 import { WEEK } from "@/lib/copy";
 import { peakDayLoad, type DayLoad, type WeekAhead } from "@/lib/engine/horizon";
 import type { LoadEvent } from "@/lib/engine/types";
+import { MobileDisclosure } from "@/components/shared/MobileDisclosure";
 
 /**
  * Four weeks on one shared scale, with one inspectable day.
@@ -22,6 +23,9 @@ export function WeekPanels({
   events: LoadEvent[];
 }) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  // Track mobile expanded state per week label. Local state for current page visit.
+  const [openWeeks, setOpenWeeks] = useState<Record<string, boolean>>({});
+
   const peak = peakDayLoad(weeks);
   const heaviestWeek = weeks.reduce<WeekAhead | null>(
     (best, week) => (!best || week.load > best.load ? week : best),
@@ -49,6 +53,28 @@ export function WeekPanels({
         : [],
     [events, selectedDay],
   );
+
+  const selectedWeek = useMemo(
+    () =>
+      selectedDay
+        ? weeks.find((w) => w.days.some((d) => d.date === selectedDay.date)) ??
+          null
+        : null,
+    [weeks, selectedDay],
+  );
+
+  const isSelectedWeekOpen = selectedWeek
+    ? Boolean(openWeeks[selectedWeek.label])
+    : false;
+
+  const handleShowSelectedWeek = () => {
+    if (selectedWeek) {
+      setOpenWeeks((prev) => ({
+        ...prev,
+        [selectedWeek.label]: true,
+      }));
+    }
+  };
 
   if (!selectedDay) {
     return (
@@ -78,35 +104,51 @@ export function WeekPanels({
             peak={peak}
             isPeak={week.label === heaviestWeek?.label}
             selectedDate={selectedDay.date}
+            isOpen={Boolean(openWeeks[week.label])}
+            onToggle={(next) =>
+              setOpenWeeks((prev) => ({ ...prev, [week.label]: next }))
+            }
             onSelect={setSelectedDate}
           />
         ))}
       </div>
 
-      <DayDetails day={selectedDay} events={selectedEvents} />
+      <DayDetails
+        day={selectedDay}
+        events={selectedEvents}
+        selectedWeekLabel={selectedWeek?.label ?? null}
+        isSelectedWeekOpen={isSelectedWeekOpen}
+        onShowSelectedWeek={handleShowSelectedWeek}
+      />
     </div>
   );
 }
-
 function Panel({
   week,
   peak,
   isPeak,
   selectedDate,
+  isOpen,
+  onToggle,
   onSelect,
 }: {
   week: WeekAhead;
   peak: number;
   isPeak: boolean;
   selectedDate: string;
+  isOpen: boolean;
+  onToggle: (next: boolean) => void;
   onSelect: (date: string) => void;
 }) {
   const containsSelection = week.days.some((day) => day.date === selectedDate);
+  const startDate = parseISO(week.start);
+  const endDate = parseISO(week.end);
+  const dateRange = `${format(startDate, "d MMM")} – ${format(endDate, "d MMM")}`;
 
   return (
     <section
       aria-label={WEEK.weekSummary(week.label, week.hours)}
-      className={`overflow-hidden rounded-3xl border py-5 transition-colors sm:p-5 ${
+      className={`overflow-hidden rounded-3xl border transition-colors md:p-5 ${
         containsSelection
           ? "border-dusk/45 bg-dusk-100/35"
           : isPeak
@@ -114,37 +156,79 @@ function Panel({
             : "border-hairline bg-surface"
       }`}
     >
-      <div className="flex items-baseline justify-between gap-3 px-5 sm:px-0">
-        <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
-          {week.label}
-        </p>
-        <p className="tnum text-sm text-ink-muted">{WEEK.hoursLabel(week.hours)}</p>
-      </div>
-
-      <div
-        className="mt-4 grid h-28 grid-cols-7 items-end gap-0 sm:gap-1"
-        role="group"
-        aria-label={WEEK.daysLabel(week.label)}
+      <MobileDisclosure
+        isOpen={isOpen}
+        onToggle={onToggle}
+        buttonClassName="px-5 py-4 hover:bg-black/[0.02]"
+        title={
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                {week.label}
+              </span>
+              {containsSelection && (
+                <span className="rounded-full bg-dusk/15 px-2 py-0.5 text-[10px] font-medium text-dusk">
+                  Selected
+                </span>
+              )}
+              {isPeak && (
+                <span className="rounded-full bg-clay-500/15 px-2 py-0.5 text-[10px] font-medium text-clay-700">
+                  Heaviest
+                </span>
+              )}
+            </div>
+            <span className="mt-0.5 text-xs text-ink-muted">{dateRange}</span>
+          </div>
+        }
+        metadata={
+          <span className="tnum font-medium text-sm text-ink-muted">
+            {WEEK.hoursLabel(week.hours)}
+          </span>
+        }
       >
-        {week.days.map((day) => (
-          <DayButton
-            key={day.date}
-            day={day}
-            peak={peak}
-            selected={day.date === selectedDate}
-            emphasized={isPeak}
-            onSelect={onSelect}
-          />
-        ))}
-      </div>
+        <div className="px-5 pb-5 pt-1 md:p-0">
+          {/* Desktop header (hidden on mobile where MobileDisclosure renders its own toggle button) */}
+          <div className="hidden items-baseline justify-between gap-3 md:flex">
+            <div className="flex items-center gap-2">
+              <p className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                {week.label}
+              </p>
+              {containsSelection && (
+                <span className="rounded-full bg-dusk/15 px-2 py-0.5 text-[10px] font-medium text-dusk">
+                  Selected
+                </span>
+              )}
+            </div>
+            <p className="tnum text-sm text-ink-muted">
+              {WEEK.hoursLabel(week.hours)}
+            </p>
+          </div>
 
-      <p className="mt-4 px-5 text-sm text-ink-faint sm:px-0">
-        {isPeak ? WEEK.heaviestWeek : WEEK.selectHint}
-      </p>
+          <div
+            className="mt-4 grid h-28 grid-cols-7 items-end gap-0 sm:gap-1"
+            role="group"
+            aria-label={WEEK.daysLabel(week.label)}
+          >
+            {week.days.map((day) => (
+              <DayButton
+                key={day.date}
+                day={day}
+                peak={peak}
+                selected={day.date === selectedDate}
+                emphasized={isPeak}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+
+          <p className="mt-4 text-sm text-ink-faint">
+            {isPeak ? WEEK.heaviestWeek : WEEK.selectHint}
+          </p>
+        </div>
+      </MobileDisclosure>
     </section>
   );
 }
-
 function DayButton({
   day,
   peak,
@@ -201,7 +285,19 @@ function DayButton({
   );
 }
 
-function DayDetails({ day, events }: { day: DayLoad; events: LoadEvent[] }) {
+function DayDetails({
+  day,
+  events,
+  selectedWeekLabel,
+  isSelectedWeekOpen,
+  onShowSelectedWeek,
+}: {
+  day: DayLoad;
+  events: LoadEvent[];
+  selectedWeekLabel: string | null;
+  isSelectedWeekOpen: boolean;
+  onShowSelectedWeek: () => void;
+}) {
   const date = format(parseISO(day.date), "EEEE, d MMMM");
 
   return (
@@ -212,9 +308,21 @@ function DayDetails({ day, events }: { day: DayLoad; events: LoadEvent[] }) {
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-micro uppercase tracking-[0.08em] text-dusk">
-            {day.past ? WEEK.alreadyCarried : WEEK.selectedDay}
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-micro uppercase tracking-[0.08em] text-dusk">
+              {day.past ? WEEK.alreadyCarried : WEEK.selectedDay}
+            </p>
+            {/* Show selected week action on mobile when that week is collapsed */}
+            {selectedWeekLabel && !isSelectedWeekOpen && (
+              <button
+                type="button"
+                onClick={onShowSelectedWeek}
+                className="md:hidden text-xs font-medium text-dusk underline underline-offset-2 transition-colors hover:text-ink"
+              >
+                Show selected week
+              </button>
+            )}
+          </div>
           <h3 className="mt-2 font-display text-2xl">{date}</h3>
         </div>
         <div className="flex items-center gap-2 rounded-full bg-dusk-100 px-3 py-2 text-sm text-dusk">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { AppPage, AppPageIntro } from "@/components/app/shell/AppPage";
 import { AppShell } from "@/components/app/shell/AppShell";
+import { MobileDisclosure } from "@/components/shared/MobileDisclosure";
 import { Reveal } from "@/components/shared/Reveal";
 import { RECOVER } from "@/lib/copy";
 import { suggestPutDown } from "@/lib/engine/putdown";
@@ -136,10 +137,16 @@ export default function RecoverPage() {
 
         {best && (
           <Reveal delay={0.2} className="mt-10 max-w-3xl border-t border-hairline pt-8">
-            <h2 className="text-micro uppercase tracking-[0.08em] text-ink-faint">
-              {RECOVER.noteTitle}
-            </h2>
-            <p className="mt-3 text-ink-muted">{RECOVER.note}</p>
+            <MobileDisclosure
+              buttonClassName="py-2 rounded-xl hover:bg-raised"
+              title={
+                <h2 className="text-micro uppercase tracking-[0.08em] text-ink-faint">
+                  {RECOVER.noteTitle}
+                </h2>
+              }
+            >
+              <p className="mt-3 text-ink-muted">{RECOVER.note}</p>
+            </MobileDisclosure>
           </Reveal>
         )}
       </AppPage>

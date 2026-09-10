@@ -47,7 +47,7 @@ export default function Home() {
       </section>
       <footer className={styles.footer}>
         <p className={styles.brand}>{PRODUCT.name}<span aria-hidden="true">.</span></p>
-        <p>{PRODUCT.meaning}</p><p>{LANDING.event}</p>
+        <p>{PRODUCT.meaning}</p>
       </footer>
     </main>
   );

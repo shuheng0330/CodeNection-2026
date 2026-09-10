@@ -40,7 +40,6 @@ export const PRODUCT = {
   meaning: "to shoulder a load",
   tagline: "You're carrying more than usual.",
 } as const;
-
 /* ── Thong · getting between screens ─────────────────────────────────── */
 /**
  * Every route's name in one place, so the shell and the pages that mount it
@@ -66,7 +65,6 @@ export const NAV = {
   method: "How it works",
   closeMore: "Close more pages",
 } as const;
-
 type BandCopy = {
   /** the sentence shown on /today */
   line: string;
@@ -712,5 +710,4 @@ export const LANDING = {
   hoursLabel: "reclaimed from your week",
   reliefNote: "If you hand this shift back, those eight hours are yours to use. Rest, see someone, or leave them unplanned.",
   howEyebrow: "How it works",
-  event: "CodeNection 2026 · Lifestyle track",
 } as const;
