@@ -47,9 +47,9 @@ RevealGroup is a small client wrapper accepting server-rendered children, option
 
 `lib/brand-metadata.ts` owns the shared title, description, image alternative text and a typed metadata factory. `app/layout.tsx` remains the root metadata export and supplies `VERCEL_PROJECT_PRODUCTION_URL`, falling back to `VERCEL_URL` and then local development. No canonical URL is defined. This keeps route-specific canonical decisions available to their route segments and avoids identifying every app route as the homepage.
 
-Next.js file conventions serve `app/favicon.ico`, `app/apple-icon.png` and `app/opengraph-image.png`. The ICO contains 16px, 32px and 48px RGBA PNG frames; the Apple icon is 180×180; and the sharing image is 1200×630. `app/opengraph-image.alt.txt` supplies the file-convention Open Graph alternative text, while the metadata object supplies the same text for Twitter. The single Open Graph and Twitter image references are verified in rendered HTML.
+Next.js file conventions serve `app/icon.svg`, `app/favicon.ico`, `app/apple-icon.png` and `app/opengraph-image.png`. The vector SVG and ICO use a 100% transparent background so the Balanced Pikul Carrying Yoke glyph floats seamlessly in browser tabs without an opaque square box. The ICO contains 16px, 32px and 48px RGBA PNG frames; the Apple icon is 180×180; and the sharing image is 1200×630. `app/opengraph-image.alt.txt` supplies the file-convention Open Graph alternative text, while the metadata object supplies the same text for Twitter. The single Open Graph and Twitter image references are verified in rendered HTML.
 
-`scripts/generate-brand-assets.py` reproducibly generates the assets from the existing Linen & Clay values and the Latin Fraunces/DM Sans font files emitted by `next/font` into `.next`. It requires a completed Next.js build before regeneration and uses the existing local Pillow tooling; it adds no application dependency or runtime work.
+`scripts/generate-brand-assets.py` reproducibly generates the assets from the existing Linen & Clay values and the Latin Fraunces/DM Sans font files emitted by `next/font` into `.next`. It emits the transparent `app/favicon.ico`, `app/icon.svg`, `app/apple-icon.png`, and sharing image. It requires a completed Next.js build before regeneration and uses the existing local Pillow tooling; it adds no application dependency or runtime work.
 
 ## Hero entrance and shift exit refinement — 9 September 2026
 
@@ -58,3 +58,11 @@ The hero text reuses RevealGroup without wrapping the actions. The shift card op
 ## Landing QA cleanup — 9 September 2026
 
 The production landing was rechecked against the current CSS Module at all five release widths. Selectors for the superseded static card stack and earlier marker-based motion scene had no remaining TypeScript or TSX references and were removed from `components/landing/landing.module.css`. Current wide-rope, card, entrance, responsive and reduced-motion rules remain unchanged. No shared token, engine, store, route or dependency changed.
+
+## Landing decision preview implementation — 9 September 2026
+
+DecisionPreview is a landing client island with local choice and announcement state. It resolves decisionDemo after mounting to avoid build-time sample-date drift. Server markup retains the explanation and demo CTA with a reserved preview area. previewOutcome is a pure formatter selecting price.landing before/after ratios, rounding to percentages and formatting added/kept-free hours; null landing omits forecast values. Dates use parseISO and local date-fns formatting. The component never imports the store or decision actions. Reply space is reserved across choices; only user selections trigger a polite status announcement and brief CSS opacity transition, disabled with reduced motion.
+
+## Simplified landing composition — 10 September 2026
+
+The request/forecast columns share one bordered surface, with a vertical desktop divider and horizontal mobile divider. Reply space stays reserved across preview selections. PutDownPrinciple retains its existing reveal wrapper but removes the secondary example figure. Local CSS provides a compact heading/body composition and tighter closing-section spacing; app state and forecast logic are unchanged.

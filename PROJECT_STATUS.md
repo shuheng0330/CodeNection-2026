@@ -212,3 +212,22 @@ inline copy of the same focus logic, and it is the copy without `inert`.
 **Also worth a look, not touched here.** `app/(app)/layout.tsx` mounts
 AppShell but the `(app)` group contains no pages, so it is dead code. Any page
 moved into it while still self-mounting AppShell would render two shells.
+
+## Landing decision preview verification — 9 September 2026
+
+- Implemented local accept/decline preview, original request details, fixed baseline comparison, factual hours, unsent selectable reply and sample CTA. Hero and existing sections are preserved.
+- Browser verified 128% reference, 132% acceptance and 128% decline with eight hours kept free for the current shared sample. CTA opens Aisyah's reset demo; app request matches Kelly's shift, 18 September 2026, eight hours.
+- Repeated keyboard toggling passed at 360/390/768/1024/1440px without overflow. Reply space is retained across choices. A small button-border size difference was removed by reserving the same border width for both states.
+- Focused tests cover affected-week selection, fixture immutability across repeated previews, added/kept-free wording and unavailable forecast handling. Source review found no blockers; no store writes or decision actions are imported. Saved-state isolation is established by code structure and fixture tests, not a browser-storage snapshot.
+- A Windows case-insensitive helper/component filename collision was fixed by renaming the pure helper to previewOutcome.ts. npm run verify subsequently passed with 144 tests; a final check follows the border adjustment.
+- Browser validation used a fresh production server at localhost:3002. Screenshots outside the repo: C:/Users/User/.codex/visualizations/2026/09/08/01a08121-815e-7c70-87c1-ecbf9bd97538/decision-preview-desktop.png and decision-preview-mobile.png.
+- True browser 200% zoom and reduced-motion preference emulation remain manual checks. CSS disables the selection transition for reduced motion. Same branch/worktree, no commit or push.
+
+Final verification after the border adjustment: npm run verify passed (voice gate, lint, 15 test files / 144 tests, TypeScript and production build). git diff --check passed.
+
+## Landing simplification verification — 10 September 2026
+
+- Combined the decision cards into one panel, removed the duplicate eight-hour put-down example, shortened its explanation and removed the How it works introductory paragraph.
+- Production browser inspection at localhost:3003 confirmed the revised desktop composition and no horizontal overflow at 360/390/768/1024/1440px. Saved landing-simplified-desktop.png and landing-simplified-mobile.png under C:/Users/User/.codex/visualizations/2026/09/08/01a08121-815e-7c70-87c1-ecbf9bd97538/.
+- Verification immediately after the layout changes passed: voice gate, lint, 144 tests, TypeScript and production build. Zoom and reduced-motion browser limitations remain as previously recorded.
+- On continuation the active branch is feature/icon-and-title-refresh, with additional icon/metadata changes from other work. These were preserved; no checkout, commit or push was performed.

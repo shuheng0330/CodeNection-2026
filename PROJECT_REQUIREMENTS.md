@@ -37,8 +37,8 @@ This revision supersedes the split-hero and static put-down motion requirements 
 
 ## Brand metadata and sharing identity — 9 September 2026
 
-- Use “Pikul — Your week is more than your timetable.” and the approved product description consistently for document, Open Graph and Twitter metadata.
-- Provide a Linen & Clay favicon with 16px, 32px and 48px frames, a matching 180px Apple touch icon, and one static 1200×630 sharing image using Fraunces and DM Sans.
+- Use “Pikul” as the document and metadata title, removing the extended subtitle from browser tabs while retaining the approved product description for Open Graph and Twitter metadata.
+- Provide a transparent vector SVG icon (`app/icon.svg`) and a matching transparent multi-frame favicon (`app/favicon.ico` with 16px, 32px, and 48px frames) displaying the Balanced Pikul Carrying Yoke, an opaque 180px Apple touch icon, and one static 1200×630 sharing image using Fraunces and DM Sans.
 - The sharing image contains only the Pikul wordmark, approved headline, a short factual supporting line and an abstract carrying-rope illustration. It does not contain screenshots, workload figures or judging claims.
 - Open Graph and Twitter metadata use the same image with dimensions and descriptive alternative text. Twitter uses a large-image card. Do not define a root canonical URL inherited by every route.
 - The project documents still do not contain a confirmed production URL. Until Thong records one, metadata resolves the deployment origin from Vercel’s production URL environment value and uses localhost only for local builds. External crawler previews remain a deployment check.
@@ -50,3 +50,11 @@ The hero eyebrow, headline and shorter supporting copy enter once, while actions
 ## Landing QA acceptance — 9 September 2026
 
 The landing page must remain readable without horizontal overflow, clipped copy, card collisions or hidden actions at 360, 390, 768, 1024 and 1440 CSS pixels. The hero entrance plays once; the extra-shift card becomes fully absent visually and to assistive technology during release, returns on the next cycle, and follows pause/resume. Lower entrances do not replay after leaving and returning. Sample/reset and explanation links remain functional. This pass adds no feature, redesign, engine or store requirement.
+
+## Landing decision preview — 9 September 2026
+
+Added a sample-request preview after the baseline section and before the existing put-down explanation. Visitors can preview accepting or declining without saving anything. Figures come from the shared decisionDemo affected-week forecast; declining keeps hours free, while the following existing-commitment example reclaims hours. The sample CTA remains visible and enters the reset demo. A selectable, unsent decline reply is shown only for Decline. No new routes, dependencies or app state changes.
+
+## Landing simplification — 10 September 2026
+
+The decision preview is the main interactive section, presented in one shared container with an internal divider. The blue put-down section is condensed to a heading and short explanation that protects essential responsibilities; the repeated eight-hour illustration is removed. How it works retains its three steps and closing CTA without the repeated introductory paragraph.
