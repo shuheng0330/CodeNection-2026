@@ -19,6 +19,7 @@ import { CURRENT_WEEK } from "@/lib/seed/generateSemester";
 import { sheetMotion, spring } from "@/lib/motion";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import { usePikul } from "@/lib/store";
+import { DateField } from "./DateField";
 
 type FieldKey = "title" | "date" | "hours" | "category" | "intensity";
 
@@ -321,17 +322,16 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         />
                       </Row>
 
-                      <div className="grid grid-cols-2 gap-3">
-                        <Row label={ADD.fields.date} guessed={isGuess("date")}>
-                          <input
-                            type="date"
-                            value={date}
-                            min={toISODate(asOf)}
-                            max={horizonEnd(asOf)}
-                            onChange={(e) => set("date", e.target.value)}
-                            className="w-full rounded-2xl border border-hairline px-4 py-3"
-                          />
-                        </Row>
+                      <DateField
+                        label={ADD.fields.date}
+                        guessed={isGuess("date")}
+                        value={date}
+                        min={toISODate(asOf)}
+                        today={toISODate(asOf)}
+                        max={horizonEnd(asOf)}
+                        events={events}
+                        onChange={(d) => set("date", d)}
+                      >
                         <Row label={ADD.fields.hours} guessed={isGuess("hours")}>
                           <input
                             type="number"
@@ -343,7 +343,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                             className="tnum w-full rounded-2xl border border-hairline px-4 py-3"
                           />
                         </Row>
-                      </div>
+                      </DateField>
 
                       <Row label="" guessed={isGuess("category")}>
                         <div className="flex flex-wrap gap-2">

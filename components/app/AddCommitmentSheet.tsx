@@ -6,11 +6,12 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ADD } from "@/lib/copy";
 import { toISODate } from "@/lib/engine/dates";
 import { checkRequest } from "@/lib/engine/validate";
-import type { LoadCategory } from "@/lib/engine/types";
+import type { LoadCategory, LoadEvent } from "@/lib/engine/types";
 import { extract } from "@/lib/parse/extract";
 import { sheetMotion } from "@/lib/motion";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import { usePikul } from "@/lib/store";
+import { DateField } from "./DateField";
 
 type FieldKey = "title" | "date" | "hours" | "category" | "intensity";
 
@@ -29,7 +30,13 @@ const CATEGORIES = Object.keys(ADD.categories) as LoadCategory[];
  * message we cannot read leaves the ordinary blank form behind, which is
  * exactly what the student would have used anyway.
  */
-export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
+export function AddCommitmentSheet({
+  asOf,
+  events,
+}: {
+  asOf: Date;
+  events: LoadEvent[];
+}) {
   const [open, setOpen] = useState(false);
   const [raw, setRaw] = useState("");
   const [edited, setEdited] = useState<Partial<Record<FieldKey, string>>>({});
@@ -168,18 +175,17 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                   />
                 </Row>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <Row label={ADD.fields.date} guessed={isGuess("date")}>
-                    <input
-                      type="date"
-                      value={date}
-                      min={toISODate(asOf)}
-                      onChange={(e) => set("date", e.target.value)}
-                      aria-invalid={badDate || undefined}
-                      aria-describedby={badDate ? problemsId : undefined}
-                      className="w-full rounded-2xl border border-hairline px-4 py-3"
-                    />
-                  </Row>
+                <DateField
+                  label={ADD.fields.date}
+                  guessed={isGuess("date")}
+                  value={date}
+                  min={toISODate(asOf)}
+                  today={toISODate(asOf)}
+                  events={events}
+                  invalid={badDate}
+                  describedBy={badDate ? problemsId : undefined}
+                  onChange={(d) => set("date", d)}
+                >
                   <Row label={ADD.fields.hours} guessed={isGuess("hours")}>
                     <input
                       type="number"
@@ -193,7 +199,7 @@ export function AddCommitmentSheet({ asOf }: { asOf: Date }) {
                       className="tnum w-full rounded-2xl border border-hairline px-4 py-3"
                     />
                   </Row>
-                </div>
+                </DateField>
 
                 <ChoiceRow label={ADD.fields.category} guessed={isGuess("category")}>
                   <div className="flex flex-wrap gap-2">

@@ -445,6 +445,49 @@ export const WEEK = {
 } as const;
 
 /* ── Ku · paste it, don't type it ────────────────────────────────────── */
+/**
+ * The date field.
+ *
+ * Chrome's own calendar is a white sheet with a blue selection and a system
+ * font, and none of that can be reached from CSS — the popup is drawn by the
+ * browser, not by the page. Next to warm paper it reads as a piece of a
+ * different application, which is the one impression this screen cannot
+ * afford at the moment somebody is deciding something.
+ */
+export const DATE_FIELD = {
+  open: "Choose a date",
+  legend: "Choose a date",
+  previousMonth: "Previous month",
+  nextMonth: "Next month",
+  /** Screen readers get the weekday spelled out; the grid shows initials. */
+  weekdayInitials: ["M", "T", "W", "T", "F", "S", "S"],
+  weekdayNames: [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ],
+  today: "Today",
+  /**
+   * Said on the cell itself, so how full a day is stops being something you
+   * have to leave the picker to find out.
+   *
+   * Things rather than hours, deliberately. Seeded days can stack a long
+   * family commitment on top of coursework and total more than a day
+   * contains — a real property of how the generator attributes effort, and
+   * not something a calendar should read out as fact. A count is exact
+   * whatever the hours do; the mark under the number carries the weight.
+   */
+  alreadyOn: (count: number): string =>
+    `${count} ${count === 1 ? "thing" : "things"} already on this day`,
+  nothingOn: "nothing on this day yet",
+  outOfRange: "outside the weeks this can price",
+  hint: "Days with something already on them carry a mark.",
+} as const;
+
 export const ADD = {
   trigger: "Add something",
   title: "What have you taken on?",

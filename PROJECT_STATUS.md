@@ -298,3 +298,62 @@ build, including Thong's new put-down chooser.
   belongs in `.gitignore`.
 - `components/app/shell/useModalDialog.ts` still has no callers, and AppShell's
   More sheet still carries its own copy of the focus logic without `inert`.
+
+## A date field of our own, 10 September 2026 (Ku's lane)
+
+`<input type="date">` was showing Chrome's calendar: a white panel, a system
+font and a blue selection, none of which CSS can reach — the popup is painted
+by the browser, so `::-webkit-calendar-picker-indicator` styles the little icon
+and nothing else. Against warm paper it read as a piece of a different
+application, at the moment somebody is deciding something.
+
+`components/app/DateField.tsx` replaces it in both sheets. It uses the app's
+own tokens and Fraunces for the month, and it does two things the native one
+could not: days that already carry something are marked, so picking a date is
+not done blind, and the four weeks the request sheet can actually price are
+shown rather than silently enforced.
+
+Decisions worth recording:
+
+- **The panel expands in the flow rather than floating.** Both sheets scroll
+  inside `overflow-y-auto`, which clips absolutely positioned children and
+  scrolls them away from their trigger. This lane has already lost an
+  afternoon to a sheet being painted over by a stacking context.
+- **The field owns its row.** A panel opening between the date and the
+  duration pushed the duration below the calendar, so the reading order
+  stopped matching the order things are asked in. The neighbour is passed as
+  a child so the calendar can come after both in the DOM.
+- **`today` is the seeded `asOf`, not `new Date()`.** The demo runs on a fixed
+  Wednesday; a picker reading the wall clock would ring the wrong day.
+- Focus enters the grid on open and follows the arrow keys, so each day is
+  announced rather than a highlight moving in silence. Escape closes the
+  calendar and stops there — reaching the sheet would throw away the request.
+- Today is a soft clay fill rather than a ring, because a ring is what the
+  global `:focus-visible` outline already means.
+- Five rows where five will do. A fixed six always trails a week belonging
+  entirely to the next month, which on a phone is a row of dead space.
+- At 320px the trigger reads "18 Sep"; "Fri, 18 Sep" truncated to "Fri, 18 …"
+  and lost the month. Only the visible variant reaches the accessible name —
+  checked against Chrome's accessibility tree, not assumed.
+
+`lib/calendar.ts` holds the date maths as pure functions with 10 tests, so the
+component carries layout and the arithmetic can be argued with on its own.
+
+**Found while building it, and not fixed here.** The seeded 18 September holds
+a 14-hour "Cousin's wedding — Melaka" on top of 11 hours of coursework, and
+totals 30.36 hours. That is how the generator attributes effort rather than a
+claim about a clock, but it means a per-day hour total is not a safe thing to
+print. The calendar therefore says "5 things already on this day" and lets the
+mark under the number carry the weight.
+
+Today's "Still ahead of you" does print per-day hours (`AHEAD.hours`). On the
+fixed demo date it shows 6h, 9h, 10h, 8h and 8h, all plausible, so nothing is
+visibly wrong today — but the same day would read "30h" if the demo date moved
+by a week. Either the generator should stop stacking a long family commitment
+onto a heavy coursework day, or that line should count things too. It is a
+shared-seed change and belongs to a conversation, not to a quiet fix the day
+before a freeze.
+
+**Verified on this commit.** `npm run verify` passes: voice gate, lint, 155
+tests, production build. `npm run check:release` passes, including the keyboard
+walk through the request sheet and 44px targets at all seven widths.
