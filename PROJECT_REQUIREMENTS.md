@@ -68,3 +68,7 @@ The decision preview is the main interactive section, presented in one shared co
 Before you say yes, Make a little room and How it works use the same once-only text entrance: 12px rise, 650ms fade, 150ms stagger and 35% visibility trigger. The request details follow the same pattern. Decision controls stay immediately usable, and selection feedback remains a separate short fade. Mobile steps retain independent visibility triggers.
 
 The consistent-entrance scope includes the forecast panel as well as the heading and request text; preview choice feedback remains separate.
+
+## Mobile collapsible sections — 10 September 2026
+
+Below 768px, secondary content in Week, Today, Asks, Method and Recover may be disclosed through a shared accessible mobile control; at 768px and above it remains visible. Primary actions, empty states, Method limitations and privacy copy, landing interactions, and Today’s weeks-ahead link remain available without expansion. Week cards start collapsed on mobile, retain selected-day state, identify the selected week, and offer a control to expand that week. The landing footer retains the Pikul wordmark and “to shoulder a load.” while omitting the event-track line.

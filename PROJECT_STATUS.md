@@ -412,3 +412,11 @@ refresh moved the claim into `putdownBody` and left the old string behind, so
 the sentence a reader now sees is `putdownBody` alone. The dead key is still
 guarded — it costs nothing and it is in copy.ts where someone will find it —
 but it should probably just be deleted.
+
+## Mobile collapsible sections — 10 September 2026
+
+- Implemented the shared `MobileDisclosure` component and applied it to Week cards, Today’s breakdown/ahead/persona choices, Asks history, Method explanations, and Recover’s supporting note.
+- Removed the landing footer’s CodeNection event-track copy and its unused constant.
+- Added focused disclosure-state and breakpoint tests in `lib/disclosure.test.ts`.
+- Fresh delivery verification: voice gate and lint passed; Vitest passed 17 files / 168 tests; Next.js production build completed successfully. `git diff --check` is clean.
+- This delivery check did not run the requested manual browser matrix, screen-reader pass, reduced-motion inspection, zoom inspection, or screenshot capture.

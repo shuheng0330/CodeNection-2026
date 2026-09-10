@@ -72,3 +72,7 @@ The request/forecast columns share one bordered surface, with a vertical desktop
 RevealGroup exports landingEntrance settings used by both its child reveal and AnimatedSteps, removing separate timing values. DecisionPreview now reuses RevealGroup for its heading and request details. No nested reveal is added to the interactive result, preventing a second entrance from replaying when selecting a choice. Existing cleanup, visible server markup and reduced-motion handling are preserved.
 
 The decision forecast now has a stable RevealGroup around its controls/result wrappers. The keyed selection-feedback element sits inside a stable entrance target, so switching choices cannot remount/replay the entrance or compete for opacity on the same node.
+
+## Mobile disclosure implementation — 10 September 2026
+
+`components/shared/MobileDisclosure.tsx` is a client-side reusable disclosure primitive. It uses `useIsDesktop`, built on `useSyncExternalStore` and the `(min-width: 768px)` media query, to render visible server content and retain desktop expansion while applying local mobile disclosure state after hydration. The toggle is a full-width 44px minimum button with `aria-expanded`, `aria-controls`, an animated chevron that respects reduced motion, and focus restoration when a collapse would hide the active element. Controlled state allows Week’s selected-week action to open an individual card without changing its selected day. No store or browser-storage state is introduced.
