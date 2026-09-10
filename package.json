@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "chrono-node": "^2.10.1",
-    "d3-shape": "^3.2.0",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.41.0",
     "motion": "^13.2.0",
@@ -26,7 +25,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/d3-shape": "^3.2.0",
     "@types/node": "^22.20.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
