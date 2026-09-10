@@ -283,3 +283,132 @@ Correction verification: npm run verify passed (voice gate, lint, 144 tests, Typ
 - `npm run verify` passed with 14 files and 143 tests. The browser release check
   passed all existing checks plus default selection, alternate selection, exact
   persisted ID, cancel and undo coverage.
+
+## Accuracy pass, 10 September 2026 (Ku's lane)
+
+**Cross-owner correction, announced here rather than assumed.** The landing
+page's put-down section promised that "Classes, coursework, health needs and
+family responsibilities stay protected." There is no health category in the
+model and never has been, and the sentence left out commuting, which the engine
+really does refuse to offer back. The protected set in `lib/engine/putdown.ts`
+is class, assignment, commute and family; the negotiable set is shift, social,
+club and admin. One string in Lim's block of `lib/copy.ts` now says commuting
+instead of health needs.
+
+The sentence is a claim about the engine sitting in a different file from the
+engine, which is why nobody caught it by reading either one. `putdown.test.ts`
+now asserts both halves against `suggestPutDown` directly: every phrase the
+landing names must be a category the engine refuses, and no category the engine
+is willing to offer may appear in that sentence. Confirmed it fails on the old
+wording before keeping the fix.
+
+**Citations confirmed.** The method section of `docs/readme-sections-ku.md` had
+its sources named from memory and flagged as needing a human. All four are now
+checked against PubMed and carry journal, year, volume and pages: Foster 1998
+(Med Sci Sports Exerc 30(7):1164-8) and Foster et al. 2001 (J Strength Cond Res
+15(1):109-15) for session-RPE, Gabbett 2016 (Br J Sports Med 50(5):273-80) for
+the ratio, Lolli et al. 2019 (Br J Sports Med 53(15):921-2) for mathematical
+coupling and Impellizzeri et al. 2020 (Int J Sports Physiol Perform
+15(6):907-13) for the conceptual objection. Gabbett's suggested 0.8-1.3 band is
+where our own first two edges come from; the draft now says so rather than
+leaving the resemblance unexplained.
+
+**Verified on this commit.** `npm run verify` passes: voice gate, lint, 145
+tests, production build. `npm run check:release` passes against a production
+build, including Thong's new put-down chooser.
+
+### Noticed, not fixed — other owners' calls
+
+- `components/landing/CarryLine.tsx` has no importers since the landing
+  redesign. It hardcodes "Cover Danish's shift, Saturday, 8 hours" while the
+  shared fixture is "Cover Kelly's shift" next Friday, so it should be deleted
+  rather than left for someone to re-import.
+- `HERO.headlineAccent` ("carrying") is no longer in either headline line, so
+  nothing renders it.
+- `.vitest/json/output.json` is committed. It is generated test output and
+  belongs in `.gitignore`.
+- `components/app/shell/useModalDialog.ts` still has no callers, and AppShell's
+  More sheet still carries its own copy of the focus logic without `inert`.
+
+## A date field of our own, 10 September 2026 (Ku's lane)
+
+`<input type="date">` was showing Chrome's calendar: a white panel, a system
+font and a blue selection, none of which CSS can reach — the popup is painted
+by the browser, so `::-webkit-calendar-picker-indicator` styles the little icon
+and nothing else. Against warm paper it read as a piece of a different
+application, at the moment somebody is deciding something.
+
+`components/app/DateField.tsx` replaces it in both sheets. It uses the app's
+own tokens and Fraunces for the month, and it does two things the native one
+could not: days that already carry something are marked, so picking a date is
+not done blind, and the four weeks the request sheet can actually price are
+shown rather than silently enforced.
+
+Decisions worth recording:
+
+- **The panel expands in the flow rather than floating.** Both sheets scroll
+  inside `overflow-y-auto`, which clips absolutely positioned children and
+  scrolls them away from their trigger. This lane has already lost an
+  afternoon to a sheet being painted over by a stacking context.
+- **The field owns its row.** A panel opening between the date and the
+  duration pushed the duration below the calendar, so the reading order
+  stopped matching the order things are asked in. The neighbour is passed as
+  a child so the calendar can come after both in the DOM.
+- **`today` is the seeded `asOf`, not `new Date()`.** The demo runs on a fixed
+  Wednesday; a picker reading the wall clock would ring the wrong day.
+- Focus enters the grid on open and follows the arrow keys, so each day is
+  announced rather than a highlight moving in silence. Escape closes the
+  calendar and stops there — reaching the sheet would throw away the request.
+- Today is a soft clay fill rather than a ring, because a ring is what the
+  global `:focus-visible` outline already means.
+- Five rows where five will do. A fixed six always trails a week belonging
+  entirely to the next month, which on a phone is a row of dead space.
+- At 320px the trigger reads "18 Sep"; "Fri, 18 Sep" truncated to "Fri, 18 …"
+  and lost the month. Only the visible variant reaches the accessible name —
+  checked against Chrome's accessibility tree, not assumed.
+
+`lib/calendar.ts` holds the date maths as pure functions with 10 tests, so the
+component carries layout and the arithmetic can be argued with on its own.
+
+**Found while building it, and not fixed here.** The seeded 18 September holds
+a 14-hour "Cousin's wedding — Melaka" on top of 11 hours of coursework, and
+totals 30.36 hours. That is how the generator attributes effort rather than a
+claim about a clock, but it means a per-day hour total is not a safe thing to
+print. The calendar therefore says "5 things already on this day" and lets the
+mark under the number carry the weight.
+
+Today's "Still ahead of you" does print per-day hours (`AHEAD.hours`). On the
+fixed demo date it shows 6h, 9h, 10h, 8h and 8h, all plausible, so nothing is
+visibly wrong today — but the same day would read "30h" if the demo date moved
+by a week. Either the generator should stop stacking a long family commitment
+onto a heavy coursework day, or that line should count things too. It is a
+shared-seed change and belongs to a conversation, not to a quiet fix the day
+before a freeze.
+
+**Verified on this commit.** `npm run verify` passes: voice gate, lint, 158
+tests, production build. `npm run check:release` passes, including the keyboard
+walk through the request sheet and 44px targets at all seven widths.
+
+### Merging PR #17, and why the guard test got wider
+
+The landing refresh rewrote the put-down section and put "health needs" back —
+not by reverting the correction above, but in `LANDING.putdownBody`, a
+different string that makes the same claim. The two lines sit next to each
+other in `lib/copy.ts`, so this arrived as a real conflict rather than a silent
+overwrite.
+
+Resolved by keeping Lim's new wording, which is better — "Already said yes?"
+says plainly that the put-down is about commitments you already hold — with
+its category list corrected to match the engine.
+
+The lesson is about the test, not the copy. A guard naming one key waves
+through the next sentence that makes the same promise, and that is exactly
+what happened within a day. `putdown.test.ts` now checks every landing string
+that claims something is protected, against `suggestPutDown` itself. Confirmed
+it fails on the incoming wording before the fix was kept.
+
+One loose end for Lim: `LANDING.protected` no longer has a caller. The
+refresh moved the claim into `putdownBody` and left the old string behind, so
+the sentence a reader now sees is `putdownBody` alone. The dead key is still
+guarded — it costs nothing and it is in copy.ts where someone will find it —
+but it should probably just be deleted.

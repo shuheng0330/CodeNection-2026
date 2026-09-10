@@ -7,6 +7,7 @@ import {
   whenLabel,
 } from "./putdown";
 import type { Intensity, LoadCategory, LoadEvent } from "./types";
+import { LANDING } from "../copy";
 
 const asOf = new Date(2026, 8, 9); // Wednesday 9 Sep 2026
 const HEAVY = 1.4;
@@ -106,6 +107,55 @@ describe("eligiblePutDowns", () => {
     expect(eligiblePutDowns([ev("2026-09-12", "shift", 8, 5)], asOf, CALM)).toEqual(
       [],
     );
+  });
+});
+
+describe("the promise the landing page makes", () => {
+  // The landing page names, in prose, the things Pikul will never ask you to
+  // drop. Those sentences are claims about this engine, and one shipped saying
+  // "health needs" — a category that has never existed in the model — while
+  // leaving out commuting, which the engine really does protect. Nobody could
+  // have caught that by reading either file alone.
+  //
+  // Every string that makes the claim is checked, not just the one that was
+  // wrong first: the next rewrite of this section put "health needs" straight
+  // back, in a new sentence a test naming a single key would have waved
+  // through.
+  // `protected` is currently unrendered — the refresh folded the claim into
+  // `putdownBody` — so only the second of these is on screen today. Both are
+  // checked anyway: the string is still in copy.ts and reaches a page the
+  // moment anyone puts it back.
+  const CLAIMS = [LANDING.protected, LANDING.putdownBody];
+
+  const NAMED: [string, LoadCategory][] = [
+    ["Classes", "class"],
+    ["coursework", "assignment"],
+    ["commuting", "commute"],
+    ["family", "family"],
+  ];
+
+  it("names something the engine actually protects, and nothing it does not", () => {
+    for (const claim of CLAIMS) {
+      for (const [phrase, category] of NAMED) {
+        expect(claim.toLowerCase()).toContain(phrase.toLowerCase());
+        expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).toBeNull();
+      }
+    }
+  });
+
+  it("leaves out every category the engine is willing to offer back", () => {
+    const offered: [string, LoadCategory][] = [
+      ["shift", "shift"],
+      ["social", "social"],
+      ["club", "club"],
+      ["errand", "admin"],
+    ];
+    for (const claim of CLAIMS) {
+      for (const [phrase, category] of offered) {
+        expect(claim.toLowerCase()).not.toContain(phrase);
+        expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).not.toBeNull();
+      }
+    }
   });
 });
 

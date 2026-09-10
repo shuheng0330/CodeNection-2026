@@ -111,7 +111,7 @@ export default function TodayPage() {
             </h2>
             <div className="grid gap-3">
               <NoButton events={events} asOf={asOf} />
-              <AddCommitmentSheet asOf={asOf} />
+              <AddCommitmentSheet asOf={asOf} events={events} />
             </div>
 
             <Reveal delay={0.12} className="mt-6">
