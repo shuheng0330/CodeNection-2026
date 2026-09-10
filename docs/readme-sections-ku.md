@@ -333,11 +333,13 @@ all the ratio is reported as a neutral 1.0 — a cold start is "we don't know yo
 yet", not "you have no load".
 
 **"% of a usual week" is not hours divided by hours.** It is the weighted
-ratio above, turned into a percentage. Aisyah's week holds 79 hours against a
-usual 59, which is 135% by plain division — but the figure the app shows is
-128%, because the ratio weighs each commitment by how much it takes out of you
-and lets the recent past decay. If you check our arithmetic with a calculator
-and a stopwatch, those are the two different sums. **Nothing is predicted.**
+ratio above, turned into a percentage, and the two sums do not agree.
+`/compare` puts both on one screen: Wei Jian's week holds **53 hours against a
+usual 35**, which is 153% by plain division — and the figure beside it reads
+**145%**, because the ratio weighs every commitment by how much it takes out
+of you and lets the recent past decay rather than dropping out of a window. If
+you check our arithmetic with a calculator, that eight-point gap is where it
+comes from. **Nothing is predicted.**
 The weeks ahead use the identical function over commitments already in the
 calendar. It is not a forecast of how you will feel.
 It is what you have already agreed to, added up.
