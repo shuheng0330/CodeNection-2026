@@ -5,10 +5,12 @@ import { useAnimate, useInView } from "motion/react";
 import { spring } from "@/lib/motion";
 import { useLandingReducedMotion } from "./useLandingReducedMotion";
 
+export const landingEntrance = { distance: 12, opacity: 0.15, duration: 0.65, stagger: 0.15, threshold: 0.35 } as const;
+
 /** Visible server markup; each content block owns its viewport entrance. */
 export function RevealGroup({ children, className, as = "div" }: { children: ReactNode; className?: string; as?: "div" | "figure" }) {
   const [scope, animate] = useAnimate();
-  const visible = useInView(scope, { amount: 0.35, once: true });
+  const visible = useInView(scope, { amount: landingEntrance.threshold, once: true });
   const reduced = useLandingReducedMotion();
   const played = useRef(false);
   useEffect(() => {
@@ -17,8 +19,8 @@ export function RevealGroup({ children, className, as = "div" }: { children: Rea
     if (reduced) return;
     const items = Array.from((scope.current as HTMLElement).children) as HTMLElement[];
     const controls = items.flatMap((item, i) => [
-      animate(item, { y: [12, 0] }, { ...spring.settle, delay: i * 0.15 }),
-      animate(item, { opacity: [0.15, 1] }, { duration: 0.65, delay: i * 0.15, ease: "easeOut" }),
+      animate(item, { y: [landingEntrance.distance, 0] }, { ...spring.settle, delay: i * landingEntrance.stagger }),
+      animate(item, { opacity: [landingEntrance.opacity, 1] }, { duration: landingEntrance.duration, delay: i * landingEntrance.stagger, ease: "easeOut" }),
     ]);
     const container = scope.current as HTMLElement;
     if (as === "figure") controls.push(animate(container, { opacity: [0.4, 1] }, { duration: 0.65, ease: "easeOut" }));

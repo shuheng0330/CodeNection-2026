@@ -96,19 +96,56 @@ def cubic_points(
     return points
 
 
-def generate_icon() -> Image.Image:
-    image = Image.new("RGBA", (512, 512), COLORS["linen"])
+def generate_icon(transparent: bool = True) -> Image.Image:
+    background = (0, 0, 0, 0) if transparent else COLORS["linen"]
+    image = Image.new("RGBA", (512, 512), background)
     draw = ImageDraw.Draw(image)
-    curve = quadratic_points((66, 150), (256, 394), (446, 150))
-    draw.line(curve, fill=COLORS["clay600"], width=46, joint="curve")
-    for point in (curve[0], curve[-1]):
+
+    # Arched carrying yoke beam (rests on shoulders, lifts towards fulcrum)
+    beam = quadratic_points((48, 208), (256, 100), (464, 208))
+    draw.line(beam, fill=COLORS["clay500"], width=50, joint="curve")
+    for point in (beam[0], beam[-1]):
         draw.ellipse(
-            (point[0] - 23, point[1] - 23, point[0] + 23, point[1] + 23),
-            fill=COLORS["clay600"],
+            (point[0] - 25, point[1] - 25, point[0] + 25, point[1] + 25),
+            fill=COLORS["clay500"],
         )
-    draw.line((256, 272, 256, 356), fill=COLORS["clay600"], width=30)
-    draw.rounded_rectangle((205, 340, 307, 430), radius=34, fill=COLORS["clay700"])
+
+    # Center fulcrum node (the shoulder contact / balance point)
+    draw.ellipse((256 - 28, 108 - 28, 256 + 28, 108 + 28), fill=COLORS["clay700"])
+
+    # Left suspension cord and balanced counterweight
+    draw.line((88, 216, 88, 296), fill=COLORS["clay600"], width=32)
+    draw.ellipse((88 - 60, 355 - 60, 88 + 60, 355 + 60), fill=COLORS["clay700"])
+    draw.ellipse((88 - 20, 355 - 20, 88 + 20, 355 + 20), fill=COLORS["linen"])
+
+    # Right suspension cord and balanced counterweight
+    draw.line((424, 216, 424, 296), fill=COLORS["clay600"], width=32)
+    draw.ellipse((424 - 60, 355 - 60, 424 + 60, 355 + 60), fill=COLORS["clay700"])
+    draw.ellipse((424 - 20, 355 - 20, 424 + 20, 355 + 20), fill=COLORS["linen"])
+
     return image
+
+
+def generate_svg_icon() -> str:
+    return """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Fulcrum node -->
+  <circle cx="16" cy="6.8" r="1.8" fill="#8f3f24"/>
+
+  <!-- Arched carrying yoke beam -->
+  <path d="M3 13 C9 6.2, 23 6.2, 29 13" stroke="#c2603f" stroke-width="3.2" stroke-linecap="round"/>
+
+  <!-- Left suspension cord & counterweight -->
+  <line x1="5.5" y1="13.5" x2="5.5" y2="18.5" stroke="#b0512f" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="5.5" cy="22.2" r="3.8" fill="#8f3f24"/>
+  <circle cx="5.5" cy="22.2" r="1.3" fill="#fbf7f2"/>
+
+  <!-- Right suspension cord & counterweight -->
+  <line x1="26.5" y1="13.5" x2="26.5" y2="18.5" stroke="#b0512f" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="26.5" cy="22.2" r="3.8" fill="#8f3f24"/>
+  <circle cx="26.5" cy="22.2" r="1.3" fill="#fbf7f2"/>
+</svg>
+"""
+
 
 
 def generate_sharing_image(fraunces_path: Path, dm_sans_path: Path) -> Image.Image:
@@ -193,9 +230,17 @@ def main() -> None:
     fraunces = find_latin_font("Fraunces")
     dm_sans = find_latin_font("DM Sans")
 
-    icon = generate_icon()
-    icon.save(APP / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-    icon.resize((180, 180), Image.Resampling.LANCZOS).save(APP / "apple-icon.png")
+    favicon = generate_icon(transparent=True)
+    favicon.save(APP / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+
+    apple_icon = generate_icon(transparent=False)
+    apple_icon.resize((180, 180), Image.Resampling.LANCZOS).save(APP / "apple-icon.png")
+
+    (APP / "icon.svg").write_text(
+        generate_svg_icon().strip() + "\n",
+        encoding="utf-8",
+    )
+
     generate_sharing_image(fraunces, dm_sans).save(APP / "opengraph-image.png")
     (APP / "opengraph-image.alt.txt").write_text(
         SHARING_IMAGE_ALT,

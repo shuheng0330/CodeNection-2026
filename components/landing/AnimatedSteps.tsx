@@ -6,6 +6,7 @@ import { HOW } from "@/lib/copy";
 import { spring } from "@/lib/motion";
 import { useLandingReducedMotion } from "./useLandingReducedMotion";
 import styles from "./landing.module.css";
+import { landingEntrance } from "./RevealGroup";
 
 export function AnimatedSteps() {
   const [scope, animate] = useAnimate();
@@ -25,18 +26,18 @@ export function AnimatedSteps() {
       if (played.current.has(index)) return;
       played.current.add(index);
       Array.from(items[index].children).forEach((child, childIndex) => {
-        const start = delay + childIndex * 0.12;
-        controls.push(animate(child, { y: [12, 0] }, { ...spring.settle, delay: start }));
-        controls.push(animate(child, { opacity: [0.15, 1] }, { duration: 0.65, delay: start, ease: "easeOut" }));
+        const start = delay + childIndex * landingEntrance.stagger;
+        controls.push(animate(child, { y: [landingEntrance.distance, 0] }, { ...spring.settle, delay: start }));
+        controls.push(animate(child, { opacity: [landingEntrance.opacity, 1] }, { duration: landingEntrance.duration, delay: start, ease: "easeOut" }));
       });
     }
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
-        if (media.matches && entry.target === list) items.forEach((_, i) => play(i, i * 0.18));
+        if (media.matches && entry.target === list) items.forEach((_, i) => play(i, i * landingEntrance.stagger));
         if (!media.matches && entry.target !== list) play(items.indexOf(entry.target as HTMLLIElement));
       }
-    }, { threshold: 0.35 });
+    }, { threshold: landingEntrance.threshold });
     function observe() {
       observer.disconnect();
       if (media.matches) observer.observe(list);

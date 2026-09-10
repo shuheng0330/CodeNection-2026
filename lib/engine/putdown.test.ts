@@ -112,10 +112,17 @@ describe("eligiblePutDowns", () => {
 
 describe("the promise the landing page makes", () => {
   // The landing page names, in prose, the things Pikul will never ask you to
-  // drop. That sentence is a claim about this engine, and it shipped saying
+  // drop. Those sentences are claims about this engine, and one shipped saying
   // "health needs" — a category that has never existed in the model — while
   // leaving out commuting, which the engine really does protect. Nobody could
   // have caught that by reading either file alone.
+  //
+  // Every string that makes the claim is checked, not just the one that was
+  // wrong first: the next rewrite of this section put "health needs" straight
+  // back, in a new sentence a test naming a single key would have waved
+  // through.
+  const CLAIMS = [LANDING.protected, LANDING.putdownBody];
+
   const NAMED: [string, LoadCategory][] = [
     ["Classes", "class"],
     ["coursework", "assignment"],
@@ -124,9 +131,11 @@ describe("the promise the landing page makes", () => {
   ];
 
   it("names something the engine actually protects, and nothing it does not", () => {
-    for (const [phrase, category] of NAMED) {
-      expect(LANDING.protected.toLowerCase()).toContain(phrase.toLowerCase());
-      expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).toBeNull();
+    for (const claim of CLAIMS) {
+      for (const [phrase, category] of NAMED) {
+        expect(claim.toLowerCase()).toContain(phrase.toLowerCase());
+        expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).toBeNull();
+      }
     }
   });
 
@@ -137,9 +146,11 @@ describe("the promise the landing page makes", () => {
       ["club", "club"],
       ["errand", "admin"],
     ];
-    for (const [phrase, category] of offered) {
-      expect(LANDING.protected.toLowerCase()).not.toContain(phrase);
-      expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).not.toBeNull();
+    for (const claim of CLAIMS) {
+      for (const [phrase, category] of offered) {
+        expect(claim.toLowerCase()).not.toContain(phrase);
+        expect(suggestPutDown([ev("2026-09-12", category, 20, 5)], asOf, HEAVY)).not.toBeNull();
+      }
     }
   });
 });

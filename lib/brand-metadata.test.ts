@@ -6,13 +6,13 @@ describe("brand metadata", () => {
     const metadata = createBrandMetadata("pikul.example");
 
     expect(metadata.metadataBase?.toString()).toBe("https://pikul.example/");
-    expect(metadata.title).toBe("Pikul — Your week is more than your timetable.");
+    expect(metadata.title).toBe("Pikul");
     expect(metadata.description).toBe(
       "See assignments, shifts, commuting and family together. Compare your week with your own normal, and find room for what matters.",
     );
     expect(metadata.alternates).toBeUndefined();
     expect(metadata.openGraph).toMatchObject({
-      title: "Pikul — Your week is more than your timetable.",
+      title: "Pikul",
       type: "website",
       images: [
         {
@@ -25,7 +25,7 @@ describe("brand metadata", () => {
     });
     expect(metadata.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "Pikul — Your week is more than your timetable.",
+      title: "Pikul",
       images: [
         {
           url: "/opengraph-image.png",

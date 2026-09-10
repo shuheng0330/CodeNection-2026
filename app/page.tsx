@@ -5,6 +5,7 @@ import { PutDownPrinciple } from "@/components/landing/PutDownPrinciple";
 import { GrainOverlay } from "@/components/landing/GrainOverlay";
 import { AnimatedSteps } from "@/components/landing/AnimatedSteps";
 import { RevealGroup } from "@/components/landing/RevealGroup";
+import { DecisionPreview } from "@/components/landing/DecisionPreview";
 import { HERO, HOW, LANDING, PRODUCT } from "@/lib/copy";
 import styles from "@/components/landing/landing.module.css";
 
@@ -34,12 +35,12 @@ export default function Home() {
         <CommitmentScene />
       </section>
       <BuildsQuietly />
+      <DecisionPreview />
       <PutDownPrinciple />
       <section id="how" aria-labelledby="how-title" className={styles.how}>
         <RevealGroup className={styles.sectionHeading}>
           <p className={styles.eyebrow}>{LANDING.howEyebrow}</p>
           <h2 id="how-title">{HOW.title}</h2>
-          <p className={styles.lead}>{HOW.body}</p>
         </RevealGroup>
         <AnimatedSteps />
         <Link href="/today?reset=1" className={styles.primary}>{HERO.cta}<span aria-hidden="true"> ↗</span></Link>

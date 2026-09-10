@@ -106,6 +106,26 @@ export const BAND: Record<BandKey, BandCopy> = {
 };
 
 /* ── Lim · landing & brand ───────────────────────────────────────────── */
+export const LANDING_DECISION = {
+  eyebrow: "Before you say yes",
+  title: "What would one more yes mean?",
+  description: "Try both answers to a sample request. Nothing here changes your week.",
+  sample: "sample week",
+  hours: "hours",
+  proposed: "A new request, not an existing commitment. These choices only preview the outcome.",
+  accept: "Accept the shift",
+  decline: "Decline the shift",
+  choiceLabel: "Preview your answer",
+  forecast: "Request forecast",
+  without: "Without this request",
+  with: "If you accept",
+  declined: "If you decline",
+  usual: "of a usual week",
+  unavailable: "This request falls outside the available forecast.",
+  reply: "Example reply · not sent",
+  fallback: "Explore how a new request could change a sample week. Open the sample demo to try the decision flow.",
+} as const;
+
 export const HERO = {
   eyebrow: "Pikul · to shoulder a load",
   headline: "Your week is more",
@@ -683,7 +703,7 @@ export const LANDING = {
   chartDescription: "Illustrative pattern: the last seven days carry more than the earlier days. Pikul uses your own commitments for the comparison in the app.",
   putdownEyebrow: "Make a little room",
   putdownTitle: "One thing you can put down.",
-  putdownBody: "You don't need another list of things to fix. When your week is heavy, Pikul looks for one negotiable commitment you could hand back, like an extra shift or an optional event.",
+  putdownBody: "Already said yes? Pikul can help you find an existing commitment to hand back, while protecting classes, coursework, commuting and family responsibilities. The choice stays yours.",
   protected: "Classes, coursework, commuting and family responsibilities stay protected. The choice is always yours.",
   reliefExample: "Illustrative example · handing back an existing commitment",
   shiftTitle: "The extra Saturday shift",
