@@ -35,18 +35,22 @@ Updated 9 September 2026.
 - Corrected declined-request totals from “handed back” to “kept free,” matching the decision semantics in the delivery plan.
 - Improved supporting-page semantics with labelled sections, a live recovery-choice result and a valid ordered Method list.
 - Verified Recover’s no-room and quiet-day states, keyboard choice selection, empty and populated Ask histories, and the Method reading flow in the browser.
-- Deployed commit `775d516` to Vercel at `https://pikul-codenection-2026.vercel.app` with no environment variables.
+- Deployed integrated commit `4cfb5c7` from `main` to Vercel at
+  `https://pikul-codenection-2026.vercel.app` with no environment variables.
 - Verified all seven public routes plus reset and persona deep links return HTTP 200.
 - Verified the public landing → Today → Week path in a fresh browser surface and recorded a repeatable demo/deployment runbook.
 - Completed the full route matrix at compact, tablet and desktop-equivalent widths with no horizontal overflow.
 - Added bounded release fixes for sheet focus behavior, clipboard fallback, atomic one-time decisions, add validation, put-down confirmation, CarryBar text alternatives and mobile touch targets.
 - Verified invalid input blocking, decision deduplication, atomic acceptance, put-down cancel/confirm and mobile target sizes in the browser.
-- `npm run verify` passes: voice gate, lint, 74 Vitest tests and the Next.js production build.
+- `npm run verify` passes: voice gate, lint, 141 Vitest tests and the Next.js
+  production build. `npm run check:release` also passes its automated route,
+  reflow, touch-target, keyboard, repeat-run and decision-state checks.
 
 ## Next actions
 
 - Team kickoff: confirm availability, official deadline/form, mentor status, sample contract and visual references.
-- Redeploy the bounded QA fixes and run the public smoke path; connect automatic Git deployment after the release branch is agreed and merged.
+- Complete the signed-out physical-phone/mobile-data and screen-reader checks on
+  the Git-backed production deployment.
 - Complete final integration/QA/fixes Friday 15:00–18:00 and freeze by 11 September, 18:00 MYT.
 - Joint README, diagrams, evidence, slides, recording and early submission.
 
@@ -112,7 +116,27 @@ The earlier planning-only validation paragraph is historical. The checks above d
 - True browser 200% zoom was not exposed by the in-app browser. A 720×450 CSS-pixel reflow proxy for a 1440×900 window at 200% had no horizontal overflow and kept all actions rendered. Reduced-motion emulation was unavailable; the active environment reported no reduced-motion preference, so only source/CSS handling was reviewed. Opening another in-app tab did not make the source document hidden (`visibilityState` stayed `visible`), so hidden-tab suspension remains unverified in a real browser.
 - Captured final 1440×900 desktop and 390×844 mobile viewport screenshots in the QA session. Real-device testing remains outside this pass.
 - Final `npm run verify` passed after the CSS cleanup: voice gate, lint, 10 test files / 80 tests, TypeScript and production build.
-Shared navigation, the living week view and supporting routes have been validated locally and on the current Vercel deployment. They have not yet been checked on a physical Android device using mobile data. Automatic Git deployment is intentionally deferred until the team agrees and merges the production branch. Other planned enhancements remain pending. External submission rules have not been reverified in this revision.
+Shared navigation, the living week view and supporting routes have been validated
+locally and on the current Vercel deployment. They have not yet been checked on
+a physical Android device using mobile data. Automatic Git deployment is active
+from `main`; other branches receive preview deployments. Other planned
+enhancements remain pending. External submission rules have not been reverified
+in this revision.
+
+## Git-backed production deployment — 9 September 2026
+
+- Connected Vercel project `pikul-codenection-2026` to
+  `github.com/shuheng0330/Pikul` with `main` as its production branch.
+- Deployment `dpl_4CQxD5AqqQz3Tdj1tCQgKQ1HGwFx` cloned `main` at `4cfb5c7`,
+  compiled successfully and reached Ready status.
+- The stable alias <https://pikul-codenection-2026.vercel.app> points to that
+  production deployment.
+- Public HTTP checks returned 200 for all seven routes, the reset and persona
+  deep links, favicon, Apple icon and Open Graph image.
+- Pull-request comments and commit-status reporting are enabled. Future pushes
+  to `main` create production deployments; other branch pushes create previews.
+- Outstanding manual checks remain a signed-out physical Android phone on mobile
+  data, TalkBack or another real screen reader, and external link-preview caches.
 
 ## Release checks run 9 September 2026 (Ku's lane)
 
@@ -243,3 +267,19 @@ Added the shared RevealGroup entrance to decision-preview headings and request d
 The earlier consistency change omitted the right forecast panel. Added its once-only RevealGroup with a stable target around the keyed choice feedback. Verified current source at localhost:3004 in the browser: twelve sampled frames show forecast opacity increasing from 0.15 to 1 and translateY settling from 12px to zero. Declining and scrolling away/back left entrance opacity at 1 and transform none; the selected result remained correct. No claim that a static screenshot alone proves motion. Existing changes preserved; no commit or push.
 
 Correction verification: npm run verify passed (voice gate, lint, 144 tests, TypeScript and production build).
+
+## Selectable hand-back commitment — 10 September 2026
+
+- Kept Pikul's highest-weight safe commitment as the default recommendation and
+  added an optional **Choose a different commitment** control on Today.
+- The revealed radio group contains only commitments already allowed by the
+  hand-back rules: negotiable categories, within seven days, at least three
+  hours, and only while the current week is heavy.
+- Selecting another item updates the hours/day preview, and confirmation stores
+  that exact commitment ID. Cancel still writes nothing; undo restores the item
+  and resets the next offer to Pikul's recommendation.
+- This is a bounded cross-owner extension to Ku's decision component and engine;
+  protected commitments and `/asks` decision history are unchanged.
+- `npm run verify` passed with 14 files and 143 tests. The browser release check
+  passed all existing checks plus default selection, alternate selection, exact
+  persisted ID, cancel and undo coverage.

@@ -206,6 +206,12 @@ export const AREAS = {
 export const PUT_DOWN = {
   title: "One thing worth putting down",
   action: "Hand it back",
+  chooseDifferent: "Choose a different commitment",
+  hideChoices: "Hide other commitments",
+  chooseLegend: "Eligible commitments to hand back",
+  recommended: "Pikul's recommendation",
+  choiceDetail: (hours: number, when: string): string =>
+    `${Math.round(hours)} hours ${when === "today" || when === "tomorrow" ? when : `on ${when}`}`,
   undo: "Actually, keep it",
   doneTitle: "Handed back",
   /** Saying nothing is also information: it says the week is heavy for

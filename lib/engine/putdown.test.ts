@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { MIN_HOURS_BACK, putDownReason, suggestPutDown, whenLabel } from "./putdown";
+import {
+  eligiblePutDowns,
+  MIN_HOURS_BACK,
+  putDownReason,
+  suggestPutDown,
+  whenLabel,
+} from "./putdown";
 import type { Intensity, LoadCategory, LoadEvent } from "./types";
 
 const asOf = new Date(2026, 8, 9); // Wednesday 9 Sep 2026
@@ -72,6 +78,34 @@ describe("suggestPutDown", () => {
     const p = suggestPutDown([ev("2026-09-12", "shift", 8.5, 4)], asOf, HEAVY);
     expect(p?.hoursBack).toBe(8.5);
     expect(p?.when).toBe("Saturday");
+  });
+});
+
+describe("eligiblePutDowns", () => {
+  it("returns every worthwhile negotiable choice with the recommendation first", () => {
+    const protectedClass = ev("2026-09-10", "class", 12, 5);
+    const tinyErrand = ev("2026-09-10", "admin", 2, 5);
+    const laterShift = ev("2026-09-30", "shift", 10, 5);
+    const social = ev("2026-09-11", "social", 6, 2);
+    const drainingShift = ev("2026-09-12", "shift", 5, 5);
+
+    const choices = eligiblePutDowns(
+      [protectedClass, tinyErrand, laterShift, social, drainingShift],
+      asOf,
+      HEAVY,
+    );
+
+    expect(choices.map((choice) => choice.event.id)).toEqual([
+      drainingShift.id,
+      social.id,
+    ]);
+    expect(choices[0]).toEqual(suggestPutDown([social, drainingShift], asOf, HEAVY));
+  });
+
+  it("reveals no choices for a calm week", () => {
+    expect(eligiblePutDowns([ev("2026-09-12", "shift", 8, 5)], asOf, CALM)).toEqual(
+      [],
+    );
   });
 });
 

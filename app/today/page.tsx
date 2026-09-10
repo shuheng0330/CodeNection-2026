@@ -12,7 +12,7 @@ import { AppShell } from "@/components/app/shell/AppShell";
 import { Reveal } from "@/components/shared/Reveal";
 import { AHEAD, AREAS, BAND, TODAY } from "@/lib/copy";
 import { daysAhead } from "@/lib/engine/horizon";
-import { putDownReason, suggestPutDown, whenLabel } from "@/lib/engine/putdown";
+import { eligiblePutDowns, putDownReason, whenLabel } from "@/lib/engine/putdown";
 import { useCarry, usePikul } from "@/lib/store";
 import { useHydrated } from "@/lib/useHydrated";
 import { DEMO_LABEL } from "@/lib/seed/decisionDemo";
@@ -45,8 +45,8 @@ export default function TodayPage() {
 
   const { persona, asOf, events, carry, handedBack } = useCarry();
 
-  const suggestion = useMemo(
-    () => suggestPutDown(events, asOf, carry.ratio),
+  const suggestions = useMemo(
+    () => eligiblePutDowns(events, asOf, carry.ratio),
     [events, asOf, carry.ratio],
   );
   const reason = useMemo(
@@ -116,7 +116,8 @@ export default function TodayPage() {
 
             <Reveal delay={0.12} className="mt-6">
               <PutDownCard
-                suggestion={suggestion}
+                key={persona.id}
+                suggestions={suggestions}
                 handedBack={handedBack}
                 reason={reason}
                 asOf={asOf}
