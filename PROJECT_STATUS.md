@@ -439,3 +439,11 @@ fixture, so the badge is suppressed twice over. The effort dial is badged; the
 title never is. Nothing user-facing is wrong, but the README should not claim
 the title is labelled as a guess, and it no longer does. Worth a one-line fix
 after the freeze, not hours before it.
+# README publication status — 11 September 2026
+
+- Created a complete judge-facing root README from frozen source commit `8080a6290dc0b2b667f1fa6b055ad6ee56504032`.
+- Added two embedded ideation diagrams and eight screenshots captured from the public prototype under `docs/readme-assets/`.
+- Added a repeatable Puppeteer capture script for eight screenshot states.
+- Recorded exact claim boundaries: mentor feedback is pending, and screen-reader/physical-device checks are outstanding.
+- Public video, Figma/design, and slide links remain unavailable and are intentionally omitted rather than represented with placeholders.
+- Frozen-release evidence: GitHub recorded Vercel deployment success for `8080a62` at 14:39 UTC; `npm run verify` passed (including 170 Vitest tests), and `npm run check:release` passed the local production browser matrix.
