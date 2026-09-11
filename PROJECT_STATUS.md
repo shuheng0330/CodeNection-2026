@@ -420,3 +420,22 @@ but it should probably just be deleted.
 - Added focused disclosure-state and breakpoint tests in `lib/disclosure.test.ts`.
 - Fresh delivery verification: voice gate and lint passed; Vitest passed 17 files / 168 tests; Next.js production build completed successfully. `git diff --check` is clean.
 - This delivery check did not run the requested manual browser matrix, screen-reader pass, reduced-motion inspection, zoom inspection, or screenshot capture.
+
+## Heads-up for integration, 11 September 2026 (Ku's lane)
+
+**`Xiang-readme` is not documentation-only.** `docs/submission-readiness.md`
+describes it as a safe documentation-only integration. It also removes
+`d3-shape` and `@types/d3-shape` from `package.json`, because nothing in
+`app/`, `components/` or `lib/` imports them on any branch — the landing hero
+curve is a hand-written quadratic Bézier animated by `motion`. `npm run verify`
+passes without them. Merge it before the freeze rather than after, so the
+frozen commit and its lockfile agree.
+
+**One product inconsistency found while fact-checking, not fixed.** The parser
+marks two fields as guessed for the demo message — the title and the intensity
+— but `components/app/NoButton.tsx:317` renders the title row with
+`guessed={false}` hardcoded, and the sheet pre-seeds the title from the demo
+fixture, so the badge is suppressed twice over. The effort dial is badged; the
+title never is. Nothing user-facing is wrong, but the README should not claim
+the title is labelled as a guess, and it no longer does. Worth a one-line fix
+after the freeze, not hours before it.

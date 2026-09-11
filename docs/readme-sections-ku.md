@@ -25,14 +25,37 @@ they still say what I quoted before publishing.
 
 ---
 
-## What it does, in one Wednesday
+## What it does
 
-Every figure here is computed by the engine rather than typed in by hand, and
-nothing in this section is illustrative. One caveat worth stating up front:
-the demo anchors itself to the Wednesday of whatever week you open it in, so
-these figures are from **Wednesday 9 September 2026** and will move if you run
-it later. Re-derive them from the frozen build before quoting them anywhere
-else.
+Pikul measures a student's week against **their own** previous four weeks
+rather than against any fixed idea of a normal week, and it attaches that
+measurement to the moment somebody asks them for something. A request is read
+where it arrives, priced against the specific week it would land in, and shown
+with the before figure beside the after one — while the answer is still theirs
+to give. They can accept it, decline it with a reply already drafted, or make
+room first by handing back one thing they already agreed to. Every answer is
+kept, and none of them is scored.
+
+### The loop, in five steps
+
+1. **See where you stand** — this week and the four ahead of it, each against
+your own usual, as a marker on a band rather than a number out of ten.
+2. **A request arrives and is read in place** — paste it, or open the one
+   already waiting. Pikul shows what it understood, field by field.
+3. **See the cost, in the week it would land in** — the before percentage and
+   the after percentage, together.
+4. **Answer it** — accept, decline with a copyable reply in three tones, or
+   make breathing room by choosing an eligible commitment to hand back, with a
+   preview that saves nothing until you confirm.
+5. **See it kept** — the decision lands in your week and in a history that
+   shows hours taken on beside hours kept free.
+
+### The same Wednesday, with and without Pikul
+
+Every figure below is computed by the engine rather than typed in by hand, and
+nothing here is illustrative. One caveat: the demo anchors to the Wednesday of
+whatever week you open it in, so these are from **Wednesday 9 September 2026**
+and will move if you run it later.
 
 Aisyah is a student with a part-time café job. It is **Wednesday 9 September**,
 and at 3pm a message arrives: *"can you cover next friday 3pm-11pm? kelly
@@ -46,8 +69,9 @@ which time the reply cannot be taken back and the assignment is already late.
 
 **With Pikul,** the same message is read in place. From the word *cover* it
 works out that this is a shift, on **Friday 18 September**, for **8 hours**,
-of a kind that takes a lot out of her. A title is the one thing it cannot read
-out of a sentence like that, so Pikul supplies one and marks it as a guess.
+of a kind that takes a lot out of her. A title is the one thing it cannot read out of a sentence like that, so Pikul
+supplies one for her to rewrite, and the effort dial — the only other thing it
+had to guess — is badged *we guessed* on the sheet.
 Anything it got wrong she corrects before a price is calculated — the number
 follows her boxes, not our guess. One tap, and she sees the week the shift
 would land in:
@@ -76,7 +100,7 @@ The change is not that Pikul decided for her. It is that the decision moved
 from *after* the consequence to *before* it, with the arithmetic visible on the
 way past.
 
-### The loop, end to end
+### The same loop, drawn
 
 ```mermaid
 flowchart TD
@@ -130,7 +154,8 @@ reading is that this request is not what made the week hard.
 Then you answer. Saying no gives you a drafted reply in three tones to copy —
 the hard part of saying no was never the wording, it was knowing you were
 allowed to. Saying yes puts the commitment on your week and records the decision
-together, once. Both answers are kept, and `/asks` shows the hours you took on
+together, once. Both answers are kept, and `/asks` — **Decisions** in the
+navigation — shows the hours you took on
 next to the hours you kept free, with a line making clear it is a record and not
 a report card. A tool that only ever congratulates you for declining is just
 another voice telling a people-pleaser what to do.
@@ -141,9 +166,10 @@ tempted to leave out — that it will not change this week's reading, because th
 week has already happened. What changes is what is still ahead of you.
 
 `/week` puts the same arithmetic across the four weeks in front of you, so you
-can see the heavy one before you are in it. `/recover` finds the quietest day you
+can see the heavy one before you are in it. `/recover` — **Quiet Day** in the
+navigation — finds the quietest day you
 have coming and asks what you would do with it, then records nothing and never
-checks. `/compare` is the argument in fifteen seconds: two students, and the one
+checks. `/compare` — **Compare weeks** in the navigation — is the argument in fifteen seconds: two students, and the one
 carrying thirty-one fewer hours is the one in trouble.
 
 ## What makes it different
@@ -192,7 +218,7 @@ Every other tool that shows you a cost is trying to change your answer. Pikul
 shows the before figure next to the after one specifically so the number
 cannot mislead you:
 
-> Week 11 is already at 128% of a usual week. Saying yes makes it 132%.
+> Week 11 is at 128% of a usual week already. Saying yes makes it 132%.
 
 Four points. The honest reading is *this request is not what made your week
 hard* — and Pikul says so rather than letting a scary-looking 132% imply the
@@ -241,9 +267,8 @@ day on discipline alone. Making it a build step is how a tone becomes a
 guarantee instead of an intention.
 
 Three smaller ones, all in the build: the request sheet opens on a message
-that has **already been parsed**. The sheet says which word it read the
-request from — *read from "cover"* — and badges anything it filled in itself
-as *we guessed*. Every field is editable and the price follows your boxes, so
+that has **already been parsed**. The sheet names the word it read the request from — *read from "cover"* — and
+badges what it had to guess rather than read. Every field is editable and the price follows your boxes, so
 nothing has to be typed before you see a number. The parser handles Malay and English in the same sentence,
 including the difference between *sabtu ni* and *sabtu depan*. And the date
 picker marks the days that already carry something, so choosing when to put a
@@ -257,8 +282,8 @@ columns are our reading of someone else's, and where we could not confirm
 something we have said so rather than writing "no".
 
 **Start with the one that is genuinely close.**
-[Bounds](https://withbounds.com/) describes itself as the first app built for
-people-pleasing recovery. When a request lands it offers a guided pause before
+[Bounds](https://withbounds.com/) calls itself *"the boundaries app to stop
+people-pleasing"*. When a request lands it offers a guided pause before
 you answer, gives you a script for that exact situation, and — this is the part
 we independently arrived at too — treats a yes and a no as equally valid
 outcomes rather than scoring you on declines. That is a real product solving a
@@ -280,7 +305,8 @@ actually afford the shift is not helped by a better script.
 | Prices a *specific* incoming request before you answer | not that we can find | not that we can find | no | no | no | **yes** |
 | Helps you say no | **yes — scripts, and it is built for this** | no | no | no | no | yes — a drafted reply in three tones |
 | Suggests what to put down, with protected categories | no | reschedules automatically | no | no | no | **yes** |
-| Works with no account and no connected calendar | no | no | no | no | yes | **yes** |
+| Lets you pick a *different* commitment to hand back | n/a | n/a | n/a | n/a | n/a | **yes — every eligible one, one tap away** |
+| Works with no account and no connected calendar | not stated on their site | no | no | no | yes | **yes** |
 
 Two honest readings of that table.
 
@@ -334,12 +360,12 @@ yet", not "you have no load".
 
 **"% of a usual week" is not hours divided by hours.** It is the weighted
 ratio above, turned into a percentage, and the two sums do not agree.
-`/compare` puts both on one screen: Wei Jian's week holds **53 hours against a
-usual 35**, which is 153% by plain division — and the figure beside it reads
-**145%**, because the ratio weighs every commitment by how much it takes out
-of you and lets the recent past decay rather than dropping out of a window. If
-you check our arithmetic with a calculator, that eight-point gap is where it
-comes from. **Nothing is predicted.**
+`/compare` puts both on one screen: Wei Jian's week holds **53 hours** and an
+ordinary week for him is **about 35** — 151% by plain division — while the
+figure beside it reads **145%**, because the ratio weighs every commitment by
+how much it takes out of you and lets the recent past decay rather than
+dropping out of a window. If you check our arithmetic with a calculator, that
+six-point gap is where it comes from. **Nothing is predicted.**
 The weeks ahead use the identical function over commitments already in the
 calendar. It is not a forecast of how you will feel.
 It is what you have already agreed to, added up.
@@ -357,23 +383,16 @@ It is also **actively argued about in its own field** — the objection being
 that the recent window sits inside the longer window it is divided by, which
 can manufacture correlations that are not really there. Both the coupling
 objection and a broader conceptual one apply to us. Rather than bury that here,
-we put the full argument, with both sides, on **`/method` inside the product**,
+we put the full argument, with both sides, on **`/method`** — *How it works* in the navigation — inside the product,
 reachable from every number the app shows. A judge or a student who wants to
 attack the maths should find our own statement of the strongest case against it
 waiting for them.
 
-- Foster C. Monitoring training in athletes with reference to overtraining
-  syndrome. *Med Sci Sports Exerc.* 1998;30(7):1164–8.
-- Foster C, Florhaug JA, Franklin J, et al. A new approach to monitoring exercise
-  training. *J Strength Cond Res.* 2001;15(1):109–15.
-- Gabbett TJ. The training-injury prevention paradox: should athletes be training
-  smarter and harder? *Br J Sports Med.* 2016;50(5):273–80.
-- Lolli L, Batterham AM, Hawkins R, et al. Mathematical coupling causes spurious
-  correlation within the conventional acute-to-chronic workload ratio
-  calculations. *Br J Sports Med.* 2019;53(15):921–2.
-- Impellizzeri FM, Tenan MS, Kempton T, Novak A, Coutts AJ. Acute:chronic
-  workload ratio: conceptual issues and fundamental pitfalls. *Int J Sports
-  Physiol Perform.* 2020;15(6):907–13.
+- Foster C. Monitoring training in athletes with reference to overtraining syndrome. *Med Sci Sports Exerc.* 1998;30(7):1164–8. [PubMed 9662690](https://pubmed.ncbi.nlm.nih.gov/9662690/)
+- Foster C, Florhaug JA, Franklin J, et al. A new approach to monitoring exercise training. *J Strength Cond Res.* 2001;15(1):109–15. [PubMed 11708692](https://pubmed.ncbi.nlm.nih.gov/11708692/)
+- Gabbett TJ. The training-injury prevention paradox: should athletes be training smarter and harder? *Br J Sports Med.* 2016;50(5):273–80. [doi:10.1136/bjsports-2015-095788](https://doi.org/10.1136/bjsports-2015-095788)
+- Lolli L, Batterham AM, Hawkins R, et al. Mathematical coupling causes spurious correlation within the conventional acute-to-chronic workload ratio calculations. *Br J Sports Med.* 2019;53(15):921–2. [doi:10.1136/bjsports-2017-098110](https://doi.org/10.1136/bjsports-2017-098110)
+- Impellizzeri FM, Tenan MS, Kempton T, Novak A, Coutts AJ. Acute:chronic workload ratio: conceptual issues and fundamental pitfalls. *Int J Sports Physiol Perform.* 2020;15(6):907–13. [doi:10.1123/ijspp.2019-0864](https://doi.org/10.1123/ijspp.2019-0864)
 
 ## What it cannot do, and the test that would settle it
 
@@ -392,8 +411,11 @@ tell you whether you are unwell, and it does not try.
 that a draining hour weighs exactly 1.7 ordinary ones, and applying an
 athlete-monitoring model to coursework and family duty is our design decision.
 
-**It only knows what it is told,** and it thinks in days rather than clock
-times — so it will never tell you Thursday 3pm is free, and a month of history
+**Everything lives in one browser.** Your week is not on a server, which is
+the privacy claim — and it is also the limit: it does not follow you to
+another device, and clearing your browser clears it. The demo ships with
+generated weeks for the same reason. **It only knows what it is told,** and it
+thinks in days rather than clock times — so it will never tell you Thursday 3pm is free, and a month of history
 has to exist before the comparison means much. That is why the demo ships with
 generated weeks.
 
@@ -413,10 +435,13 @@ TalkBack and a physical-device check are **not** done, and are not claimed.
 
 ## Architecture
 
-A single Next.js App Router frontend. No backend, no database, no account, no
+**Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Zustand ·
+deployed on Vercel.** A single frontend and nothing behind it. No backend, no database, no account, no
 API key, and no network call at runtime — verified, not asserted: there is no
-`fetch`, no SDK and no `process.env` reference anywhere in `app/`, `components/`
-or `lib/`. Your week lives in your own browser and nowhere else.
+`fetch` and no SDK anywhere in `app/`, `components/` or `lib/`. The one
+`process.env` read in the whole product is the deployment URL Vercel injects
+by itself, used at build time so link previews resolve. Your week lives in
+your own browser and nowhere else.
 
 ```mermaid
 flowchart TD
@@ -492,6 +517,37 @@ without touching how load is calculated — which is the sensible division of
 labour: language understanding where it helps, deterministic arithmetic where
 consistency matters.
 
+## Where it runs
+
+Static output on **Vercel**, connected to `main`, with **nothing to configure
+and no secrets** — no API keys, no database URL, no service credentials. The
+only environment variables the code reads at all are the deployment URL that
+Vercel injects by itself, used at build time to make link previews resolve.
+There is nothing to set, because there is nothing for a server to do. `npm run build` produces
+prerendered HTML for all seven routes and the deployment serves it.
+
+**Live:** <https://pikul-codenection-2026.vercel.app>
+
+All seven routes plus the `?reset=1` and `?persona=` demo links return 200
+signed out. Because the whole product is static and the student's week lives in
+their own browser, there is no database to provision, no API key to rotate, no
+rate limit, and no runtime cost — the app would serve a thousand students on
+the same free tier it serves one.
+
+<!-- INTERNAL, do not publish: the production commit recorded in
+docs/evidence/2026-09-09-vercel-deployment.md is 4cfb5c7 and main has moved
+well past it. Re-deploy from the frozen commit, re-record it, and replace this
+comment with the commit the deployment is actually serving. -->
+
+**What would have to change for a real multi-device product,** stated plainly
+because the current architecture is a deliberate trade and not an accident: the
+moment a student's week has to follow them from a phone to a laptop, this needs
+an account system, a database, a migration path for data already in browsers,
+and a privacy position we have not yet had to write down. None of that is hard
+in itself; all of it is more than a week. What we have instead is a product
+where the honest privacy claim — *your week never leaves your device* — is
+enforced by there being nowhere else for it to go.
+
 ## Built, next, and not promised
 
 The line between these three is the one we would most like a judge to hold us
@@ -533,8 +589,10 @@ documented in `PROJECT_STATUS.md` with which version survived and why.
 
 ## Running it
 
-Node 20.9 or newer — what Next 16 requires. We build on 22. No environment
-variables and nothing to configure.
+You do not need to run it — it is live at <https://pikul-
+codenection-2026.vercel.app>. To run it anyway: Node 20.9 or newer, which is
+what Next 16 requires; we build on 22. Nothing to configure and no secrets to
+supply.
 
     npm install
     npm run dev          # http://localhost:3000
@@ -561,7 +619,10 @@ path in `docs/DEMO_RUNBOOK.md`.
 
 ## Dependencies
 
-Nine runtime packages, all of them load-bearing.
+Eight runtime packages, all of them load-bearing. There were nine until
+`d3-shape` turned out to be imported nowhere — the hero curve is a hand-
+written quadratic Bézier animated by `motion` — so it and its types came out
+of `package.json` rather than being described.
 
 | | |
 |---|---|
@@ -570,7 +631,7 @@ Nine runtime packages, all of them load-bearing.
 | `date-fns` | every *calendar* operation — month ends, week starts, weekday names. Three places do plain millisecond arithmetic to get a duration, which is a different job |
 | `chrono-node` | natural-language dates in the message parser |
 | `motion` | the transitions, all of which respect reduced motion |
-| `d3-shape` | the curve on the landing hero |
+
 | `lucide-react` | navigation icons |
 
 Development adds TypeScript, ESLint, Tailwind CSS 4, Vitest, and
