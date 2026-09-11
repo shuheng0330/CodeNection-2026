@@ -153,7 +153,8 @@ reading is that this request is not what made the week hard.
 Then you answer. Saying no gives you a drafted reply in three tones to copy —
 the hard part of saying no was never the wording, it was knowing you were
 allowed to. Saying yes puts the commitment on your week and records the decision
-together, once. Both answers are kept, and `/asks` shows the hours you took on
+together, once. Both answers are kept, and `/asks` — **Decisions** in the
+navigation — shows the hours you took on
 next to the hours you kept free, with a line making clear it is a record and not
 a report card. A tool that only ever congratulates you for declining is just
 another voice telling a people-pleaser what to do.
@@ -164,7 +165,8 @@ tempted to leave out — that it will not change this week's reading, because th
 week has already happened. What changes is what is still ahead of you.
 
 `/week` puts the same arithmetic across the four weeks in front of you, so you
-can see the heavy one before you are in it. `/recover` finds the quietest day you
+can see the heavy one before you are in it. `/recover` — **Quiet Day** in the
+navigation — finds the quietest day you
 have coming and asks what you would do with it, then records nothing and never
 checks. `/compare` is the argument in fifteen seconds: two students, and the one
 carrying thirty-one fewer hours is the one in trouble.
@@ -517,9 +519,11 @@ consistency matters.
 
 ## Where it runs
 
-Static output on **Vercel**, connected to `main`, with **no environment
-variables and no secrets to configure** — there is nothing to configure,
-because there is nothing for a server to do. `npm run build` produces
+Static output on **Vercel**, connected to `main`, with **nothing to configure
+and no secrets** — no API keys, no database URL, no service credentials. The
+only environment variables the code reads at all are the deployment URL that
+Vercel injects by itself, used at build time to make link previews resolve.
+There is nothing to set, because there is nothing for a server to do. `npm run build` produces
 prerendered HTML for all seven routes and the deployment serves it.
 
 **Live:** <https://pikul-codenection-2026.vercel.app>
