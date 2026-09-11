@@ -30,7 +30,6 @@ export default function Home() {
             <Link href="/today?reset=1" className={styles.primary}>{HERO.cta}<span aria-hidden="true"> ↗</span></Link>
             <a href="#how" className={styles.secondary}>{HERO.ctaSecondary}<span aria-hidden="true"> ↓</span></a>
           </div>
-          <p className={styles.demoNote}>{LANDING.demoNote}</p>
         </div>
         <CommitmentScene />
       </section>
