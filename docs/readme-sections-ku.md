@@ -431,7 +431,7 @@ rate limit, and no runtime cost — the app would serve a thousand students on
 the same free tier it serves one.
 
 <!-- INTERNAL, do not publish: the production commit recorded in
-docs/evidence/2026-09-09-vercel-deployment.md is 4cfb5c7 and main has moved
+docs/evidence.md (Vercel deployment) is 4cfb5c7 and main has moved
 well past it. Re-deploy from the frozen commit, re-record it, and replace this
 comment with the commit the deployment is actually serving. -->
 

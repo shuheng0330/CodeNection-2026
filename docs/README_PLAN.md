@@ -132,7 +132,7 @@ Document multiple iterations in a concise timeline:
 | Stage/date | Earlier direction | Evidence or concern | Decision/change | Result in prototype |
 |---|---|---|---|---|
 
-Useful evidence already exists in `docs/evidence/`, including the decision
+Useful evidence already exists in `docs/evidence.md`, including the decision
 contract, app shell, Living Week, supporting routes, and route-QA notes. Convert
 those implementation decisions into a reader-friendly product evolution story;
 do not paste engineering logs into the README.

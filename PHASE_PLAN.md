@@ -136,7 +136,7 @@ Ku exports a deterministic sample scenario from `lib/seed/decisionDemo.ts`: pers
 
 Ku defines preview, accept, decline, and confirmation semantics. Thong consumes existing `useCarry()` and engine helpers for Week rather than modifying the store. By Wednesday morning, Ku and Thong test one integrated Today/shell page for direct loading, internal links, persona switching, reset, and hydration. Only then spread the shell to the other routes.
 
-Record brief dated decisions, screenshots, mentor comments, and tester observations during development. Each member contributes their own notes. Thong collects them in `docs/evidence/`; this is raw evidence capture, not a separate documentation workstream. Keep a mentor slot before freeze where possible; do not postpone booking to Saturday.
+Record brief dated decisions, screenshots, mentor comments, and tester observations during development. Each member contributes their own notes. Thong collects them in `docs/evidence.md`; this is raw evidence capture, not a separate documentation workstream. Keep a mentor slot before freeze where possible; do not postpone booking to Saturday.
 
 ## 6. Friday release gate
 

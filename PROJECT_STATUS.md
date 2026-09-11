@@ -14,7 +14,7 @@ Updated 9 September 2026.
 ## Completed planning work
 
 - Studied the app, historical plan and current phase plan.
-- Completed three review passes, recorded in docs/PLAN_REVIEW.md.
+- Completed three review passes, recorded in docs/PLAN_REVIEW.md (folded away on 11 September; in git history).
 - Consolidated PHASE_PLAN.md into the final team delivery plan with minimum scope, bounded enhancements/fallbacks, three development lanes, early integration, Friday freeze, release gate and shared weekend production.
 - Marked PLAN.md historical and synchronised requirements/architecture/status documentation.
 

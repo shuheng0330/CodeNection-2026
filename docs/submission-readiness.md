@@ -33,8 +33,8 @@ visible in the root `README.md`.
 | Ideation visuals | 🟢 Draft ready | Mindmap and problem reasoning flow in [`readme-draft-thong.md`](readme-draft-thong.md) | Content exists as Mermaid; Lim may still polish the final visual presentation |
 | README image assets | 🔴 Missing | `docs/readme-assets/` does not exist | No final hero image or four-to-eight screen set is ready for GitHub |
 | Public prototype | 🟡 In progress | <https://pikul-codenection-2026.vercel.app> returned HTTP 200 on all seven routes during this audit | The app is reachable, but the final deployment has not been matched to the eventual frozen `main` commit or added to the root README |
-| Mentor consultation | 🔴 Missing | No mentor record in `docs/evidence/` | Confirm whether a session occurred; document real feedback or disclose that it did not happen |
-| External student testing | 🔴 Missing | No tester or participant record in `docs/evidence/` | Internal QA must not be presented as user validation |
+| Mentor consultation | 🔴 Missing | No mentor record in `docs/evidence.md` | Confirm whether a session occurred; document real feedback or disclose that it did not happen |
+| External student testing | 🔴 Missing | No tester or participant record in `docs/evidence.md` | Internal QA must not be presented as user validation |
 | Video and slides | 🔴 Missing | No confirmed YouTube or public slides/design link in the repository | Record, publish and verify both final links |
 | Final build verification | 🟡 In progress | Historical QA is recorded, but no final frozen-build record exists | Re-run checks and record the exact commit, test result and production deployment after freeze |
 
@@ -99,8 +99,8 @@ must appear directly in the root README or video.
 | [`readme-draft-thong.md`](readme-draft-thong.md) | Header, ideation breadth, two visuals, product evolution, QA summary, impact, roadmap and team contributions | V2 is ready for cross-review and integration |
 | [`readme-sections-ku.md`](readme-sections-ku.md) | Product flow, method, limitations, architecture, setup and dependencies | Core technical draft exists locally |
 | `origin/Xiang-readme:docs/readme-sections-ku.md` | Expanded solution, novelty, competitor comparison, architecture diagram and build scope | Branch-only; integrate documentation files without importing stale application code |
-| `origin/Xiang-readme:docs/readme-ideation-inputs-ku.md` | Ku's dated ideation and dropped-direction evidence | Branch-only supporting input for Thong's chronology check |
-| `origin/Xiang-readme:docs/readme-captions-ku.md` | Alt text, captions and a six-screen capture list | Branch-only input for Lim's final screenshots |
+| `docs/readme-inputs-ku.md` | Ku's dated ideation and dropped-direction evidence | Branch-only supporting input for Thong's chronology check |
+| `docs/readme-inputs-ku.md` | Alt text, captions and a six-screen capture list | Branch-only input for Lim's final screenshots |
 | [`README_PLAN.md`](README_PLAN.md) | Rubric-aligned structure, ownership, production schedule and claim guardrails | Internal coordination evidence, not a substitute for public README content |
 | [`PHASE_PLAN.md`](../PHASE_PLAN.md) | Product scope, team ownership, time limits, fallbacks and release gate | Source for the public feasibility summary |
 | [`2026-09-09-decision-contract.md`](evidence/2026-09-09-decision-contract.md) | Request-flow evolution, correctness decisions and release checks | Translate user-visible outcomes into concise README evidence |
