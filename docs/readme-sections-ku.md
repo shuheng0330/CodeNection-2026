@@ -329,110 +329,6 @@ None of them, and no calendar or task list, answers *"if I say yes to this,
 what happens to me?"* — which is the only question being asked at the moment
 the message arrives.
 
-## The method
-
-The engine is one idea borrowed from sports science and one arithmetic trick,
-and it is small enough to read in full in `lib/engine/acwr.ts`.
-
-**Everything becomes one number.** A commitment's load is its hours multiplied by
-how much it takes out of you, on a one-to-five dial that maps to `0.6, 0.85,
-1.0, 1.3, 1.7`. This is session-RPE — duration times intensity — which is a
-published and widely used way of making unlike activities comparable. It is why
-a two-hour group meeting can outweigh a four-hour lecture, and why a shift, an
-assignment and a weekend at home can be compared at all.
-
-**Your recent self against your settled self.** Daily loads are totalled across
-84 days, then run through two exponentially weighted moving averages over the
-same series: a fast one with the smoothing factor for a 7-day window, and a slow
-one with the factor for 28 days, using the standard `λ = 2 / (N + 1)`. The fast
-average divided by the slow one is the only figure the app cares about. Above one
-means this stretch is heavier than you usually carry. Weighted averages rather
-than flat rolling means, because a flat mean lets a hard Tuesday drop out of the
-window and vanish, and real load decays rather than falling off a cliff.
-
-**The bands are deliberately wide.** Below 0.8 is lighter than usual, up to 1.1
-is about usual, then 1.3, then 1.5. Note where the first edge sits: a perfectly
-steady life computes to exactly 1.0, so 1.0 has to land inside "about your
-usual". Telling someone whose weeks have not changed that they are carrying more
-than usual would be a lie the first time they opened the app. With no history at
-all the ratio is reported as a neutral 1.0 — a cold start is "we don't know you
-yet", not "you have no load".
-
-**"% of a usual week" is not hours divided by hours.** It is the weighted
-ratio above, turned into a percentage, and the two sums do not agree.
-`/compare` puts both on one screen: Wei Jian's week holds **53 hours** and an
-ordinary week for him is **about 35** — 151% by plain division — while the
-figure beside it reads **145%**, because the ratio weighs every commitment by
-how much it takes out of you and lets the recent past decay rather than
-dropping out of a window. If you check our arithmetic with a calculator, that
-six-point gap is where it comes from. **Nothing is predicted.**
-The weeks ahead use the identical function over commitments already in the
-calendar. It is not a forecast of how you will feel.
-It is what you have already agreed to, added up.
-
-**Where it comes from.** The load model is not ours and we would rather say so
-than be caught. Session-RPE — duration times intensity — is Foster's. The
-acute-to-chronic ratio is what athlete monitoring built on top of it, and
-Gabbett's 2016 paper is the one that made it widely used, and his suggested
-band — 0.8 to 1.3 — is where our **outer** edges come from. That is not a
-coincidence. We moved the inner edge to 1.1 for the reason above: a perfectly
-steady life computes to exactly 1.0, and 1.0 has to land inside "about your
-usual".
-
-It is also **actively argued about in its own field** — the objection being
-that the recent window sits inside the longer window it is divided by, which
-can manufacture correlations that are not really there. Both the coupling
-objection and a broader conceptual one apply to us. Rather than bury that here,
-we put the full argument, with both sides, on **`/method`** — *How it works* in the navigation — inside the product,
-reachable from every number the app shows. A judge or a student who wants to
-attack the maths should find our own statement of the strongest case against it
-waiting for them.
-
-- Foster C. Monitoring training in athletes with reference to overtraining syndrome. *Med Sci Sports Exerc.* 1998;30(7):1164–8. [PubMed 9662690](https://pubmed.ncbi.nlm.nih.gov/9662690/)
-- Foster C, Florhaug JA, Franklin J, et al. A new approach to monitoring exercise training. *J Strength Cond Res.* 2001;15(1):109–15. [PubMed 11708692](https://pubmed.ncbi.nlm.nih.gov/11708692/)
-- Gabbett TJ. The training-injury prevention paradox: should athletes be training smarter and harder? *Br J Sports Med.* 2016;50(5):273–80. [doi:10.1136/bjsports-2015-095788](https://doi.org/10.1136/bjsports-2015-095788)
-- Lolli L, Batterham AM, Hawkins R, et al. Mathematical coupling causes spurious correlation within the conventional acute-to-chronic workload ratio calculations. *Br J Sports Med.* 2019;53(15):921–2. [doi:10.1136/bjsports-2017-098110](https://doi.org/10.1136/bjsports-2017-098110)
-- Impellizzeri FM, Tenan MS, Kempton T, Novak A, Coutts AJ. Acute:chronic workload ratio: conceptual issues and fundamental pitfalls. *Int J Sports Physiol Perform.* 2020;15(6):907–13. [doi:10.1123/ijspp.2019-0864](https://doi.org/10.1123/ijspp.2019-0864)
-
-## What it cannot do, and the test that would settle it
-
-Four boundaries, stated once and stated plainly. The same list is inside the
-product on `/method`, not only here.
-
-**It does not track stress.** There is no self-report anywhere in Pikul — it
-never asks how you feel and has no idea. It measures committed hours weighted
-by a dial we chose. Calling that stress tracking would be a claim we cannot
-support, so we do not make it, anywhere.
-
-**It is not a diagnosis.** It notices a change in your own pattern. It cannot
-tell you whether you are unwell, and it does not try.
-
-**The dial is ours, and the transfer is a hypothesis.** Nobody has established
-that a draining hour weighs exactly 1.7 ordinary ones, and applying an
-athlete-monitoring model to coursework and family duty is our design decision.
-
-**Everything lives in one browser.** Your week is not on a server, which is
-the privacy claim — and it is also the limit: it does not follow you to
-another device, and clearing your browser clears it. The demo ships with
-generated weeks for the same reason. **It only knows what it is told,** and it
-thinks in days rather than clock times — so it will never tell you Thursday 3pm is free, and a month of history
-has to exist before the comparison means much. That is why the demo ships with
-generated weeks.
-
-We would rather name the experiment than leave that hanging. **The smallest
-thing that would settle it is a campus pilot:** thirty students, their real
-timetables, four weeks, and one question at the end of each week — *was that
-heavier than usual for you?* If the ratio agrees with the answer more often
-than chance, the transfer holds. If it does not, the dial is wrong and we would
-want to know that before anyone relies on it. That test needs no new
-engineering; it needs the check-in in the "next" column above, and thirty
-people.
-
-On accessibility we claim exactly what we ran: `npm run check:release` verifies
-seven routes at seven widths for reflow, flags any control that is under 44px
-in *both* dimensions, and walks the request sheet from the keyboard. A screen-reader pass, Android
-TalkBack and a physical-device check are **not** done, and are not claimed.
-
 ## Architecture
 
 **Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Zustand ·
@@ -586,6 +482,110 @@ and shell/navigation — with file ownership agreed up front, because three
 people editing the same components for a week is how a hackathon repository
 dies on the Friday. Where two lanes did build the same thing, the merge is
 documented in `PROJECT_STATUS.md` with which version survived and why.
+
+## The method
+
+The engine is one idea borrowed from sports science and one arithmetic trick,
+and it is small enough to read in full in `lib/engine/acwr.ts`.
+
+**Everything becomes one number.** A commitment's load is its hours multiplied by
+how much it takes out of you, on a one-to-five dial that maps to `0.6, 0.85,
+1.0, 1.3, 1.7`. This is session-RPE — duration times intensity — which is a
+published and widely used way of making unlike activities comparable. It is why
+a two-hour group meeting can outweigh a four-hour lecture, and why a shift, an
+assignment and a weekend at home can be compared at all.
+
+**Your recent self against your settled self.** Daily loads are totalled across
+84 days, then run through two exponentially weighted moving averages over the
+same series: a fast one with the smoothing factor for a 7-day window, and a slow
+one with the factor for 28 days, using the standard `λ = 2 / (N + 1)`. The fast
+average divided by the slow one is the only figure the app cares about. Above one
+means this stretch is heavier than you usually carry. Weighted averages rather
+than flat rolling means, because a flat mean lets a hard Tuesday drop out of the
+window and vanish, and real load decays rather than falling off a cliff.
+
+**The bands are deliberately wide.** Below 0.8 is lighter than usual, up to 1.1
+is about usual, then 1.3, then 1.5. Note where the first edge sits: a perfectly
+steady life computes to exactly 1.0, so 1.0 has to land inside "about your
+usual". Telling someone whose weeks have not changed that they are carrying more
+than usual would be a lie the first time they opened the app. With no history at
+all the ratio is reported as a neutral 1.0 — a cold start is "we don't know you
+yet", not "you have no load".
+
+**"% of a usual week" is not hours divided by hours.** It is the weighted
+ratio above, turned into a percentage, and the two sums do not agree.
+`/compare` puts both on one screen: Wei Jian's week holds **53 hours** and an
+ordinary week for him is **about 35** — 151% by plain division — while the
+figure beside it reads **145%**, because the ratio weighs every commitment by
+how much it takes out of you and lets the recent past decay rather than
+dropping out of a window. If you check our arithmetic with a calculator, that
+six-point gap is where it comes from. **Nothing is predicted.**
+The weeks ahead use the identical function over commitments already in the
+calendar. It is not a forecast of how you will feel.
+It is what you have already agreed to, added up.
+
+**Where it comes from.** The load model is not ours and we would rather say so
+than be caught. Session-RPE — duration times intensity — is Foster's. The
+acute-to-chronic ratio is what athlete monitoring built on top of it, and
+Gabbett's 2016 paper is the one that made it widely used, and his suggested
+band — 0.8 to 1.3 — is where our **outer** edges come from. That is not a
+coincidence. We moved the inner edge to 1.1 for the reason above: a perfectly
+steady life computes to exactly 1.0, and 1.0 has to land inside "about your
+usual".
+
+It is also **actively argued about in its own field** — the objection being
+that the recent window sits inside the longer window it is divided by, which
+can manufacture correlations that are not really there. Both the coupling
+objection and a broader conceptual one apply to us. Rather than bury that here,
+we put the full argument, with both sides, on **`/method`** — *How it works* in the navigation — inside the product,
+reachable from every number the app shows. A judge or a student who wants to
+attack the maths should find our own statement of the strongest case against it
+waiting for them.
+
+- Foster C. Monitoring training in athletes with reference to overtraining syndrome. *Med Sci Sports Exerc.* 1998;30(7):1164–8. [PubMed 9662690](https://pubmed.ncbi.nlm.nih.gov/9662690/)
+- Foster C, Florhaug JA, Franklin J, et al. A new approach to monitoring exercise training. *J Strength Cond Res.* 2001;15(1):109–15. [PubMed 11708692](https://pubmed.ncbi.nlm.nih.gov/11708692/)
+- Gabbett TJ. The training-injury prevention paradox: should athletes be training smarter and harder? *Br J Sports Med.* 2016;50(5):273–80. [doi:10.1136/bjsports-2015-095788](https://doi.org/10.1136/bjsports-2015-095788)
+- Lolli L, Batterham AM, Hawkins R, et al. Mathematical coupling causes spurious correlation within the conventional acute-to-chronic workload ratio calculations. *Br J Sports Med.* 2019;53(15):921–2. [doi:10.1136/bjsports-2017-098110](https://doi.org/10.1136/bjsports-2017-098110)
+- Impellizzeri FM, Tenan MS, Kempton T, Novak A, Coutts AJ. Acute:chronic workload ratio: conceptual issues and fundamental pitfalls. *Int J Sports Physiol Perform.* 2020;15(6):907–13. [doi:10.1123/ijspp.2019-0864](https://doi.org/10.1123/ijspp.2019-0864)
+
+## What it cannot do, and the test that would settle it
+
+Four boundaries, stated once and stated plainly. The same list is inside the
+product on `/method`, not only here.
+
+**It does not track stress.** There is no self-report anywhere in Pikul — it
+never asks how you feel and has no idea. It measures committed hours weighted
+by a dial we chose. Calling that stress tracking would be a claim we cannot
+support, so we do not make it, anywhere.
+
+**It is not a diagnosis.** It notices a change in your own pattern. It cannot
+tell you whether you are unwell, and it does not try.
+
+**The dial is ours, and the transfer is a hypothesis.** Nobody has established
+that a draining hour weighs exactly 1.7 ordinary ones, and applying an
+athlete-monitoring model to coursework and family duty is our design decision.
+
+**Everything lives in one browser.** Your week is not on a server, which is
+the privacy claim — and it is also the limit: it does not follow you to
+another device, and clearing your browser clears it. The demo ships with
+generated weeks for the same reason. **It only knows what it is told,** and it
+thinks in days rather than clock times — so it will never tell you Thursday 3pm is free, and a month of history
+has to exist before the comparison means much. That is why the demo ships with
+generated weeks.
+
+We would rather name the experiment than leave that hanging. **The smallest
+thing that would settle it is a campus pilot:** thirty students, their real
+timetables, four weeks, and one question at the end of each week — *was that
+heavier than usual for you?* If the ratio agrees with the answer more often
+than chance, the transfer holds. If it does not, the dial is wrong and we would
+want to know that before anyone relies on it. That test needs no new
+engineering; it needs the check-in in the "next" column above, and thirty
+people.
+
+On accessibility we claim exactly what we ran: `npm run check:release` verifies
+seven routes at seven widths for reflow, flags any control that is under 44px
+in *both* dimensions, and walks the request sheet from the keyboard. A screen-reader pass, Android
+TalkBack and a physical-device check are **not** done, and are not claimed.
 
 ## Running it
 
