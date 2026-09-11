@@ -456,12 +456,13 @@ the arithmetic with no browser in sight.
     app/                    seven routes: /, /today, /week, /compare,
                             /recover, /asks, /method
     components/app/shell/   navigation, the page frame, demo deep-links
-    components/app/         the decision surfaces — request sheet, add sheet,
-                            carry bar, area breakdown, put-down
+    components/app/         the decision surfaces — NoButton (the request
+                            sheet), AddCommitmentSheet, CarryBar,
+                            AreaBreakdown, PutDownCard, DateField
     components/landing/     the hero
     lib/engine/             the maths. Pure functions, no React, fully tested
     lib/parse/              message to draft commitment. Deterministic, offline
-    lib/seed/              generated personas and the shared demo fixture
+    lib/seed/               generated personas and the shared demo fixture
     lib/store.ts            the decision contract, persisted to localStorage
     lib/copy.ts             the interface strings
     lib/decline.ts          the drafted replies
