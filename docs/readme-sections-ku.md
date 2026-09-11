@@ -25,14 +25,37 @@ they still say what I quoted before publishing.
 
 ---
 
-## What it does, in one Wednesday
+## What it does
 
-Every figure here is computed by the engine rather than typed in by hand, and
-nothing in this section is illustrative. One caveat worth stating up front:
-the demo anchors itself to the Wednesday of whatever week you open it in, so
-these figures are from **Wednesday 9 September 2026** and will move if you run
-it later. Re-derive them from the frozen build before quoting them anywhere
-else.
+Pikul measures a student's week against **their own** previous four weeks
+rather than against any fixed idea of a normal week, and it attaches that
+measurement to the moment somebody asks them for something. A request is read
+where it arrives, priced against the specific week it would land in, and shown
+with the before figure beside the after one — while the answer is still theirs
+to give. They can accept it, decline it with a reply already drafted, or make
+room first by handing back one thing they already agreed to. Every answer is
+kept, and none of them is scored.
+
+### The loop, in five steps
+
+1. **See where the week stands** — this week against your own usual, as a
+   marker on a band rather than a number out of ten.
+2. **A request arrives and is read in place** — paste it, or open the one
+   already waiting. Pikul shows what it understood, field by field.
+3. **See the cost, in the week it would land in** — the before percentage and
+   the after percentage, together.
+4. **Answer it** — accept, decline with a copyable reply in three tones, or
+   make breathing room by choosing an eligible commitment to hand back, with a
+   preview that saves nothing until you confirm.
+5. **See it kept** — the decision lands in your week and in a history that
+   shows hours taken on beside hours kept free.
+
+### The same Wednesday, with and without Pikul
+
+Every figure below is computed by the engine rather than typed in by hand, and
+nothing here is illustrative. One caveat: the demo anchors to the Wednesday of
+whatever week you open it in, so these are from **Wednesday 9 September 2026**
+and will move if you run it later.
 
 Aisyah is a student with a part-time café job. It is **Wednesday 9 September**,
 and at 3pm a message arrives: *"can you cover next friday 3pm-11pm? kelly
@@ -76,7 +99,7 @@ The change is not that Pikul decided for her. It is that the decision moved
 from *after* the consequence to *before* it, with the arithmetic visible on the
 way past.
 
-### The loop, end to end
+### The same loop, drawn
 
 ```mermaid
 flowchart TD
@@ -491,6 +514,35 @@ parser is one function, a language model could replace that step alone later
 without touching how load is calculated — which is the sensible division of
 labour: language understanding where it helps, deterministic arithmetic where
 consistency matters.
+
+## Where it runs
+
+Static output on **Vercel**, connected to `main`, with **no environment
+variables and no secrets to configure** — there is nothing to configure,
+because there is nothing for a server to do. `npm run build` produces
+prerendered HTML for all seven routes and the deployment serves it.
+
+**Live:** <https://pikul-codenection-2026.vercel.app>
+
+All seven routes plus the `?reset=1` and `?persona=` demo links return 200
+signed out. Because the whole product is static and the student's week lives in
+their own browser, there is no database to provision, no API key to rotate, no
+rate limit, and no runtime cost — the app would serve a thousand students on
+the same free tier it serves one.
+
+> **Before submission:** the production commit recorded in
+> `docs/evidence/2026-09-09-vercel-deployment.md` is `4cfb5c7`, which `main` has
+> since moved well past. Re-deploy from the frozen commit and re-record it here,
+> so the number in the README matches what a judge actually opens.
+
+**What would have to change for a real multi-device product,** stated plainly
+because the current architecture is a deliberate trade and not an accident: the
+moment a student's week has to follow them from a phone to a laptop, this needs
+an account system, a database, a migration path for data already in browsers,
+and a privacy position we have not yet had to write down. None of that is hard
+in itself; all of it is more than a week. What we have instead is a product
+where the honest privacy claim — *your week never leaves your device* — is
+enforced by there being nowhere else for it to go.
 
 ## Built, next, and not promised
 
