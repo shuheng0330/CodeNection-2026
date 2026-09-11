@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AppPage, AppPageIntro } from "@/components/app/shell/AppPage";
 import { AppShell } from "@/components/app/shell/AppShell";
+import { MobileDisclosure } from "@/components/shared/MobileDisclosure";
 import { Reveal } from "@/components/shared/Reveal";
 import { METHOD } from "@/lib/copy";
 
@@ -41,17 +42,38 @@ export default function MethodPage() {
           {METHOD.steps.map((step, index) => (
             <li key={step.t}>
               <Reveal delay={index * 0.05}>
-                <article className="grid gap-4 rounded-3xl border border-hairline bg-surface p-6 sm:grid-cols-[3rem_minmax(0,1fr)] sm:p-8">
-                  <p
-                    aria-hidden
-                    className="tnum font-display text-2xl text-clay-600"
+                <article className="overflow-hidden rounded-3xl border border-hairline bg-surface md:p-8">
+                  <MobileDisclosure
+                    buttonClassName="p-6 hover:bg-raised/40 md:hidden"
+                    title={
+                      <div className="flex items-center gap-4">
+                        <span
+                          aria-hidden
+                          className="tnum font-display text-2xl text-clay-600"
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <h2 className="font-display text-xl">{step.t}</h2>
+                      </div>
+                    }
                   >
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <div>
-                    <h2 className="font-display text-xl">{step.t}</h2>
-                    <p className="mt-3 leading-relaxed text-ink-muted">{step.d}</p>
-                  </div>
+                    <div className="px-6 pb-6 pt-1 md:p-0 md:grid md:gap-4 md:grid-cols-[3rem_minmax(0,1fr)]">
+                      <p
+                        aria-hidden
+                        className="hidden tnum font-display text-2xl text-clay-600 md:block"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </p>
+                      <div>
+                        <h2 className="hidden font-display text-xl md:block">
+                          {step.t}
+                        </h2>
+                        <p className="leading-relaxed text-ink-muted md:mt-3">
+                          {step.d}
+                        </p>
+                      </div>
+                    </div>
+                  </MobileDisclosure>
                 </article>
               </Reveal>
             </li>

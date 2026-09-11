@@ -33,9 +33,11 @@ const CATEGORIES = Object.keys(ADD.categories) as LoadCategory[];
 export function AddCommitmentSheet({
   asOf,
   events,
+  triggerAppearance = "button",
 }: {
   asOf: Date;
   events: LoadEvent[];
+  triggerAppearance?: "button" | "link";
 }) {
   const [open, setOpen] = useState(false);
   const [raw, setRaw] = useState("");
@@ -159,7 +161,7 @@ export function AddCommitmentSheet({
                   className="mt-2 w-full resize-none rounded-2xl border border-hairline bg-raised/50 px-4 py-3 text-ink placeholder:text-ink-faint"
                 />
               </label>
-              <p className="mt-2 text-sm text-ink-faint">
+              <p className="mt-2 text-sm text-ink-muted">
                 {draft.matchedOn && raw.trim()
                   ? ADD.readFrom(draft.matchedOn)
                   : ADD.pasteHint}
@@ -282,7 +284,7 @@ export function AddCommitmentSheet({
                 <button
                   type="button"
                   onClick={close}
-                  className="min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
+                  className="min-h-11 w-full py-2 text-sm text-ink-muted transition-colors hover:text-ink"
                 >
                   {ADD.cancel}
                 </button>
@@ -298,7 +300,11 @@ export function AddCommitmentSheet({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="min-h-11 w-full rounded-full border border-hairline px-6 py-3.5 font-medium text-ink transition-colors hover:bg-raised"
+        className={
+          triggerAppearance === "link"
+            ? "inline-flex min-h-11 w-full items-center justify-center px-4 py-2 text-sm font-medium text-ink-muted underline underline-offset-4 transition-colors hover:text-ink"
+            : "min-h-11 w-full rounded-full border border-hairline px-6 py-3.5 font-medium text-ink transition-colors hover:bg-raised"
+        }
       >
         {ADD.trigger}
       </button>

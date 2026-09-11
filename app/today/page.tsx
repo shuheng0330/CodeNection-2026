@@ -9,6 +9,7 @@ import { CarryBar } from "@/components/app/CarryBar";
 import { NoButton } from "@/components/app/NoButton";
 import { PutDownCard } from "@/components/app/PutDownCard";
 import { AppShell } from "@/components/app/shell/AppShell";
+import { MobileDisclosure } from "@/components/shared/MobileDisclosure";
 import { Reveal } from "@/components/shared/Reveal";
 import { AHEAD, AREAS, BAND, TODAY } from "@/lib/copy";
 import { daysAhead } from "@/lib/engine/horizon";
@@ -63,7 +64,7 @@ export default function TodayPage() {
     <AppShell>
       {/* pb-28 on a phone clears the shell's fixed bottom bar. */}
       <main className="mx-auto w-full max-w-lg px-5 pb-28 pt-8 lg:max-w-6xl lg:px-10 lg:pb-20 lg:pt-10">
-        <p className="text-right text-sm text-ink-faint">
+        <p className="text-right text-sm text-ink-muted">
           {format(asOf, "EEEE, d MMMM")}
         </p>
 
@@ -111,7 +112,11 @@ export default function TodayPage() {
             </h2>
             <div className="grid gap-3">
               <NoButton events={events} asOf={asOf} />
-              <AddCommitmentSheet asOf={asOf} events={events} />
+              <AddCommitmentSheet
+                asOf={asOf}
+                events={events}
+                triggerAppearance="link"
+              />
             </div>
 
             <Reveal delay={0.12} className="mt-6">
@@ -131,31 +136,51 @@ export default function TodayPage() {
             className="mt-12 lg:col-span-7 lg:col-start-1 lg:row-start-2"
             aria-labelledby="areas-title"
           >
-            <h2
-              id="areas-title"
-              className="px-3 text-micro uppercase tracking-[0.08em] text-ink-faint"
+            <MobileDisclosure
+              buttonClassName="px-3 py-2 rounded-xl hover:bg-raised"
+              title={
+                <h2
+                  id="areas-title"
+                  className="text-micro uppercase tracking-[0.08em] text-ink-faint"
+                >
+                  {AREAS.titleFor(carry.band)}
+                </h2>
+              }
+              metadata={
+                <span className="text-xs text-clay-700 font-medium">
+                  View breakdown
+                </span>
+              }
             >
-              {AREAS.titleFor(carry.band)}
-            </h2>
-            <div className="mt-4">
-              <AreaBreakdown events={events} asOf={asOf} />
-            </div>
+              <div className="mt-4">
+                <AreaBreakdown events={events} asOf={asOf} />
+              </div>
+            </MobileDisclosure>
           </section>
 
           <section
             className="mt-12 lg:col-span-5 lg:col-start-8 lg:row-start-2"
             aria-labelledby="ahead-title"
           >
-            <h2
-              id="ahead-title"
-              className="text-micro uppercase tracking-[0.08em] text-ink-faint"
+            <MobileDisclosure
+              buttonClassName="py-2 rounded-xl hover:bg-raised px-1"
+              title={
+                <h2
+                  id="ahead-title"
+                  className="text-micro uppercase tracking-[0.08em] text-ink-faint"
+                >
+                  {AHEAD.title}
+                </h2>
+              }
+              metadata={
+                <span className="text-xs text-ink-muted">
+                  {ahead.length} {ahead.length === 1 ? "day" : "days"} ahead
+                </span>
+              }
             >
-              {AHEAD.title}
-            </h2>
-            {ahead.length === 0 ? (
-              <p className="mt-4 text-ink-muted">{AHEAD.empty}</p>
-            ) : (
-              <>
+              {ahead.length === 0 ? (
+                <p className="mt-4 text-ink-muted">{AHEAD.empty}</p>
+              ) : (
                 <ul className="mt-4 grid">
                   {ahead.map((d) => (
                     <li
@@ -176,13 +201,15 @@ export default function TodayPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/week"
-                  className="mt-4 inline-flex min-h-11 items-center text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
-                >
-                  {AHEAD.more}
-                </Link>
-              </>
+              )}
+            </MobileDisclosure>
+            {ahead.length > 0 && (
+              <Link
+                href="/week"
+                className="mt-4 inline-flex min-h-11 items-center text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
+              >
+                {AHEAD.more}
+              </Link>
             )}
           </section>
         </div>
@@ -208,28 +235,44 @@ export default function TodayPage() {
             </p>
           </div>
 
-          <div className="mt-4 grid gap-2 sm:grid-cols-3">
-            {PERSONAS.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setPersona(p.id)}
-                aria-pressed={p.id === persona.id}
-                className={`flex min-h-11 flex-col rounded-2xl border px-4 py-3 text-left transition-colors ${
-                  p.id === persona.id
-                    ? "border-clay-600 bg-clay-100"
-                    : "border-hairline hover:bg-raised"
-                }`}
-              >
-                <span className="font-medium">{p.name}</span>
-                <span className="text-sm text-ink-faint">{p.course}</span>
-                <span className="mt-2 text-sm text-ink-muted">{p.blurb}</span>
-              </button>
-            ))}
-          </div>
+          <MobileDisclosure
+            className="mt-4"
+            buttonClassName="py-2.5 px-3 rounded-2xl border border-hairline hover:bg-raised"
+            title={
+              <div className="flex items-baseline gap-2">
+                <span className="font-medium text-ink">{persona.name}</span>
+                <span className="text-xs text-ink-muted">{persona.course}</span>
+              </div>
+            }
+            metadata={
+              <span className="text-xs text-clay-700 font-medium">
+                Change sample student
+              </span>
+            }
+          >
+            <div className="mt-4 grid gap-2 sm:grid-cols-3">
+              {PERSONAS.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => setPersona(p.id)}
+                  aria-pressed={p.id === persona.id}
+                  className={`flex min-h-11 flex-col rounded-2xl border px-4 py-3 text-left transition-colors ${
+                    p.id === persona.id
+                      ? "border-clay-600 bg-clay-100"
+                      : "border-hairline hover:bg-raised"
+                  }`}
+                >
+                  <span className="font-medium">{p.name}</span>
+                  <span className="text-sm text-ink-muted">{p.course}</span>
+                  <span className="mt-2 text-sm text-ink-muted">{p.blurb}</span>
+                </button>
+              ))}
+            </div>
+          </MobileDisclosure>
 
           <button
             onClick={reset}
-            className="mt-5 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+            className="mt-5 min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
           >
             Reset demo
           </button>

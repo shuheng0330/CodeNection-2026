@@ -18,8 +18,10 @@
 
   /* -- ink ------------------------------------------------- */
   --color-ink: #2b211c;
-  --color-ink-muted: #7a6a60;
-  --color-ink-faint: #a6968b;
+  /* Both supporting text tones clear 4.5:1 on linen, white and raised
+     surfaces. Meaningful copy should never need opacity to feel secondary. */
+  --color-ink-muted: #6f5f56;
+  --color-ink-faint: #78665c;
 
   /* -- brand ----------------------------------------------- */
   --color-clay-700: #8f3f24;

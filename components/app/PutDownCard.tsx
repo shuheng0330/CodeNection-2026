@@ -112,7 +112,7 @@ export function PutDownCard({
             setSelectedId(null);
             setChoosing(false);
           }}
-          className="mt-5 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+          className="mt-5 min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
         >
           {PUT_DOWN.undo}
         </button>
@@ -230,7 +230,7 @@ export function PutDownCard({
               </ul>
 
               {/* The half nobody else would print. */}
-              <p className="mt-4 text-sm text-ink-faint">{PUT_DOWN.previewUnchanged}</p>
+              <p className="mt-4 text-sm text-ink-muted">{PUT_DOWN.previewUnchanged}</p>
 
               <div className="mt-5 flex flex-wrap gap-2">
                 <button
@@ -252,7 +252,7 @@ export function PutDownCard({
                   {PUT_DOWN.previewCancel}
                 </button>
               </div>
-              <p className="mt-3 text-sm text-ink-faint">{PUT_DOWN.previewNote}</p>
+              <p className="mt-3 text-sm text-ink-muted">{PUT_DOWN.previewNote}</p>
             </motion.div>
           ) : (
             <motion.button

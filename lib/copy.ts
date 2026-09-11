@@ -40,7 +40,6 @@ export const PRODUCT = {
   meaning: "to shoulder a load",
   tagline: "You're carrying more than usual.",
 } as const;
-
 /* ── Thong · getting between screens ─────────────────────────────────── */
 /**
  * Every route's name in one place, so the shell and the pages that mount it
@@ -58,15 +57,14 @@ export const NAV = {
   skip: "Skip to content",
   today: "Today",
   week: "Week",
-  recover: "Recover",
-  asks: "Asks",
+  recover: "Quiet Day",
+  asks: "Decisions",
   more: "More",
   moreTitle: "More from Pikul",
   compare: "Compare weeks",
   method: "How it works",
   closeMore: "Close more pages",
 } as const;
-
 type BandCopy = {
   /** the sentence shown on /today */
   line: string;
@@ -335,35 +333,48 @@ export const METHOD = {
 
 /* ── Thong · time that is already yours ──────────────────────────────── */
 export const RECOVER = {
-  eyebrow: "Recovery",
-  title: "Somewhere to put the time down",
-  lead: "Find time that is already yours, then decide what you want to protect it for.",
-  found: "The quietest day you have coming",
-  /** "Saturday is the quietest day in your next ten." */
-  foundLine: (day: string): string =>
-    `${day} is the quietest day you have coming.`,
-  clearAfter: (day: string): string => `And ${day} after it is clear.`,
-  busyAfter: "It is the calmest one there is, though the day after is not.",
-  planTitle: "What would you do with it?",
+  eyebrow: "Quiet Day",
+  title: "Find your next quiet day",
+  lead:
+    "Pikul checks your next 10 days to find a lighter day you can keep free for rest or personal time.",
+  found: "Your next quiet day",
+  foundLine: (day: string): string => day,
+  plannedHours: (hours: number): string => {
+    if (hours === 0) return "Nothing is planned on this day.";
+    const amount =
+      hours < 1
+        ? "under an hour"
+        : `${Number.isInteger(hours) ? hours : hours.toFixed(1)} hours`;
+    return `You have ${amount} planned on this day.`;
+  },
+  clearAfter: (day: string): string =>
+    `Pikul selected it because its schedule is lighter and ${day} is clear too.`,
+  busyAfter:
+    "Pikul selected it because it offers the best balance of a lighter schedule and what comes the day after.",
+  planTitle: "What would you like to protect it for?",
   /** Naming when and what, rather than resolving to rest, is the part that
    *  actually survives contact with a heavy week. */
   planLine: (day: string, choice: string): string =>
-    `If ${day} comes and nothing has caught fire — ${choice}.`,
+    `${day} is for you to ${choice}.`,
   choices: [
     { key: "empty", label: "leave it empty" },
     { key: "sleep", label: "sleep in" },
     { key: "outside", label: "get out of the house" },
     { key: "someone", label: "see someone" },
   ],
-  noteTitle: "We are not going to check",
-  note: "Nothing here is logged, counted, or held against you next week. It is your time, and the only reason it exists is that you made room for it.",
-  none: "There is no unclaimed time in your next ten days.",
+  noteTitle: "Private and optional",
+  note: "Nothing here is logged, counted, or used to judge your next week. This is your time, and you decide whether to protect it.",
+  none: "Your next 10 days are full.",
+  noneLead:
+    "Pikul could not find a day light enough to keep free for rest or personal time.",
+  makeRoomTitle: "Want to make some room?",
   /** The one screen that points at another: relief has to come from somewhere. */
   noneFix: (title: string, day: string): string =>
     `Handing back ${title} would give you ${day} back.`,
   noneAction: "See what to put down",
   noneHard:
-    "Nothing in the next ten days is yours to hand back. The thing that helps is not taking on anything more.",
+    "Nothing in the next 10 days can be moved. If it feels right for you, try not to take on anything new.",
+  optional: "Nothing changes unless you choose to take the next step.",
   back: "Today",
 } as const;
 
@@ -687,7 +698,6 @@ export const LANDING = {
   skip: "Skip to content",
   audience: "For students carrying more than classes",
   openDemo: "Open demo",
-  demoNote: "Sample data · no account needed · resets the demo",
   sceneTitle: "A student's week",
   example: "Illustrative example",
   sceneCaption: "Different commitments. One person carrying them.",
@@ -712,5 +722,4 @@ export const LANDING = {
   hoursLabel: "reclaimed from your week",
   reliefNote: "If you hand this shift back, those eight hours are yours to use. Rest, see someone, or leave them unplanned.",
   howEyebrow: "How it works",
-  event: "CodeNection 2026 · Lifestyle track",
 } as const;

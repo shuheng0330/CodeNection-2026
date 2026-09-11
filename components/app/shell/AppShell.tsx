@@ -158,7 +158,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-medium transition-colors ${
               moreIsActive
                 ? "bg-clay-100 text-clay-700"
-                : "text-ink-faint hover:bg-raised hover:text-ink"
+                : "text-ink-muted hover:bg-raised hover:text-ink"
             }`}
           >
             <Ellipsis aria-hidden size={20} strokeWidth={1.8} />
@@ -264,7 +264,7 @@ function MobileLink({ item, active }: { item: NavItem; active: boolean }) {
       className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-medium transition-colors ${
         active
           ? "bg-clay-100 text-clay-700"
-          : "text-ink-faint hover:bg-raised hover:text-ink"
+          : "text-ink-muted hover:bg-raised hover:text-ink"
       }`}
     >
       <Icon aria-hidden size={20} strokeWidth={1.8} />

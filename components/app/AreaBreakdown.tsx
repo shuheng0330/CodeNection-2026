@@ -70,7 +70,7 @@ export function AreaBreakdown({ events, asOf }: { events: LoadEvent[]; asOf: Dat
                         className="flex items-baseline justify-between gap-3 py-1 text-sm"
                       >
                         <span className="min-w-0 truncate text-ink-muted">{e.title}</span>
-                        <span className="tnum shrink-0 text-ink-faint">
+                        <span className="tnum shrink-0 text-ink-muted">
                           {hoursLabel(e.hours)}
                         </span>
                       </li>
@@ -82,7 +82,7 @@ export function AreaBreakdown({ events, asOf }: { events: LoadEvent[]; asOf: Dat
           );
         })}
       </ul>
-      <p className="mt-4 px-3 text-sm text-ink-faint">{AREAS.footnote}</p>
+      <p className="mt-4 px-3 text-sm text-ink-muted">{AREAS.footnote}</p>
     </div>
   );
 }
