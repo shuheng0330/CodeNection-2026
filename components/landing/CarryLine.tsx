@@ -121,7 +121,7 @@ export function CarryLine() {
           stroke="currentColor"
           strokeWidth={1.5}
           strokeDasharray="6 7"
-          className="text-ink-faint/50"
+          className="text-[#a6968b]/50"
         />
         <text
           x={X1}

@@ -69,6 +69,9 @@ export default function RecoverPage() {
                 <h2 className="mt-3 max-w-xl font-display text-h2 text-ink">
                   {RECOVER.foundLine(dayName)}
                 </h2>
+                <p className="mt-3 max-w-xl font-medium text-ink">
+                  {RECOVER.plannedHours(best.hours)}
+                </p>
                 <p className="mt-3 max-w-xl text-ink-muted">
                   {nextDayIsClear(best)
                     ? RECOVER.clearAfter(nextName)
@@ -116,21 +119,32 @@ export default function RecoverPage() {
           <Reveal delay={0.08} className="mt-10 max-w-3xl">
             <section className="rounded-3xl border border-hairline bg-surface p-6 sm:p-8">
               <h2 className="font-display text-h2 text-ink">{RECOVER.none}</h2>
-              {suggestion ? (
-                <>
-                  <p className="mt-3 max-w-xl text-lead text-ink-muted">
-                    {RECOVER.noneFix(suggestion.event.title, suggestion.when)}
+              <p className="mt-3 max-w-xl text-lead text-ink-muted">
+                {RECOVER.noneLead}
+              </p>
+              <div className="mt-7 border-t border-hairline pt-7">
+                <h3 className="font-display text-2xl text-ink">
+                  {RECOVER.makeRoomTitle}
+                </h3>
+                {suggestion ? (
+                  <>
+                    <p className="mt-3 max-w-xl text-lead text-ink-muted">
+                      {RECOVER.noneFix(suggestion.event.title, suggestion.when)}
+                    </p>
+                    <Link
+                      href="/today"
+                      className="mt-6 inline-flex min-h-11 items-center rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
+                    >
+                      {RECOVER.noneAction}
+                    </Link>
+                  </>
+                ) : (
+                  <p className="mt-3 max-w-xl text-ink-muted">
+                    {RECOVER.noneHard}
                   </p>
-                  <Link
-                    href="/today"
-                    className="mt-6 inline-flex min-h-11 items-center rounded-full bg-dusk px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
-                  >
-                    {RECOVER.noneAction}
-                  </Link>
-                </>
-              ) : (
-                <p className="mt-3 max-w-xl text-ink-muted">{RECOVER.noneHard}</p>
-              )}
+                )}
+                <p className="mt-4 text-sm text-ink-muted">{RECOVER.optional}</p>
+              </div>
             </section>
           </Reveal>
         )}

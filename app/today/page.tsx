@@ -64,7 +64,7 @@ export default function TodayPage() {
     <AppShell>
       {/* pb-28 on a phone clears the shell's fixed bottom bar. */}
       <main className="mx-auto w-full max-w-lg px-5 pb-28 pt-8 lg:max-w-6xl lg:px-10 lg:pb-20 lg:pt-10">
-        <p className="text-right text-sm text-ink-faint">
+        <p className="text-right text-sm text-ink-muted">
           {format(asOf, "EEEE, d MMMM")}
         </p>
 
@@ -112,7 +112,11 @@ export default function TodayPage() {
             </h2>
             <div className="grid gap-3">
               <NoButton events={events} asOf={asOf} />
-              <AddCommitmentSheet asOf={asOf} events={events} />
+              <AddCommitmentSheet
+                asOf={asOf}
+                events={events}
+                triggerAppearance="link"
+              />
             </div>
 
             <Reveal delay={0.12} className="mt-6">
@@ -202,7 +206,7 @@ export default function TodayPage() {
             {ahead.length > 0 && (
               <Link
                 href="/week"
-                className="mt-4 inline-flex min-h-11 items-center text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                className="mt-4 inline-flex min-h-11 items-center text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
               >
                 {AHEAD.more}
               </Link>
@@ -237,7 +241,7 @@ export default function TodayPage() {
             title={
               <div className="flex items-baseline gap-2">
                 <span className="font-medium text-ink">{persona.name}</span>
-                <span className="text-xs text-ink-faint">{persona.course}</span>
+                <span className="text-xs text-ink-muted">{persona.course}</span>
               </div>
             }
             metadata={
@@ -259,7 +263,7 @@ export default function TodayPage() {
                   }`}
                 >
                   <span className="font-medium">{p.name}</span>
-                  <span className="text-sm text-ink-faint">{p.course}</span>
+                  <span className="text-sm text-ink-muted">{p.course}</span>
                   <span className="mt-2 text-sm text-ink-muted">{p.blurb}</span>
                 </button>
               ))}
@@ -268,7 +272,7 @@ export default function TodayPage() {
 
           <button
             onClick={reset}
-            className="mt-5 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+            className="mt-5 min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
           >
             Reset demo
           </button>

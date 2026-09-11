@@ -42,7 +42,7 @@ export function CollisionCard({
           const first = collision.events.find((e) => e.title === title)!;
           return (
             <li key={title} className="flex items-baseline gap-3 text-sm">
-              <span className="tnum w-12 shrink-0 text-ink-faint">
+              <span className="tnum w-12 shrink-0 text-ink-muted">
                 {format(parseISO(first.date), "EEE d")}
               </span>
               <span className="min-w-0 truncate text-ink">{title}</span>

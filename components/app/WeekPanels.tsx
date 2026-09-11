@@ -221,7 +221,7 @@ function Panel({
             ))}
           </div>
 
-          <p className="mt-4 text-sm text-ink-faint">
+          <p className="mt-4 text-sm text-ink-muted">
             {isPeak ? WEEK.heaviestWeek : WEEK.selectHint}
           </p>
         </div>
@@ -258,7 +258,7 @@ function DayButton({
       className={`group flex min-h-24 min-w-0 flex-col items-center justify-end gap-1 rounded-xl px-0.5 pb-1 transition-colors ${
         selected
           ? "bg-surface text-dusk shadow-soft ring-2 ring-dusk/50"
-          : "text-ink-faint hover:bg-surface/75 hover:text-ink"
+          : "text-ink-muted hover:bg-surface/75 hover:text-ink"
       }`}
     >
       <span className="flex h-16 w-full items-end justify-center" aria-hidden>
@@ -342,7 +342,7 @@ function DayDetails({
             >
               <div className="min-w-0">
                 <p className="font-medium text-ink">{event.title}</p>
-                <p className="mt-1 text-sm text-ink-faint">
+                <p className="mt-1 text-sm text-ink-muted">
                   {WEEK.categories[event.category]}
                 </p>
               </div>
