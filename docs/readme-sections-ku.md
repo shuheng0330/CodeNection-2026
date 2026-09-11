@@ -450,7 +450,7 @@ engine or the store directly without going through a decision surface —
 `?reset=1` and `?persona=`. The solid path is the request flow; the dotted
 ones are everything else. Two properties of that picture are the point of it.
 **No arrow leaves the device.** And the engine has no path back into the
-interface except through a return value, which is what lets 158 tests exercise
+interface except through a return value, which is what lets 170 tests exercise
 the arithmetic with no browser in sight.
 
     app/                    seven routes: /, /today, /week, /compare,
@@ -471,7 +471,7 @@ the arithmetic with no browser in sight.
 Three decisions worth explaining:
 
 **The engine is pure and separately tested.** `lib/engine` has no React import
-and no knowledge of the screen. That is what makes 158 tests possible and it is
+and no knowledge of the screen. That is what makes 170 tests possible and it is
 why the maths can be argued with independently of the interface.
 
 **User-facing strings live in two files, by name.** `lib/copy.ts` holds the
@@ -541,7 +541,7 @@ variables and nothing to configure.
 
 To check it the way we do before a release:
 
-    npm run verify       # voice gate, lint, 158 tests, production build
+    npm run verify       # voice gate, lint, 170 tests, production build
 
     npm run build && npm start
     npm run check:release   # in a second terminal
