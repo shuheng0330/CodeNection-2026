@@ -90,7 +90,7 @@ export default function AsksPage() {
                   <button
                     type="button"
                     onClick={clearAsks}
-                    className="mt-4 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                    className="mt-4 min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
                   >
                     {ASKS.clear}
                   </button>
@@ -131,7 +131,7 @@ export default function AsksPage() {
                         <p className={`tnum mt-3 text-sm ${VERDICT_TONE[ask.verdict]}`}>
                           {ASKS.cost(ask.pct, ask.weekLabel)}
                         </p>
-                        <p className="mt-1 text-sm text-ink-faint">
+                        <p className="mt-1 text-sm text-ink-muted">
                           {ASKS.hours(ask.hours)} · {format(parseISO(ask.at), "d MMM")}
                         </p>
                       </li>

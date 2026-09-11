@@ -134,7 +134,7 @@ export default function ComparePage() {
                 } ${revealed ? "cursor-default" : "hover:bg-raised"}`}
               >
                 <p className="font-display text-2xl">{p.persona.name}</p>
-                <p className="mt-1 text-sm text-ink-faint">{p.persona.course}</p>
+                <p className="mt-1 text-sm text-ink-muted">{p.persona.course}</p>
 
                 <p className="tnum mt-6 font-display text-display leading-none text-ink">
                   {Math.round(p.hours)}h
@@ -167,7 +167,7 @@ export default function ComparePage() {
         </div>
 
         {!revealed && (
-          <p className="mt-6 text-center text-sm text-ink-faint">{COMPARE.prompt}</p>
+          <p className="mt-6 text-center text-sm text-ink-muted">{COMPARE.prompt}</p>
         )}
 
         <AnimatePresence>
@@ -193,7 +193,7 @@ export default function ComparePage() {
                     heavier.hours,
                   )}
                 </p>
-                <p className="mt-4 text-sm text-ink-faint">{COMPARE.method}</p>
+                <p className="mt-4 text-sm text-ink-muted">{COMPARE.method}</p>
               </section>
 
               {/* Now let them supply the ask, so nobody can say we picked it. */}
@@ -269,7 +269,7 @@ export default function ComparePage() {
                     setPicked(null);
                     setRaw("");
                   }}
-                  className="mt-8 min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                  className="mt-8 min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
                 >
                   {COMPARE.again}
                 </button>

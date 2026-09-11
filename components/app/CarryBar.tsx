@@ -60,7 +60,7 @@ export function CarryBar({ ratio, band }: { ratio: number; band: BandKey }) {
       </div>
       <div className="mt-2 flex justify-center">
         <span
-          className="text-micro uppercase tracking-[0.08em] text-ink-faint"
+          className="text-micro uppercase tracking-[0.08em] text-ink-muted"
           style={{ marginLeft: `${(usualFrom + usualTo) / 2 - 50}%` }}
         >
           {TODAY.usualBandLabel}

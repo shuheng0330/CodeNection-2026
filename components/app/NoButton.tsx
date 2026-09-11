@@ -255,7 +255,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                     <button
                       type="button"
                       onClick={() => setSwapping((s) => !s)}
-                      className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                      className="min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
                     >
                       {swapping ? NO_BUTTON.swapCancel : NO_BUTTON.swap}
                     </button>
@@ -268,7 +268,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                           setCopyState("idle");
                           setSwapping(false);
                         }}
-                        className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                        className="min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
                       >
                         {NO_BUTTON.restore}
                       </button>
@@ -306,7 +306,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         {NO_BUTTON.readTitle}
                       </p>
                       {draft.matchedOn && (
-                        <p className="text-sm text-ink-faint">
+                        <p className="text-sm text-ink-muted">
                           {ADD.readFrom(draft.matchedOn)}
                         </p>
                       )}
@@ -471,7 +471,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                             ? NO_BUTTON.copied
                             : NO_BUTTON.copyAction}
                         </button>
-                        <p className="mt-2 text-sm text-ink-faint" role="status">
+                        <p className="mt-2 text-sm text-ink-muted" role="status">
                           {copyState === "failed"
                             ? NO_BUTTON.copyFailed
                             : NO_BUTTON.copyManualHint}
@@ -481,7 +481,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                       <button
                         type="button"
                         onClick={() => setStep(0)}
-                        className="mt-6 min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
+                        className="mt-6 min-h-11 w-full py-2 text-sm text-ink-muted transition-colors hover:text-ink"
                       >
                         {NO_BUTTON.back}
                       </button>
@@ -535,7 +535,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                         className="mt-2.5 flex flex-wrap items-baseline gap-3"
                         role="status"
                       >
-                        <p className="text-sm text-ink-faint">
+                        <p className="text-sm text-ink-muted">
                           {decided === "yes"
                             ? NO_BUTTON.acceptedNote
                             : NO_BUTTON.declinedNote}
@@ -547,7 +547,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                             setDecided(null);
                             setSettled(null);
                           }}
-                          className="min-h-11 text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ink-muted hover:underline"
+                          className="min-h-11 text-sm text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
                         >
                           {NO_BUTTON.undo}
                         </button>
@@ -559,7 +559,7 @@ export function NoButton({ events, asOf }: { events: LoadEvent[]; asOf: Date }) 
                 <button
                   type="button"
                   onClick={close}
-                  className="min-h-11 w-full py-2 text-sm text-ink-faint transition-colors hover:text-ink-muted"
+                  className="min-h-11 w-full py-2 text-sm text-ink-muted transition-colors hover:text-ink"
                 >
                   {ADD.cancel}
                 </button>
@@ -616,7 +616,7 @@ function CannotPrice({
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-sm text-ink-faint">{NO_BUTTON.fixHint}</p>
+      <p className="mt-4 text-sm text-ink-muted">{NO_BUTTON.fixHint}</p>
       <button
         type="button"
         onClick={onBack}
