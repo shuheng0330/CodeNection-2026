@@ -10,30 +10,33 @@ solution and core loop, §5 what makes Pikul different, §6 architecture and
 feasibility, §7 method and limitations - and supply the interaction captions
 for §4 and the setup lines in §9, both now in `docs/readme-inputs-ku.md`.
 
-**Restructured 11 September, on Thong's note** that too much evidence sat at
-the same level of importance and that some of it read as engineering rather
-than as English. Nothing was deleted. What a judge needs in order to score a
-row is now the visible layer; the supporting depth sits in collapsible
-`<details>` blocks that GitHub renders natively, one click away for whoever
-wants to check us. The prose a judge has to read to score a row went from
-5,960 words to 2,867; the supporting 2,252 sit in seven collapsed blocks. About
-840 words of repetition went entirely - the 128%/132% explanation was made three
-separate times. The two Mermaid diagrams stay open, since Presentation and
-Design are scored on them.
+**Cut twice on Thong's notes.** First pass ranked the evidence: what a judge
+needs to score a row is the visible layer, the supporting depth sits in seven
+collapsible blocks GitHub renders natively. Second pass cut the visible layer
+again, because three members' sections have to add up to one readable README.
+My prose a judge must read is now 1,668 words, from 5,960, plus 541 words
+of table that is scanned rather than read. Nothing of substance was lost - it
+moved into the collapsed blocks or was repetition.
 
 Terms a student would not say - the ratio's real name, the averaging method,
-the library names, the folder layout - now appear only inside the collapsed
-blocks, where a technical judge is the one reading.
+the library names, the folder layout - appear only inside the collapsed blocks,
+where a technical judge is the one reading.
+
+**Two duplications to settle with Thong before integration.** His *"The
+decision before and after Pikul"* table and my *"The same Wednesday"* scenario
+are the same 7-mark Impact row; the plan asks for figures from the frozen
+build, which his table does not carry and mine does, so I would keep one. His
+*"Roadmap and realistic reach"* repeats three of the five rows in my built /
+next / not-promised table; his rollout row is the part that is genuinely his.
 
 Every figure comes out of the calculation rather than being typed in by hand.
 
 **Still needs a human before this ships.** The test count and commit must be
 re-taken from the frozen build on Friday evening. The production commit on
-record in `docs/evidence.md` is `4cfb5c7`, which `main` has moved well past —
-re-deploy from the frozen commit and re-record it. The accessibility paragraph
-must match the manual testing actually completed by then. And the four
-competitor claims in §5 each carry a source link; re-check they still say what
-I quoted before publishing.
+record in `docs/evidence.md` is `4cfb5c7`, which `main` has moved well past -
+re-deploy from the frozen commit and re-record it. The accessibility sentence
+must match the manual testing actually completed. And the four competitor
+claims each carry a source link; re-check them before publishing.
 
 <!-- ================= END NOT FOR PUBLICATION ================= -->
 
@@ -41,20 +44,20 @@ I quoted before publishing.
 
 ## What it does
 
-Pikul measures your week against **your own** previous four weeks, and it puts
-that measurement in front of you at the moment somebody asks you for something.
-The request is read where it arrives, priced against the week it would actually
-land in, and shown with the before figure beside the after one — while the
-answer is still yours to give. You can say yes, say no with a reply already
-drafted, or make room first by handing back something you already agreed to.
-Every answer is kept, and none of them is scored.
+Pikul measures your week against **your own** previous four weeks, and puts that
+measurement in front of you at the moment somebody asks you for something. The
+request is read where it arrives, priced against the week it would land in, and
+shown with the before figure beside the after one — while the answer is still
+yours. You can say yes, say no with a reply already drafted, or make room first
+by handing back something you already agreed to. Every answer is kept, and none
+of them is scored.
 
 ### The loop, in five steps
 
 1. **See where you stand** — this week and the four ahead, each against your own
    usual, as a marker on a band rather than a number out of ten.
-2. **A request arrives and is read in place** — paste it, or open the one
-   waiting. Pikul shows what it understood, field by field.
+2. **A request arrives and is read in place** — Pikul shows what it understood,
+   field by field, and badges what it had to guess.
 3. **See the cost, in the week it would land in** — the before figure and the
    after figure, together.
 4. **Answer it** — yes; no, with a copyable reply in three tones; or make room
@@ -64,40 +67,29 @@ Every answer is kept, and none of them is scored.
 
 ### The same Wednesday, with and without Pikul
 
-It is **Wednesday 9 September**. Aisyah has a part-time café job, and at 3pm a
-message arrives: *"can you cover next friday 3pm-11pm? kelly called in sick"*.
+It is **Wednesday 9 September**. Aisyah has a part-time café job, and a message
+arrives: *"can you cover next friday 3pm-11pm? kelly called in sick"*.
 
 **Without Pikul,** the only question she can answer is *am I free on Friday the
-18th?* Her calendar says yes — the evening is empty. So she says yes, the way
-she said yes to the last four. She finds out what it cost her the following
-week, when the reply cannot be taken back and the assignment is already late.
+18th?* Her calendar says yes. So she says yes, the way she said yes to the last
+four, and finds out what it cost her the following week.
 
-**With Pikul,** the same message is read in place. From the word *cover* it
-works out this is a shift, on **Friday 18 September**, for **8 hours**, of a
-kind that takes a lot out of her. Anything it got wrong she corrects before a
-price is calculated — the number follows her boxes, not our guess. One tap:
+**With Pikul,** the same message is read in place — a shift, **Friday 18
+September**, **8 hours**, draining. She corrects anything it got wrong, and:
 
 > **Week 11 is at 128% of a usual week already. Saying yes makes it 132%.**
 
 That sentence is the whole product. It is not *"you are at 90% capacity"*, which
-would need a limit nobody has established. It is Aisyah against Aisyah — and it
+would need a limit nobody has established — it is Aisyah against Aisyah. And it
 comes with the before figure, because 132% sounds alarming until you know the
 week was at 128% before anyone asked. The honest reading is that **this request
 is not what made the week hard**, and Pikul says so rather than letting the
 number imply otherwise.
 
-She now has three answers instead of one:
-
-- **Say yes**, knowing the price.
-- **Say no**, with a reply drafted in three tones to copy. The hard part of
-  saying no was never the wording.
-- **Make room first** — hand back Saturday's shift, which frees about 9 hours
-  and genuinely clears that day, previewed before anything is saved.
-
-The change is not that Pikul decided for her. It is that the decision moved from
+She now has three answers instead of one: say yes knowing the price; say no with
+a drafted reply; or hand back Saturday's shift, freeing about 9 hours. The
+change is not that Pikul decided for her — it is that the decision moved from
 *after* the consequence to *before* it.
-
-### The same loop, drawn
 
 ```mermaid
 flowchart TD
@@ -121,10 +113,8 @@ flowchart TD
     no --> asks
 ```
 
-*In words:* a request arrives and is read in place; you correct anything it got
-wrong; it is priced against the week it would land in; you answer yes, no, or
-*not as things stand*; and whichever you choose is kept, with the hours you took
-on shown beside the hours you kept free.
+*Without the diagram:* a request is read in place, priced against the week it
+would land in, answered yes, no or *not as things stand*, and kept either way.
 
 <details>
 <summary><b>The rest of the app, screen by screen</b></summary>
@@ -163,57 +153,44 @@ and the one carrying thirty-one fewer hours is the one in trouble.
 
 Almost everything built for an overloaded student answers one of two questions.
 *When is it?* — that is a calendar. *What is still outstanding?* — that is a
-to-do list. Both are inventories, both are answered by adding another row, and
-neither gets harder to answer as your week fills up.
+to-do list. Both are inventories, and neither gets harder to answer as your week
+fills up.
 
 Pikul answers a third question, and it only comes up at one moment: **somebody
 is asking you for something right now — what will saying yes actually cost
-you?**
+you?** Two things make that answerable, and it is the combination that is ours:
 
-Two things make that answerable, and it is the combination that is ours rather
-than either half:
+**A baseline that is yours.** Every figure compares you against your own previous
+four weeks — not a target, not a recommended maximum, not another student. A
+53-hour week wrecks one student and is an ordinary Tuesday for another, so any
+fixed threshold is wrong for nearly everybody it is applied to. **Compare weeks**
+proves it in fifteen seconds: the student carrying **31 fewer hours is the one in
+trouble**, because he is further from his own normal.
 
-**A baseline that is yours.** Every figure compares you against your own
-previous four weeks — not a target, not a recommended maximum, not another
-student. This matters more than it sounds: a 53-hour week wrecks one student and
-is an ordinary Tuesday for another, so any fixed threshold is wrong for nearly
-everybody it is applied to. **Compare weeks** proves it in fifteen seconds — the
-student carrying **31 fewer hours is the one in trouble**, because he is further
-from his own normal than she is from hers.
-
-**Priced at the decision, not after it.** The measurement is attached to the
-moment somebody asks: Pikul reads the message that arrived, prices it against
-the week it would land in, and shows the before figure beside the after one,
-while the answer is still yours.
-
-Neither half is unprecedented alone. Load ratios come from athlete monitoring,
-and we say so at length below. Reading a message is ordinary. Putting them
-together so the arithmetic runs *inside the decision* is the part we have not
-seen elsewhere.
+**Priced at the decision, not after it.** Load ratios come from athlete
+monitoring and reading a message is ordinary. Putting them together so the
+arithmetic runs *inside the decision* is the part we have not seen elsewhere.
 
 ### Three things it does that we have not seen elsewhere
 
-**1. The price argues against itself.** Every other tool that shows you a cost
-is trying to change your answer. Pikul shows the before figure next to the after
-one so the number cannot mislead you — *128% already, 132% if you say yes*. Four
-points. A product that will talk you *out* of blaming the thing in front of you
-is unusual, and it is why the figure can be trusted the next time it is large.
+**1. The price argues against itself.** Every other tool that shows you a cost is
+trying to change your answer. Pikul shows the before figure next to the after one
+so the number cannot mislead you. A product that will talk you *out* of blaming
+the thing in front of you is unusual, and it is why the figure can be trusted the
+next time it is large.
 
 **2. A recommender that refuses to recommend.** The hand-back suggestion will
-never offer your classes, your coursework, your commute or your family. Those
-are things you owe, not things you chose, and telling a Malaysian student to
-skip a cousin's wedding is not advice, it is a bug. Nothing under three hours is
-offered either — if the only flexible things left are small ones, Pikul says so
-instead of producing a suggestion for the sake of having one. And below a
-certain heaviness it switches off entirely: *"Nothing needs to come off this
-week."*
+never offer your classes, coursework, commute or family — those are things you
+owe, not things you chose, and telling a Malaysian student to skip a cousin's
+wedding is not advice, it is a bug. Nothing under three hours is offered either,
+and below a certain heaviness it switches off entirely: *"Nothing needs to come
+off this week."*
 
-**3. The build fails if the writing gets clinical.** One command scans every
-line a student could read and fails the build if a clinical or technical word
-reaches the screen — including the calculation's own vocabulary. Pikul's whole
-thesis is *show the arithmetic to a judge, never to the user*, and with three
-people writing copy in parallel that promise survives about a day on discipline
-alone. Making it a build step turns a tone into a guarantee.
+**3. The build fails if the writing gets clinical.** One command scans every line
+a student could read and fails the build if a clinical or technical word reaches
+the screen — including the calculation's own vocabulary. With three people
+writing copy in parallel, that promise survives about a day on discipline alone.
+Making it a build step turns a tone into a guarantee.
 
 <details>
 <summary><b>The reasoning behind the hand-back, in detail</b></summary>
@@ -247,28 +224,18 @@ something, so choosing when to put a new commitment is not done blind.
 ### Against what students actually use
 
 Compared on what each product says about itself, linked, as we read it in
-September 2026. We can demonstrate the Pikul column in the build; the other
-columns are our reading of someone else's, and where we could not confirm
-something we say so rather than writing "no".
-
-**Start with the one that is genuinely close.**
-[Bounds](https://withbounds.com/) calls itself *"the boundaries app to stop
-people-pleasing"*. When a request lands it offers a guided pause, gives you a
-script for that situation, and — the part we independently arrived at too —
-treats a yes and a no as equally valid rather than scoring you on declines. That
-is a real product solving a real version of this problem, and pretending
-otherwise would be the easiest way to lose a judge.
-
-Here is the difference, and it is the whole of our claim: **Bounds helps you say
-it. Pikul tells you what it costs.** It can hand you the words for no; it cannot
-tell you that this particular Friday lands in a week already at 128% of your
-usual, because it has no model of what you are carrying. The pause is emotional;
-ours is arithmetic.
+September 2026. The closest is [Bounds](https://withbounds.com/), *"the
+boundaries app to stop people-pleasing"* — a guided pause when a request lands,
+a script for it, and no scoring you on declines. That is a real product solving a
+real version of this problem. The difference is the whole of our claim: **Bounds
+helps you say it. Pikul tells you what it costs.** It cannot tell you this Friday
+lands in a week already at 128% of your usual, because it has no model of what
+you are carrying.
 
 | | [Bounds](https://withbounds.com/) | [Reclaim.ai](https://reclaim.ai/) | [Google Calendar](https://calendar.google.com/) | [Todoist](https://www.todoist.com/) | [Daylio](https://daylio.net/) | **Pikul** |
 |---|---|---|---|---|---|---|
 | What it is for | saying no without the guilt | arranging your time for you | when things are | what is outstanding | how you felt | **what a new yes will cost** |
-| Knows what you are already carrying | not that we can find | your calendar's contents, and reports on where time went | your calendar's contents | your task list | the moods you logged | **a weighted total, against your own last 4 weeks** |
+| Knows what you are already carrying | not that we can find | your calendar's contents | your calendar's contents | your task list | the moods you logged | **a weighted total, against your own last 4 weeks** |
 | Weighs effort, not just hours | no | priority levels | no | priority flags | no | **a 1–5 dial that scales the hours** |
 | Prices a *specific* incoming request before you answer | not that we can find | not that we can find | no | no | no | **yes** |
 | Helps you say no | **yes — scripts, and it is built for this** | no | no | no | no | yes — a drafted reply in three tones |
@@ -276,9 +243,8 @@ ours is arithmetic.
 | Lets you pick a *different* commitment to hand back | n/a | n/a | n/a | n/a | n/a | **yes — every eligible one, one tap away** |
 | Works with no account and no connected calendar | not stated on their site | no | no | no | yes | **yes** |
 
-None of them, and no calendar or task list, answers *"if I say yes to this, what
-happens to me?"* — the only question being asked at the moment the message
-arrives.
+None of them answers *"if I say yes to this, what happens to me?"* — the only
+question being asked at the moment the message arrives.
 
 <details>
 <summary><b>Why Reclaim and Daylio are solving different problems</b></summary>
@@ -303,18 +269,15 @@ asks what tomorrow will cost.
 ## How it is built
 
 **Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · Zustand · deployed on
-Vercel.** A single frontend and nothing behind it.
+Vercel.** A single frontend and nothing behind it — no backend, no database, no
+account, no API key. Your week is saved in your own browser and goes nowhere
+else, which is not a promise but a fact about the code: nothing in it makes a
+network call at runtime, so there is nowhere else for your week to go. The app is
+prerendered into plain pages, which is why it would serve a thousand students on
+the same free tier it serves one.
 
-There is no backend, no database, no account and no API key. Your week is saved
-in your own browser and goes nowhere else — not a promise we are asking you to
-take on trust, but a fact about the code: nothing in it makes a network call at
-runtime, so there is nowhere else for your week to go. The app is prerendered
-into plain pages, which is why it costs nothing to run and would serve a
-thousand students on the same free tier it serves one.
-
-**Live:** <https://pikul-codenection-2026.vercel.app>
-
-All seven pages open signed out, with no sign-up and nothing to configure.
+**Live:** <https://pikul-codenection-2026.vercel.app> — all seven pages open
+signed out, with nothing to configure.
 
 ```mermaid
 flowchart TD
@@ -334,12 +297,9 @@ flowchart TD
     store == "your existing week" ==> engine
 ```
 
-*In words:* the message you paste is read and comes back as a draft with every
-field marked as read or guessed **(1)**. That draft, plus the week already
-saved, is priced and comes back as a before figure, an after figure and a
-verdict **(2)**. Only an actual decision — yes, no, or hand back — saves
-anything, and it saves the commitment and the decision together, once **(3)**.
-**No arrow in that picture leaves the device.**
+*Without the diagram:* the message is read into a draft **(1)**, priced against
+the week already saved **(2)**, and only an actual decision saves anything —
+commitment and decision together, once **(3)**. **No arrow leaves the device.**
 
 <details>
 <summary><b>Where the code lives, and three decisions worth explaining</b></summary>
@@ -391,15 +351,12 @@ secrets to supply.
 
 ## Built, next, and not promised
 
-The line between these three is the one we would most like a judge to hold us
-to, because every column is a claim of a different kind.
-
 | Built and demonstrable today | Next, and what would have to be true first | Later, and deliberately not promised |
 |---|---|---|
-| Seven routes, working end to end with no account | **The "how did it feel?" check-in.** Scoped, then cut to finish the decision flow properly. It is the obvious next thing and the only way the intensity dial stops being ours and starts being yours. | Multi-device sync, which needs accounts, a backend and a privacy position we have not earned |
+| Seven routes, working end to end with no account | **The "how did it feel?" check-in.** Scoped, then cut to finish the decision flow properly. The only way the intensity dial stops being ours and starts being yours. | Multi-device sync, which needs accounts, a backend and a privacy position we have not earned |
 | A request priced against the specific week it lands in, before you answer | **Import a real timetable.** Everything today runs on generated weeks. Until a student's own semester goes in, the baseline is a demonstration rather than a measurement. | Notifications or anything that pings you — a tool for overloaded people should not add to the pile |
 | Accept, decline with a drafted reply, or hand one thing back — all reversible | **Move a commitment instead of dropping it.** The brief's load balancer implies rescheduling; we only support handing back. | Predicting how you will feel. We total commitments; that is not the same thing and we will not blur it |
-| Malay and English parsing, offline, and the same message always read the same way | **Intensity learned per person** rather than a fixed five-point dial, which is what the check-in would unlock | Any clinical or diagnostic claim, at any point |
+| Malay and English parsing, offline, and the same message always read the same way | **Intensity learned per person** rather than a fixed five-point dial | Any clinical or diagnostic claim, at any point |
 | Four-week horizon, put-down chooser, recovery prompt | **A campus pilot** — the smallest test that would tell us whether the ratio means anything for coursework | A marketplace, a social feed, or anything that turns a private week into a comparison with other people |
 
 <details>
@@ -438,31 +395,19 @@ Friday. Where two lanes did build the same thing, the merge is documented in
 
 ## The method
 
-**Everything becomes one number.** A commitment's weight is its hours
-multiplied by how much it takes out of you, on a one-to-five dial. That is why a
-two-hour group meeting can outweigh a four-hour lecture, and why a shift, an
-assignment and a weekend at home can be compared at all.
+A commitment's weight is its hours multiplied by how much it takes out of you,
+on a one-to-five dial — which is why a two-hour group meeting can outweigh a
+four-hour lecture. Pikul totals that day by day and compares a recent stretch
+against a longer one, always you against you. With no history it says it does
+not know you yet rather than inventing a figure.
 
-**Your recent self against your settled self.** Pikul totals that weight day by
-day, then compares a recent stretch against a longer one. Above 100% means this
-stretch is heavier than you usually carry. The comparison is always you against
-you — there is no target and no recommended maximum anywhere in it.
+**Nothing is predicted.** The weeks ahead run the identical arithmetic over
+commitments already in your calendar — what you have agreed to, added up.
 
-**The ranges are deliberately wide,** and a life that has not changed reads as
-*about your usual* rather than as a warning. With no history at all, Pikul says
-it does not know you yet instead of inventing a figure.
-
-**Nothing is predicted.** The weeks ahead use the identical arithmetic over
-commitments already in your calendar. It is not a forecast of how you will feel.
-It is what you have already agreed to, added up.
-
-**Where it comes from.** The model is not ours and we would rather say so than
-be caught: it is borrowed from the way athletes' training load is monitored, and
-it is **actively argued about in its own field**. Rather than bury that, we put
-the full argument, with both sides, on **How it works** *inside the product*,
-reachable from every number the app shows. A judge or a student who wants to
-attack the maths should find our own statement of the strongest case against it
-waiting for them.
+The model is borrowed from the way athletes' training load is monitored, and it
+is **actively argued about in its own field**. Rather than bury that, the full
+argument with both sides is on **How it works** *inside the product*, reachable
+from every number the app shows.
 
 <details>
 <summary><b>The full calculation, the numbers, and the argument against it</b></summary>
@@ -515,13 +460,9 @@ coupling objection and a broader conceptual one apply to us.
 
 ## What it cannot do
 
-Four boundaries, stated plainly. The same list is inside the product, not only
-here.
-
 **It does not track stress.** There is no self-report anywhere in Pikul — it
-never asks how you feel and has no idea. It measures committed hours weighted by
-a dial we chose. Calling that stress tracking would be a claim we cannot
-support, so we do not make it, anywhere.
+never asks how you feel. It measures committed hours weighted by a dial we
+chose, and calling that stress tracking would be a claim we cannot support.
 
 **It is not a diagnosis.** It notices a change in your own pattern. It cannot
 tell you whether you are unwell, and it does not try.
@@ -530,36 +471,32 @@ tell you whether you are unwell, and it does not try.
 that a draining hour weighs exactly 1.7 ordinary ones, and applying an
 athlete-monitoring model to coursework and family duty is our design decision.
 
-**Everything lives in one browser.** Your week is not on a server, which is the
-privacy claim — and it is also the limit: it does not follow you to another
-device, and clearing your browser clears it. It also only knows what it is told,
-and it thinks in days rather than clock times, so it will never tell you
-Thursday 3pm is free. That is why the demo ships with generated weeks.
+**Everything lives in one browser.** That is the privacy claim and also the
+limit: your week does not follow you to another device, and clearing your browser
+clears it. It thinks in days rather than clock times, so it will never tell you
+Thursday 3pm is free.
 
-**The test that would settle it.** We would rather name the experiment than
-leave that hanging. The smallest thing that would settle it is a campus pilot:
-thirty students, their real timetables, four weeks, and one question at the end
-of each week — *was that heavier than usual for you?* If the ratio agrees with
-the answer more often than chance, the transfer holds. If it does not, the dial
-is wrong and we would want to know that before anyone relies on it.
+**The test that would settle it** is a campus pilot: thirty students, their real
+timetables, four weeks, and one question each week — *was that heavier than usual
+for you?* If the ratio agrees more often than chance, the transfer holds. If not,
+the dial is wrong and we would want to know before anyone relies on it.
 
-On accessibility we claim exactly what we ran: an automated release check
-verifies seven pages at seven widths for reflow, flags any control under 44px in
-both dimensions, and walks the request sheet from the keyboard. A screen-reader
-pass, Android TalkBack and a physical-device check are **not** done, and are not
-claimed.
+On accessibility we claim exactly what we ran: an automated check verifies seven
+pages at seven widths for reflow, flags controls under 44px, and walks the
+request sheet from the keyboard. A screen-reader pass, Android TalkBack and a
+physical-device check are **not** done, and are not claimed.
 
 ## Running it
 
 You do not need to run it — it is live at
-<https://pikul-codenection-2026.vercel.app>. To run it anyway, you need Node
-20.9 or newer. Nothing to configure and no secrets to supply.
+<https://pikul-codenection-2026.vercel.app>. To run it anyway you need Node 20.9
+or newer. Nothing to configure and no secrets to supply.
 
     npm install
     npm run dev          # http://localhost:3000
 
-Useful demo links: `/today?reset=1` for a clean start, and `/today?persona=nurul`
-or `?persona=weijian` to switch student. Full operator path in
+Demo links: `/today?reset=1` for a clean start, `/today?persona=nurul` or
+`?persona=weijian` to switch student. Full operator path in
 `docs/DEMO_RUNBOOK.md`.
 
 <details>
