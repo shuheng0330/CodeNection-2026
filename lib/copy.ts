@@ -698,7 +698,6 @@ export const LANDING = {
   skip: "Skip to content",
   audience: "For students carrying more than classes",
   openDemo: "Open demo",
-  demoNote: "Sample data · no account needed · resets the demo",
   sceneTitle: "A student's week",
   example: "Illustrative example",
   sceneCaption: "Different commitments. One person carrying them.",

@@ -3,7 +3,7 @@
 .header { display:flex; align-items:center; gap:18px; min-height:100px; border-bottom:1px solid var(--color-hairline); }
 .brand { display:inline-flex; align-items:center; min-height:44px; font-family:var(--font-display); font-size:32px; letter-spacing:-1.5px; text-decoration:none; }
 .brand span { color:var(--color-clay-600); }
-.brandNote,.demoNote { color:var(--color-ink-muted); font-size:13px; }
+.brandNote { color:var(--color-ink-muted); font-size:13px; }
 .headerLink { margin-left:auto; display:inline-flex; align-items:center; min-height:44px; font-size:14px; }
 .headerLink:hover,.secondary:hover { text-decoration:underline; text-underline-offset:5px; }
 .hero { display:grid; grid-template-columns:1.05fr 1fr; gap:60px; align-items:center; padding-block:72px 88px; }
@@ -15,7 +15,6 @@
 .primary { display:inline-flex; align-items:center; justify-content:space-between; gap:28px; min-height:50px; padding:13px 22px; border-radius:999px; background:var(--color-clay-700); color:white; font-size:14px; font-weight:500; transition:background .2s; }
 .primary:hover { background:var(--color-ink); }
 .secondary { display:inline-flex; align-items:center; gap:12px; min-height:48px; font-size:14px; }
-.demoNote { margin-top:17px; }
 .sceneTop { display:flex; justify-content:space-between; gap:12px; padding:18px 14px 24px; color:var(--color-ink-muted); font-size:10px; text-transform:uppercase; letter-spacing:.1em; }
 .cardCategory { color:var(--color-ink-muted); font-size:10px; text-transform:uppercase; letter-spacing:.09em; }
 .cardDetail { color:var(--color-ink-muted); font-size:12px; }
