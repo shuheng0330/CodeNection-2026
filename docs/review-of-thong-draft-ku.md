@@ -68,10 +68,12 @@ anything is visible. Source: `docs/evidence/2026-09-09-decision-contract.md`.
 
 ## 3. Verified correct — no change needed
 
-- **No stress, capacity or wellbeing claim anywhere in the draft.** I grepped
-  for all four. Every mention of "capacity" is in the *dropped* column,
-  explaining why we refused a capacity percentage. This is the trap
-  `BRIEF_COVERAGE.md` warns about and the draft walks past it cleanly.
+- **No stress or wellbeing claim anywhere in the draft.** I grepped for
+  stress, capacity, wellbeing and diagnosis. "Capacity" appears twice — in the
+  dropped-ideas table, and in the body at line 119 saying Pikul works *"rather
+  than claiming to know a student's maximum capacity"* — which is the refusal,
+  not the claim. This is the trap `BRIEF_COVERAGE.md` warns about and the draft
+  walks past it cleanly.
 - *"Kept free and handed back had been mixed up"* — true, and documented in the
   `PROJECT_STATUS.md` merge table.
 - *"protection wording did not fully match the rules"* — true. The landing page
@@ -97,9 +99,11 @@ anything is visible. Source: `docs/evidence/2026-09-09-decision-contract.md`.
 - **The pitch line.** *"See what a new 'yes' will cost before you give it."* is
   the best single sentence anyone has written for this project. I would put it
   in the video script verbatim.
-- **`/method` is missing from the roadmap's Now row**, which lists six of the
-  seven routes. Worth naming — it is the route that makes the honesty claims
-  checkable, and a judge who finds it there is more likely to go and read it.
+- **The roadmap's Now row could name `/method`.** It currently lists
+  capabilities — personal baseline, request preview, decision choices,
+  hand-back, four-week view — which is a reasonable way to write it. I would
+  still add the route by name somewhere, because it is the one that makes the
+  honesty claims checkable, and a judge who finds it is more likely to read it.
 - **"Thong Shuheng"** — the repo's git author name is "Shu Heng". Worth
   settling which spelling goes in a public README.
 - The draft carries three internal comment blocks. They are correctly marked,

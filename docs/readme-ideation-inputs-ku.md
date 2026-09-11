@@ -55,6 +55,10 @@ fabrication `README_PLAN.md` forbids. Thong committed the file, so Thong knows.
 
 ## 2. Dates and references for the evolution table
 
+**Internal apparatus — do not paste this section into the README.** Commit
+hashes and `git show` commands are for you to check my claims against, not for
+a judge to read. Use them to confirm the rows, then publish the rows.
+
 Thong's "How Pikul evolved" table is accurate. These are the citations that let
 a judge check it, in his existing row order.
 

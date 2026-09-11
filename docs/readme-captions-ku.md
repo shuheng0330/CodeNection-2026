@@ -1,8 +1,9 @@
 # §4 screenshot captions — Ku's supply to Lim
 
 Six captures, in the order README_PLAN names them. Each has alt text (for the
-image) and a caption (printed under it). Figures are the frozen-build values —
-re-check them against the frozen commit before publishing.
+image) and a caption (printed under it). A note on the figures: the percentages are stable, but the **dates** follow
+the Wednesday of whatever week the demo is opened in, not the commit. Re-check
+the dates against whatever the capture actually shows.
 
 Rubric note: Design is scored on Visual Consistency (4), Usability and UX (4)
 and Mockup Completeness (2 — "covers the core flow end-to-end"). So the six
@@ -43,22 +44,22 @@ and eight hours of lectures are not the same week.
 ### 3 · The request, already read
 
 **Alt:** The request sheet, open over the Today screen. A sample message reads
-"can you cover next friday 3pm-11pm? kelly called in sick". Below it, four
-fields — what it is, when, how long, how much it takes out of you — each
-labelled either "read from cover" or "we guessed", and all editable.
+"can you cover next friday 3pm-11pm? kelly called in sick". A line above the
+fields reads "read from cover". Below it are five editable rows — what it is,
+when, how long, what kind of thing, and how much it takes out of you — with a
+"we guessed" badge on the effort dial.
 
-**Caption:** The moment the product exists for. Pikul opens on the message that
-actually arrived and shows what it made of it, field by field, marked *read
-from "cover"* or *we guessed*. Every one is editable and the price follows the
-boxes, not our guess. Nothing has to be typed before you see a cost — which is
+**Caption:** The moment the product exists for. Pikul opens on the message
+that actually arrived and shows what it made of it — naming the word it read
+the request from, and badging what it had to guess. Every row is editable and
+the price follows the boxes, not our guess. Nothing has to be typed before you see a cost — which is
 what a thirty-second decision actually requires.
 
 ---
 
 ### 4 · The price, with its own before figure
 
-**Alt:** The request sheet after pricing. Text reads "Week 11 is already at 128%
-of a usual week. Saying yes makes it 132%." A four-week bar chart shows the
+**Alt:** The request sheet after pricing. Text reads "Week 11 is at 128% of a usual week already. Saying yes makes it 132%." A four-week bar chart shows the
 weeks ahead, with week 11 highlighted. Below are two buttons: "I said yes" and
 "I said no".
 
