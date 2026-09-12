@@ -4,7 +4,7 @@
 
 Pikul helps Malaysian university students understand the cost of an incoming commitment before they accept it. It compares the commitments they already carry with **their own usual pattern**, previews the affected week, and leaves the final decision with them.
 
-**Team:** Thong Shuheng · Lim Wey Cheng · Ku Kian Xiang
+**Team:** Thong Shu Heng · Lim Wey Cheng · Ku Kian Xiang
 **Prototype:** [pikul-codenection-2026.vercel.app](https://pikul-codenection-2026.vercel.app) · **Repository:** [github.com/shuheng0330/Pikul](https://github.com/shuheng0330/Pikul)
 
 ![Pikul landing page on mobile: “Your week is more than your timetable,” with a sample week carried as hanging cards.](docs/readme-assets/01-landing-mobile.png)
@@ -194,7 +194,7 @@ The next product step is not an integration race. It is validating the personal-
 
 | Member | Main responsibilities |
 |---|---|
-| **Thong Shuheng** | App shell, navigation and demo deep-links; Week, Quiet Day and Decisions framing; selectable hand-back; deployment and route QA; ideation, impact, and README integration. |
+| **Thong Shu Heng** | App shell, navigation and demo deep-links; Week, Quiet Day and Decisions framing; selectable hand-back; deployment and route QA; ideation, impact, and README integration. |
 | **Lim Wey Cheng** | Landing-page story and visual system; decision preview; brand assets, motion, mobile presentation, and final README screenshots. |
 | **Ku Kian Xiang** | Initial prototype and seven routes; workload engine, message parser and seeded weeks; decision reliability; automated release check; Today and Compare compositions; method, limitations, and technical README sections. |
 
