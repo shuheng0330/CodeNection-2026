@@ -5,7 +5,10 @@
 Pikul helps Malaysian university students understand the cost of an incoming commitment before they accept it. It compares the commitments they already carry with **their own usual pattern**, previews the affected week, and leaves the final decision with them.
 
 **Team:** Thong Shu Heng · Lim Wey Cheng · Ku Kian Xiang
-**Prototype:** [pikul-codenection-2026.vercel.app](https://pikul-codenection-2026.vercel.app) · **Repository:** [github.com/shuheng0330/Pikul](https://github.com/shuheng0330/Pikul)
+
+**Prototype:** [pikul-codenection-2026.vercel.app](https://pikul-codenection-2026.vercel.app) · 
+
+**Repository:** [github.com/shuheng0330/Pikul](https://github.com/shuheng0330/Pikul)
 
 ![Pikul landing page on mobile: “Your week is more than your timetable,” with a sample week carried as hanging cards.](docs/readme-assets/01-landing-mobile.png)
 
