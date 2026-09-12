@@ -5,7 +5,9 @@
 - Production: <https://pikul-codenection-2026.vercel.app>
 - Vercel project: `pikul-codenection-2026`
 - Production branch: `main`
-- Current production commit: `4cfb5c7`
+- Frozen source for the submission: `8080a629` (11 Sep, 14:39 UTC)
+- Production tracks `main`; the doc-only commits merged since the freeze do
+  not change the app
 - Connected repository: <https://github.com/shuheng0330/Pikul>
 
 The app needs no account, backend, API key, or environment variable.
