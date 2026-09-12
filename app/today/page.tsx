@@ -55,6 +55,12 @@ export default function TodayPage() {
     [events, asOf, carry.ratio],
   );
   const ahead = useMemo(() => daysAhead(events, asOf), [events, asOf]);
+  // A row without a bar is a row you have to read. The scale is the
+  // heaviest day in this list, so the shape is about the week you are in.
+  const aheadPeak = useMemo(
+    () => Math.max(1, ...ahead.map((d) => d.hours)),
+    [ahead],
+  );
 
   if (!hydrated) {
     return <div className="min-h-screen bg-linen" />;
@@ -185,18 +191,31 @@ export default function TodayPage() {
                   {ahead.map((d) => (
                     <li
                       key={d.date}
-                      className="flex items-baseline justify-between gap-4 border-b border-hairline py-3 last:border-0"
+                      className="grid gap-2 border-b border-hairline py-4 last:border-0"
                     >
-                      <div className="min-w-0">
-                        <p className="font-medium capitalize">
+                      <div className="flex items-baseline justify-between gap-4">
+                        <p className="min-w-0 truncate font-medium capitalize">
                           {whenLabel(d.date, asOf)}
                         </p>
-                        <p className="truncate text-sm text-ink-muted">
-                          {AHEAD.dayLine(d.heaviest.title, d.others)}
+                        <p className="tnum shrink-0 font-medium text-ink">
+                          {AHEAD.hours(d.hours)}
                         </p>
                       </div>
-                      <p className="tnum shrink-0 text-sm text-ink-muted">
-                        {AHEAD.hours(d.hours)}
+                      <span
+                        aria-hidden
+                        className="relative block h-1.5 overflow-hidden rounded-full bg-raised"
+                      >
+                        <span
+                          className={`absolute inset-y-0 left-0 rounded-full ${
+                            d.hours >= aheadPeak ? "bg-clay-600" : "bg-clay-100"
+                          }`}
+                          style={{
+                            width: `${Math.max(6, (d.hours / aheadPeak) * 100)}%`,
+                          }}
+                        />
+                      </span>
+                      <p className="truncate text-sm text-ink-muted">
+                        {AHEAD.dayLine(d.heaviest.title, d.others)}
                       </p>
                     </li>
                   ))}
