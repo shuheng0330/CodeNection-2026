@@ -5,7 +5,10 @@
 Pikul helps Malaysian university students understand the cost of an incoming commitment before they accept it. It compares the commitments they already carry with **their own usual pattern**, previews the affected week, and leaves the final decision with them.
 
 **Team:** Thong Shu Heng · Lim Wey Cheng · Ku Kian Xiang
-**Prototype:** [pikul-codenection-2026.vercel.app](https://pikul-codenection-2026.vercel.app) · **Repository:** [github.com/shuheng0330/Pikul](https://github.com/shuheng0330/Pikul)
+
+**Prototype:** [pikul-codenection-2026.vercel.app](https://pikul-codenection-2026.vercel.app) · 
+
+**Repository:** [github.com/shuheng0330/Pikul](https://github.com/shuheng0330/Pikul)
 
 ![Pikul landing page on mobile: “Your week is more than your timetable,” with a sample week carried as hanging cards.](docs/readme-assets/01-landing-mobile.png)
 
@@ -13,7 +16,7 @@ Pikul helps Malaysian university students understand the cost of an incoming com
 
 ## The problem
 
-University students can be carrying coursework, a part-time shift, travel, family obligations, and club or social plans at the same time. The design situations that shaped Pikul were not formal research findings: they are situations our team observed and discussed while framing the prototype. The recurring problem was not simply “I am busy”; it was **not knowing whether one more request will make an already-heavy week unreasonable until after saying yes**.
+University students can be carrying coursework, a part-time shift, travel, family obligations, and club or social plans at the same time. Malaysian research reflects this mix: [a UUM study](https://journal.unisza.edu.my/apj/index.php/apj/article/view/104) identified academic, social, and environmental factors as important sources of student stress, while [a UKM study of part-time students](https://www.researchgate.net/publication/354082340_Pekerjaan_Sambilan_dan_Prestasi_Akademik_Mahasiswa_Kajian_dalam_Kalangan_Pelajar_Universiti_Kebangsaan_Malaysia_Part-Time_Work_and_Students'_Academic_Performance_A_Study_among_Students_at_University_K) found that balancing time and academic responsibilities matters when working during university. These studies support the broader context, while the specific situations that shaped Pikul came from our team’s observations and discussions. The recurring problem was not simply “I am busy”; it was **not knowing whether one more request will make an already-heavy week unreasonable until after saying yes**.
 
 The direct users are Malaysian university students, particularly those balancing study with paid work, commuting, family responsibilities, or student activities. Other stakeholders include peers asking for cover, employers and club organisers who need a response, and student-support staff who want students to make informed choices without being judged by a single universal capacity score.
 
@@ -77,7 +80,19 @@ The problem tree led to four product decisions: compare with a personal baseline
 
 ### Mentor consultation and validation status
 
-**Mentor consultation is scheduled for 12 September 2026. No mentor feedback is claimed in this README before that session.**
+**Mentor consultation — 12 September 2026**
+
+We presented Pikul to CodeNection mentor **Janelle Tan**.
+
+![The Pikul team presenting the prototype to mentor Janelle Tan during a CodeNection Discord consultation.](docs/readme-assets/mentor-consultation.jpg)
+
+Her feedback was:
+
+- The overall interface is clean, with Quiet Day standing out as a strong screen.
+- Refine the typography and button styling so the visual language feels more distinctive and intentional.
+- Explore Dribbble and Mobbin for further UI references.
+
+We have documented this feedback, but no design changes are attributed to it yet. It will guide our next visual refinement pass.
 
 Our current evidence is implementation and release QA, not external student validation. While refining the prototype, the team found and corrected a forecast chart with invisible bars, a sheet that could be painted behind page content, and a low-contrast carry-bar track. Keyboard focus, cancellation, repeated decisions, responsive layouts, and wording against actual behaviour were then added to the automated release check. A future campus pilot should test whether students understand and trust the personal-baseline comparison.
 
@@ -111,9 +126,9 @@ The before figure matters: the incoming request may add pressure without being t
 
 ### 5. Hand-back choice — advice with control
 
-![Mobile Today page showing the hand-back card expanded to reveal eligible commitments, with Cafe shift selected.](docs/readme-assets/05-hand-back-mobile.png)
+![Mobile Today page showing the hand-back confirmation for Cafe shift and the time it would give back.](docs/readme-assets/05-hand-back-mobile.png)
 
-The recommendation is a starting point, not a command. Pikul offers only eligible, negotiable commitments and previews the result before a hand-back is saved; it does not offer classes, coursework, commuting, or family responsibilities.
+After an eligible commitment is chosen, Pikul explains what handing it back would change before anything is saved. The student can confirm or keep it; classes, coursework, commuting, and family responsibilities are never offered.
 
 ### 6. Weeks ahead — see the commitments that are already coming
 
@@ -125,9 +140,9 @@ The forward view totals commitments already recorded; it does not predict how th
 
 Quiet Day identifies a comparatively calm day in the next ten when one exists. This captured state shows the honest alternative: the next ten days are full, so Pikul does not invent a recovery slot and instead points back to the optional hand-back flow. It records nothing and never checks whether a suggestion was followed.
 
-![Mobile Decisions page showing its empty state and an invitation to price the next incoming request.](docs/readme-assets/08-decisions-mobile.png)
+![Mobile Decisions page showing eight hours kept free after declining one shift request.](docs/readme-assets/08-decisions-mobile.png)
 
-The Decisions route records accepted hours and hours kept free once a request has been priced. Its empty state makes the next step clear without pretending the student has a score or report card.
+The Decisions route records accepted hours and hours kept free once a request has been priced. This state shows one declined request without turning the history into a score or report card.
 
 ## What makes Pikul different
 

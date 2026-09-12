@@ -43,7 +43,7 @@ export function AreaBreakdown({ events, asOf }: { events: LoadEvent[]; asOf: Dat
                 <span className="relative h-2.5 flex-1 overflow-hidden rounded-full bg-raised">
                   <motion.span
                     className={`absolute inset-y-0 left-0 rounded-full ${
-                      i === 0 ? "bg-clay-600" : "bg-clay-100"
+                      i === 0 ? "bg-clay-600" : "bg-clay-500"
                     }`}
                     initial={still ? false : { scaleX: 0 }}
                     animate={{ scaleX: a.share }}

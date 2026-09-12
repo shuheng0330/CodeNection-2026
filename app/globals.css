@@ -31,9 +31,13 @@
 
   /* -- load bands (never traffic-light) -------------------- */
   --color-sage: #6e8f6b;
+  --color-sage-700: #4f704d;
   --color-ember: #e08d3c;
+  --color-ember-700: #a75b20;
   --color-amber: #d99b32;
+  --color-amber-700: #94620e;
   --color-rust: #b4462f;
+  --color-rust-700: #963522;
 
   /* -- rest / counterweight -------------------------------- */
   --color-dusk: #5b6c8c;
