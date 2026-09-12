@@ -447,3 +447,32 @@ after the freeze, not hours before it.
 - Recorded exact claim boundaries: mentor feedback is pending, and screen-reader/physical-device checks are outstanding.
 - Public video, Figma/design, and slide links remain unavailable and are intentionally omitted rather than represented with placeholders.
 - Frozen-release evidence: GitHub recorded Vercel deployment success for `8080a62` at 14:39 UTC; `npm run verify` passed (including 170 Vitest tests), and `npm run check:release` passed the local production browser matrix.
+
+## Submission links — 13 September 2026
+
+- Pulled main with fast-forward-only; it was already up to date.
+- Added the team-provided Google Slides pitch deck and YouTube presentation links beside the prototype and repository links in README.md. This supersedes the earlier note that video and slide links were unavailable.
+- Checked Markdown destinations and git diff formatting. Public sharing permissions were not independently verified.
+- Reviewed requirements and architecture documentation; updated submission requirements, with no architecture change needed.
+
+## Submission readiness audit — 13 September 2026
+
+- Reviewed the official 21-item rubric, organiser guidance, README plan, brief coverage, demo runbook, evidence log and current README. Replaced the stale readiness checklist with the current audit in submission-readiness.md.
+- Corrected the effort-weight explanation, Quiet Day image alt text, test count (172), and stale demo source reference; added explicit resource/time feasibility context.
+- Verified public repository, slides access, YouTube duration (4:28), seven live routes, and README asset targets. The user confirmed team approval, full-video review, and physical-phone testing.
+- Fresh npm run verify and npm run check:release both passed. Production dependency audit: zero findings; three high findings remain in development browser tooling.
+- Reviewed architecture documentation: no architectural change. Exact deadline, submission receipt and formal screen-reader validation remain outside verified evidence. No push or submission performed.
+
+## Responsive UI documentation — 13 September 2026
+
+- Made the README explicitly identify mobile, tablet, and desktop screenshots as views of one responsive web application.
+- Described adaptive navigation, content columns, and decision sheets, supported by the completed seven-width release checks and team-reported phone check.
+- Reviewed requirements and architecture documentation; this clarifies existing behavior and adds no requirement or architecture change. Markdown diff check passed; no application code changed.
+
+- Added the responsive mobile/tablet/desktop description beside the README prototype link for immediate visibility.
+
+## Submission documentation publication — 13 September 2026
+
+- User authorised committing and pushing the reviewed documentation to main.
+- Publication includes pitch/video links, responsive UI positioning, corrected technical details, and the current readiness audit.
+- Competition submission and saving its receipt remain the team leader's final steps.

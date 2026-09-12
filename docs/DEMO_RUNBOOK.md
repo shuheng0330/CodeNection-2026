@@ -5,7 +5,7 @@
 - Production: <https://pikul-codenection-2026.vercel.app>
 - Vercel project: `pikul-codenection-2026`
 - Production branch: `main`
-- Frozen source for the submission: `8080a629` (11 Sep, 14:39 UTC)
+- Frozen source for the submission: `6cb8b22` (12 September 2026); application source also matches `b2271bf`
 - Production tracks `main`; the doc-only commits merged since the freeze do
   not change the app
 - Connected repository: <https://github.com/shuheng0330/Pikul>
@@ -30,7 +30,7 @@ The app needs no account, backend, API key, or environment variable.
 2. Read the personal-baseline statement and the single thing worth putting down.
 3. Open **Someone's asking me for something**.
 4. Choose a request and weight, then show what saying yes costs.
-5. Record a decline and open **Asks** to show the hours kept free.
+5. Record a decline and open **Decisions** to show the hours kept free.
 6. Open **Week**, select the heavy cluster, and inspect another day.
 7. Use **Reset demo** before the next rehearsal.
 

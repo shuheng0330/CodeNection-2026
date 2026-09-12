@@ -14,4 +14,4 @@ The root `README.md` is the judge-facing Pikul submission artifact. It must cont
 
 ## Remaining submission inputs
 
-Video, Figma/design, and slide links are omitted until public signed-out URLs are available. Screen-reader and physical-device validation remain incomplete.
+The README includes the team-provided pitch deck and YouTube video links. The supplied slides satisfy the slides/design-link item; a separate Figma file is not required. The team confirmed physical-phone testing and full-video review on 13 September; formal screen-reader validation remains incomplete.

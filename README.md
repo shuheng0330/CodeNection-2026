@@ -6,9 +6,13 @@ Pikul helps Malaysian university students understand the cost of an incoming com
 
 **Team:** Thong Shu Heng · Lim Wey Cheng · Ku Kian Xiang
 
-**Prototype:** [pikul-codenection-2026.vercel.app](https://pikul-codenection-2026.vercel.app) · 
+**Prototype:** [pikul-codenection-2026.vercel.app](https://pikul-codenection-2026.vercel.app) — Responsive web app for mobile, tablet, and desktop.
 
 **Repository:** [github.com/shuheng0330/Pikul](https://github.com/shuheng0330/Pikul)
+
+**Pitch deck:** [View the slides](https://docs.google.com/presentation/d/1N_hvX5zPDjVFfvpO1oL6e6bv7iq9yCjL/edit?usp=sharing&ouid=118139642159601944127&rtpof=true&sd=true)
+
+**YouTube video:** [Watch the Pikul presentation](https://youtu.be/hdSDdZmLogw)
 
 ![Pikul landing page on mobile: “Your week is more than your timetable,” with a sample week carried as hanging cards.](docs/readme-assets/01-landing-mobile.png)
 
@@ -105,6 +109,10 @@ Our current evidence is implementation and release QA, not external student vali
 
 Pikul’s visual system uses warm paper-like surfaces, dark high-contrast type, rounded cards, and rust/gold accents to make a sensitive workload conversation feel calm rather than clinical. The desktop layout uses a persistent navigation rail and contextual panels; the mobile layout keeps the primary decision close to the thumb and uses a bottom navigation bar. The implementation includes `prefers-reduced-motion` handling.
 
+**One responsive web application across mobile, tablet, and desktop.** The screenshots below show the same working application at different screen sizes. On wider screens, navigation sits in a persistent sidebar and content uses multiple columns; on phones, content stacks into a single column, navigation moves to the bottom, and decision forms open as touch-friendly sheets.
+
+All seven routes passed automated layout and touch-target checks at **320, 360, 390, 640, 768, 1024, and 1440px**, with no horizontal overflow. The team also confirmed a physical-phone check. The mobile and desktop captures below demonstrate this responsive layout in use.
+
 ### 1. Landing — explain the premise before asking for data
 
 ![Pikul landing page on mobile showing its headline, a sample week and four hanging commitment cards.](docs/readme-assets/01-landing-mobile.png)
@@ -141,7 +149,7 @@ After an eligible commitment is chosen, Pikul explains what handing it back woul
 
 The forward view totals commitments already recorded; it does not predict how the student will feel.
 
-![Mobile Quiet Day page proposing a quieter upcoming day as a chance to make room, without recording or grading the response.](docs/readme-assets/07-quiet-day-mobile.png)
+![Mobile Quiet Day page explaining that the next ten days are full and linking to the optional hand-back flow.](docs/readme-assets/07-quiet-day-mobile.png)
 
 Quiet Day identifies a comparatively calm day in the next ten when one exists. This captured state shows the honest alternative: the next ten days are full, so Pikul does not invent a recovery slot and instead points back to the optional hand-back flow. It records nothing and never checks whether a suggestion was followed.
 
@@ -165,9 +173,9 @@ Pikul’s implemented differentiators are its personal baseline, its request-cos
 
 ## Technical feasibility
 
-**Frozen source:** [`6cb8b22`](https://github.com/shuheng0330/Pikul/commit/6cb8b2243eb7e6df45056f8177d612856e1ee78a) on `main` (12 September 2026). Vercel successfully deployed this commit, and all seven public routes return HTTP 200 signed out.
+**Frozen source:** [`6cb8b22`](https://github.com/shuheng0330/Pikul/commit/6cb8b2243eb7e6df45056f8177d612856e1ee78a) on `main` (12 September 2026). The application source at the current `main` commit (`b2271bf`) is unchanged from this reference. All seven public routes returned HTTP 200 without authentication during the 13 September audit.
 
-**Frozen release record:** `npm run verify` passed its voice gate, ESLint, **170 Vitest tests**, and production build. `npm run check:release` then passed the local production build across all seven routes at 320, 360, 390, 640, 768, 1024, and 1440px, including reflow, touch targets, keyboard dialog behaviour, repeatable decisions, invalid-input handling, and reversible hand-back selection.
+**Release verification (13 September 2026):** `npm run verify` passed its voice gate, ESLint, **172 Vitest tests**, and production build. `npm run check:release` then passed the local production build across all seven routes at 320, 360, 390, 640, 768, 1024, and 1440px, including reflow, touch targets, keyboard dialog behaviour, repeatable decisions, invalid-input handling, and reversible hand-back selection.
 
 ```mermaid
 flowchart LR
@@ -181,6 +189,8 @@ flowchart LR
 
 The prototype is a static Next.js 16 App Router frontend using React 19 and TypeScript. Zustand persists demo state to browser `localStorage`; `chrono-node` and `date-fns` handle deterministic parsing and dates; Motion supplies reduced-motion-aware transitions; Lucide React supplies icons. It is deployed on Vercel.
 
+The three-person team split implementation across the workload engine and request flow, landing/design, and app navigation/release QA. The 7–12 September build prioritised a complete frontend decision loop; accounts, integrations, and multi-device sync were deferred. The prototype needs no paid AI inference or backend service. A wider pilot would require time for student testing, privacy design, persistent storage, and hosting capacity before adding integrations.
+
 There is currently **no backend, database, account, API key, calendar connection, AI model, or runtime network service**. This is a deliberate scope choice: the team focused the available time on one complete, demonstrable decision loop rather than presenting unbuilt infrastructure as complete.
 
 | Demonstrated now | Next validation or extension | Later, not promised |
@@ -191,7 +201,7 @@ There is currently **no backend, database, account, API key, calendar connection
 
 ### What Pikul measures
 
-Each commitment becomes a weighted load: its duration is multiplied by a fixed one-to-five effort dial. Recent and longer-term daily loads are calculated as exponentially weighted averages over 7 and 28 days, then compared. A ratio around 1.0 means the recent period resembles the student’s own established pattern; a new student with no history receives a neutral starting signal.
+Each commitment becomes a weighted load: its duration is multiplied by the weight selected by a one-to-five effort dial (0.6, 0.85, 1.0, 1.3, or 1.7). Recent and longer-term daily loads are calculated as exponentially weighted averages over 7 and 28 days, then compared. A ratio around 1.0 means the recent period resembles the student’s own established pattern; a new student with no history receives a neutral starting signal.
 
 The arithmetic is inspired by session-RPE and athlete workload-monitoring literature, not validated student-health science. Foster described a simple training-load monitoring approach in 1998; [Foster (1998)](https://pubmed.ncbi.nlm.nih.gov/9662690/) is the source for that context. The team also acknowledges the substantial methodological critique of acute:chronic workload ratios, including [Impellizzeri et al. (2020)](https://pubmed.ncbi.nlm.nih.gov/32502973/). We use the calculation as a transparent design hypothesis for comparing committed workload—not as a causal or medical model.
 
@@ -202,7 +212,7 @@ The arithmetic is inspired by session-RPE and athlete workload-monitoring litera
 - The effort dial and transfer from sports science to student commitments are unvalidated design choices that need a campus pilot.
 - Future views total commitments already recorded. They are not a forecast of how a person will feel.
 - The demo uses generated personas and browser-local data, so the current baseline demonstrates the concept rather than measuring a real semester.
-- Automated checks cover seven routes at seven viewport widths, horizontal overflow, touch-target size, keyboard behaviour in the request sheet, repeatable decisions, and local-state outcomes. A screen-reader pass, Android TalkBack, and physical-phone/mobile-data validation remain outstanding.
+- Automated checks cover seven routes at seven viewport widths, horizontal overflow, touch-target size, keyboard behaviour in the request sheet, repeatable decisions, and local-state outcomes. The team confirmed a physical-phone check on 13 September. A formal screen-reader pass and Android TalkBack validation remain outstanding.
 
 ## Impact and next steps
 
