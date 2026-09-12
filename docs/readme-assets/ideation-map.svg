@@ -7,22 +7,22 @@
     <text x="800" y="94" text-anchor="middle" font-size="19" fill="#5d6d62">From scattered commitments to a decision before one more yes</text>
   </g>
   <g fill="none" stroke="#b08b70" stroke-width="3" stroke-linecap="round">
-    <path d="M725 463 C590 410 515 272 364 230"/><path d="M725 489 C570 500 500 510 340 500"/><path d="M725 515 C590 608 500 714 364 756"/>
-    <path d="M875 463 C1010 410 1085 272 1236 230"/><path d="M875 489 C1030 500 1100 510 1260 500"/><path d="M875 515 C1010 608 1100 714 1236 756"/>
+    <path d="M725 463 C640 424 560 262 455 230"/><path d="M725 489 C650 496 560 500 455 500"/><path d="M725 515 C640 594 560 726 455 757"/>
+    <path d="M875 463 C960 424 1040 262 1145 230"/><path d="M875 489 C950 496 1040 500 1145 500"/><path d="M875 515 C960 594 1040 726 1145 757"/>
   </g>
   <g fill="#fffdf8" stroke="#d9c7b5" stroke-width="2">
-    <rect x="80" y="132" width="284" height="196" rx="22"/><rect x="55" y="407" width="285" height="186" rx="22"/><rect x="80" y="672" width="284" height="170" rx="22"/>
-    <rect x="1236" y="132" width="284" height="196" rx="22"/><rect x="1260" y="407" width="285" height="186" rx="22"/><rect x="1236" y="672" width="284" height="170" rx="22"/>
+    <rect x="60" y="132" width="395" height="196" rx="22"/><rect x="60" y="407" width="395" height="186" rx="22"/><rect x="60" y="672" width="395" height="170" rx="22"/>
+    <rect x="1145" y="132" width="395" height="196" rx="22"/><rect x="1145" y="407" width="395" height="186" rx="22"/><rect x="1145" y="672" width="395" height="170" rx="22"/>
   </g>
   <g font-family="Arial, sans-serif" fill="#23342c">
-    <g font-size="22" font-weight="700" fill="#9a5738"><text x="112" y="174">SOURCES OF LOAD</text><text x="87" y="449">CAUSES</text><text x="112" y="714">PAIN POINTS</text><text x="1268" y="174">CURRENT BEHAVIOURS</text><text x="1292" y="449">OPPORTUNITIES</text><text x="1268" y="714">RESULTING FEATURES</text></g>
+    <g font-size="22" font-weight="700" fill="#9a5738"><text x="90" y="174">SOURCES OF LOAD</text><text x="90" y="449">CAUSES</text><text x="90" y="714">PAIN POINTS</text><text x="1175" y="174">CURRENT BEHAVIOURS</text><text x="1175" y="449">OPPORTUNITIES</text><text x="1175" y="714">RESULTING FEATURES</text></g>
     <g font-size="20" fill="#405147">
-      <text x="112" y="212">• coursework and deadlines</text><text x="112" y="244">• part-time work and commuting</text><text x="112" y="276">• family, clubs and social plans</text>
-      <text x="87" y="487">• requests arrive separately</text><text x="87" y="519">• pressure to say yes</text><text x="87" y="551">• no universal “normal” week</text>
-      <text x="112" y="752">• overload appears too late</text><text x="112" y="784">• hard to prioritise or decline</text><text x="112" y="816">• another app can add friction</text>
-      <text x="1268" y="212">• calendar and task lists</text><text x="1268" y="244">• answer requests by instinct</text><text x="1268" y="276">• see time, not personal cost</text>
-      <text x="1292" y="487">• compare against own baseline</text><text x="1292" y="519">• preview the affected week</text><text x="1292" y="551">• make one response easier</text>
-      <text x="1268" y="752">• editable request interpretation</text><text x="1268" y="784">• Price the Yes preview</text><text x="1268" y="816">• decline copy and hand-back choice</text>
+      <text x="90" y="212">• coursework and deadlines</text><text x="90" y="244">• part-time work and commuting</text><text x="90" y="276">• family, clubs and social plans</text>
+      <text x="90" y="487">• requests arrive separately</text><text x="90" y="519">• pressure to say yes</text><text x="90" y="551">• no universal “normal” week</text>
+      <text x="90" y="752">• overload appears too late</text><text x="90" y="784">• hard to prioritise or decline</text><text x="90" y="816">• another app can add friction</text>
+      <text x="1175" y="212">• calendar and task lists</text><text x="1175" y="244">• answer requests by instinct</text><text x="1175" y="276">• see time, not personal cost</text>
+      <text x="1175" y="487">• compare against own baseline</text><text x="1175" y="519">• preview the affected week</text><text x="1175" y="551">• make one response easier</text>
+      <text x="1175" y="752">• editable request interpretation</text><text x="1175" y="784">• Price the Yes preview</text><text x="1175" y="816">• decline copy and hand-back choice</text>
     </g>
   </g>
   <g>
