@@ -77,7 +77,19 @@ The problem tree led to four product decisions: compare with a personal baseline
 
 ### Mentor consultation and validation status
 
-**Mentor consultation is scheduled for 12 September 2026. No mentor feedback is claimed in this README before that session.**
+**Mentor consultation — 12 September 2026**
+
+We presented Pikul to CodeNection mentor **Janelle Tan**.
+
+![The Pikul team presenting the prototype to mentor Janelle Tan during a CodeNection Discord consultation.](docs/readme-assets/mentor-consultation.jpg)
+
+Her feedback was:
+
+- The overall interface is clean, with Quiet Day standing out as a strong screen.
+- Refine the typography and button styling so the visual language feels more distinctive and intentional.
+- Explore Dribbble and Mobbin for further UI references.
+
+We have documented this feedback, but no design changes are attributed to it yet. It will guide our next visual refinement pass.
 
 Our current evidence is implementation and release QA, not external student validation. While refining the prototype, the team found and corrected a forecast chart with invisible bars, a sheet that could be painted behind page content, and a low-contrast carry-bar track. Keyboard focus, cancellation, repeated decisions, responsive layouts, and wording against actual behaviour were then added to the automated release check. A future campus pilot should test whether students understand and trust the personal-baseline comparison.
 
