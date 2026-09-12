@@ -89,7 +89,12 @@ Her feedback was:
 - Refine the typography and button styling so the visual language feels more distinctive and intentional.
 - Explore Dribbble and Mobbin for further UI references.
 
-We have documented this feedback, but no design changes are attributed to it yet. It will guide our next visual refinement pass.
+After the session, we made a focused visual pass. Primary actions now use more rounded, consistent button shapes, while key headings use a more distinctive display typeface. These changes make the interface feel more intentional without changing Pikul’s core flow.
+
+| Before refinement | After refinement |
+|---|---|
+| ![Earlier Today page with simpler typography and rectangular primary actions.](docs/readme-assets/mentor-before-today.png) | ![Refined Today page with display typography and rounded primary actions.](docs/readme-assets/02-today-desktop.png) |
+| Simpler type hierarchy and rectangular buttons. | More distinctive headings and consistent pill-shaped actions. |
 
 Our current evidence is implementation and release QA, not external student validation. While refining the prototype, the team found and corrected a forecast chart with invisible bars, a sheet that could be painted behind page content, and a low-contrast carry-bar track. Keyboard focus, cancellation, repeated decisions, responsive layouts, and wording against actual behaviour were then added to the automated release check. A future campus pilot should test whether students understand and trust the personal-baseline comparison.
 
