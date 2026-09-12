@@ -101,7 +101,7 @@ export interface DayAhead {
 }
 
 /**
- * The next few days, one row each.
+ * The rest of this week, one row each.
  *
  * Listing every commitment individually turns this into a backlog: twenty-odd
  * chips, half of them the word "Commute", and the one that matters buried in
@@ -112,16 +112,23 @@ export interface DayAhead {
  * heaviest thing on it. Days with nothing on them are dropped rather than
  * shown as empty — a calendar of dates and durations cannot honestly promise
  * anyone that a day is free.
+ *
+ * It stops at Sunday. A rolling five days puts next Monday under a heading
+ * about this week, next to a percentage measured on this week, and the empty
+ * state has always read "Nothing else on this week." The weeks ahead are a
+ * screen of their own, which is what `more` links to.
  */
 export function daysAhead(
   events: LoadEvent[],
   asOf: Date,
-  count: number = 5,
+  count: number = 7,
 ): DayAhead[] {
+  const lastOfWeek = toISODate(endOfWeek(asOf, { weekStartsOn: 1 }));
   const out: DayAhead[] = [];
 
   for (let i = 1; i <= count; i++) {
     const date = toISODate(addDays(asOf, i));
+    if (date > lastOfWeek) break;
     const onDay = events.filter((e) => e.date === date);
     if (onDay.length === 0) continue;
 

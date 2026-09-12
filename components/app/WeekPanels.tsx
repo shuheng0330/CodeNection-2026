@@ -334,20 +334,38 @@ function DayDetails({
       {events.length === 0 ? (
         <p className="mt-6 text-ink-muted">{WEEK.dayEmpty}</p>
       ) : (
-        <ul className="mt-6 grid gap-2">
-          {events.map((event) => (
+        <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+          {events.map((event, i) => (
             <li
               key={event.id}
-              className="flex min-w-0 items-start justify-between gap-4 rounded-2xl border border-hairline bg-linen/60 px-4 py-3"
+              className="grid min-w-0 gap-2 rounded-2xl border border-hairline bg-linen/60 px-4 py-3"
             >
-              <div className="min-w-0">
-                <p className="font-medium text-ink">{event.title}</p>
-                <p className="mt-1 text-sm text-ink-muted">
-                  {WEEK.categories[event.category]}
+              <div className="flex min-w-0 items-start justify-between gap-4">
+                <p className="min-w-0 font-medium text-ink">{event.title}</p>
+                <p className="tnum shrink-0 font-medium text-ink">
+                  {WEEK.eventHours(event.hours)}
                 </p>
               </div>
-              <p className="tnum shrink-0 text-sm text-ink-muted">
-                {WEEK.eventHours(event.hours)}
+              {/* Same bar language as the area breakdown: the heaviest thing on
+                  the day is the one that gets the solid colour. */}
+              <span
+                aria-hidden
+                className="relative block h-1.5 overflow-hidden rounded-full bg-raised"
+              >
+                <span
+                  className={`absolute inset-y-0 left-0 rounded-full ${
+                    i === 0 ? "bg-clay-600" : "bg-clay-100"
+                  }`}
+                  style={{
+                    width: `${Math.max(
+                      6,
+                      (event.hours / Math.max(1, events[0].hours)) * 100,
+                    )}%`,
+                  }}
+                />
+              </span>
+              <p className="text-sm text-ink-muted">
+                {WEEK.categories[event.category]}
               </p>
             </li>
           ))}

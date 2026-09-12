@@ -68,10 +68,29 @@ describe("daysAhead", () => {
     ]);
   });
 
-  it("stops at the window it was asked for", () => {
+  it("stops at Sunday, because Monday is next week's problem", () => {
+    // asOf is Wednesday 9 Sep 2026, so this week has four days left in it.
+    // A rolling five would put Monday the 14th under a heading about this
+    // week, beside a percentage measured on this week.
     const events = Array.from({ length: 14 }, (_, i) => on(i + 1, 2, "Class"));
-    expect(daysAhead(events, asOf)).toHaveLength(5);
+    const days = daysAhead(events, asOf);
+    expect(days).toHaveLength(4);
+    expect(days.at(-1)!.date).toBe("2026-09-13"); // Sunday
+    expect(days.map((d) => d.date)).not.toContain("2026-09-14"); // Monday
+  });
+
+  it("still honours a smaller window than the week has left", () => {
+    const events = Array.from({ length: 14 }, (_, i) => on(i + 1, 2, "Class"));
     expect(daysAhead(events, asOf, 3)).toHaveLength(3);
+  });
+
+  it("has nothing left to show on a Sunday", () => {
+    const sunday = new Date(2026, 8, 13);
+    const events = Array.from({ length: 5 }, (_, i) => ({
+      ...on(0, 2, "Class"),
+      date: toISODate(addDays(sunday, i + 1)),
+    }));
+    expect(daysAhead(events, sunday)).toEqual([]);
   });
 
   it("says nothing at all about a calendar with nothing on it", () => {
