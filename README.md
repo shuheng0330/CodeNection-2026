@@ -165,7 +165,7 @@ Pikul’s implemented differentiators are its personal baseline, its request-cos
 
 ## Technical feasibility
 
-**Frozen source reference:** [`8080a6290dc0b2b667f1fa6b055ad6ee56504032`](https://github.com/shuheng0330/Pikul/commit/8080a6290dc0b2b667f1fa6b055ad6ee56504032) (11 September 2026). Vercel finished deploying that commit at 14:39 UTC, one minute after it landed on `main`. The deployment record itself sits behind our Vercel account, so the checkable evidence is the public one: every route above returns HTTP 200 signed out, and the commit link opens for anyone.
+**Frozen source:** [`6cb8b22`](https://github.com/shuheng0330/Pikul/commit/6cb8b2243eb7e6df45056f8177d612856e1ee78a) on `main` (12 September 2026). Vercel successfully deployed this commit, and all seven public routes return HTTP 200 signed out.
 
 **Frozen release record:** `npm run verify` passed its voice gate, ESLint, **170 Vitest tests**, and production build. `npm run check:release` then passed the local production build across all seven routes at 320, 360, 390, 640, 768, 1024, and 1440px, including reflow, touch targets, keyboard dialog behaviour, repeatable decisions, invalid-input handling, and reversible hand-back selection.
 
