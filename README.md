@@ -93,7 +93,7 @@ After the session, we made a focused visual pass. Primary actions now use more r
 
 | Before refinement | After refinement |
 |---|---|
-| ![Earlier Today page with simpler typography and rectangular primary actions.](docs/readme-assets/mentor-before-today.png) | ![Refined Today page with display typography and rounded primary actions.](docs/readme-assets/02-today-desktop.png) |
+| ![Earlier Today page with simpler typography and rectangular primary actions.](docs/readme-assets/mentor-before-today.png) | ![Refined Today page with display typography and rounded primary actions.](docs/readme-assets/mentor-after-today.png) |
 | Simpler type hierarchy and rectangular buttons. | More distinctive headings and consistent pill-shaped actions. |
 
 Our current evidence is implementation and release QA, not external student validation. While refining the prototype, the team found and corrected a forecast chart with invisible bars, a sheet that could be painted behind page content, and a low-contrast carry-bar track. Keyboard focus, cancellation, repeated decisions, responsive layouts, and wording against actual behaviour were then added to the automated release check. A future campus pilot should test whether students understand and trust the personal-baseline comparison.
