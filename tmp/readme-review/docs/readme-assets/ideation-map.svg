@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Pikul ideation map</title>
+  <desc id="desc">A mindmap connecting student workload sources, causes, current behaviours, pain points, intervention opportunities, Pikul principles and resulting features.</desc>
+  <rect width="1600" height="1000" fill="#f8f3e8"/>
+  <g font-family="Arial, sans-serif" fill="#23342c">
+    <text x="800" y="58" text-anchor="middle" font-size="24" letter-spacing="3" fill="#8b614d">IDEATION MAP</text>
+    <text x="800" y="94" text-anchor="middle" font-size="19" fill="#5d6d62">From scattered commitments to a decision before one more yes</text>
+  </g>
+  <g fill="none" stroke="#b08b70" stroke-width="3" stroke-linecap="round">
+    <path d="M725 463 C640 424 560 262 455 230"/><path d="M725 489 C650 496 560 500 455 500"/><path d="M725 515 C640 594 560 726 455 757"/>
+    <path d="M875 463 C960 424 1040 262 1145 230"/><path d="M875 489 C950 496 1040 500 1145 500"/><path d="M875 515 C960 594 1040 726 1145 757"/>
+  </g>
+  <g fill="#fffdf8" stroke="#d9c7b5" stroke-width="2">
+    <rect x="60" y="132" width="395" height="196" rx="22"/><rect x="60" y="407" width="395" height="186" rx="22"/><rect x="60" y="672" width="395" height="170" rx="22"/>
+    <rect x="1145" y="132" width="395" height="196" rx="22"/><rect x="1145" y="407" width="395" height="186" rx="22"/><rect x="1145" y="672" width="395" height="170" rx="22"/>
+  </g>
+  <g font-family="Arial, sans-serif" fill="#23342c">
+    <g font-size="22" font-weight="700" fill="#9a5738"><text x="90" y="174">SOURCES OF LOAD</text><text x="90" y="449">CAUSES</text><text x="90" y="714">PAIN POINTS</text><text x="1175" y="174">CURRENT BEHAVIOURS</text><text x="1175" y="449">OPPORTUNITIES</text><text x="1175" y="714">RESULTING FEATURES</text></g>
+    <g font-size="20" fill="#405147">
+      <text x="90" y="212">• coursework and deadlines</text><text x="90" y="244">• part-time work and commuting</text><text x="90" y="276">• family, clubs and social plans</text>
+      <text x="90" y="487">• requests arrive separately</text><text x="90" y="519">• pressure to say yes</text><text x="90" y="551">• no universal “normal” week</text>
+      <text x="90" y="752">• overload appears too late</text><text x="90" y="784">• hard to prioritise or decline</text><text x="90" y="816">• another app can add friction</text>
+      <text x="1175" y="212">• calendar and task lists</text><text x="1175" y="244">• answer requests by instinct</text><text x="1175" y="276">• see time, not personal cost</text>
+      <text x="1175" y="487">• compare against own baseline</text><text x="1175" y="519">• preview the affected week</text><text x="1175" y="551">• make one response easier</text>
+      <text x="1175" y="752">• editable request interpretation</text><text x="1175" y="784">• Price the Yes preview</text><text x="1175" y="816">• decline copy and hand-back choice</text>
+    </g>
+  </g>
+  <g>
+    <rect x="590" y="365" width="420" height="280" rx="40" fill="#28443a"/>
+    <path d="M738 548 Q800 608 862 548" fill="none" stroke="#e9b272" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="738" cy="488" r="12" fill="#e9b272"/><circle cx="862" cy="488" r="12" fill="#e9b272"/>
+    <text x="800" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" fill="#f8f3e8" letter-spacing="2">PIKUL PRINCIPLE</text>
+    <text x="800" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="29" font-weight="700" fill="#ffffff">One commitment too many</text>
+    <text x="800" y="595" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#d7e3d7">Make its cost visible before the answer.</text>
+  </g>
+  <text x="800" y="940" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#5d6d62">Pikul is a workload-decision prototype: it measures weighted commitments, not stress or wellbeing.</text>
+</svg>
