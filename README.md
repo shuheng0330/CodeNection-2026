@@ -111,9 +111,9 @@ The before figure matters: the incoming request may add pressure without being t
 
 ### 5. Hand-back choice — advice with control
 
-![Mobile Today page showing the hand-back card expanded to reveal eligible commitments, with Cafe shift selected.](docs/readme-assets/05-hand-back-mobile.png)
+![Mobile Today page showing the hand-back confirmation for Cafe shift and the time it would give back.](docs/readme-assets/05-hand-back-mobile.png)
 
-The recommendation is a starting point, not a command. Pikul offers only eligible, negotiable commitments and previews the result before a hand-back is saved; it does not offer classes, coursework, commuting, or family responsibilities.
+After an eligible commitment is chosen, Pikul explains what handing it back would change before anything is saved. The student can confirm or keep it; classes, coursework, commuting, and family responsibilities are never offered.
 
 ### 6. Weeks ahead — see the commitments that are already coming
 
@@ -125,9 +125,9 @@ The forward view totals commitments already recorded; it does not predict how th
 
 Quiet Day identifies a comparatively calm day in the next ten when one exists. This captured state shows the honest alternative: the next ten days are full, so Pikul does not invent a recovery slot and instead points back to the optional hand-back flow. It records nothing and never checks whether a suggestion was followed.
 
-![Mobile Decisions page showing its empty state and an invitation to price the next incoming request.](docs/readme-assets/08-decisions-mobile.png)
+![Mobile Decisions page showing eight hours kept free after declining one shift request.](docs/readme-assets/08-decisions-mobile.png)
 
-The Decisions route records accepted hours and hours kept free once a request has been priced. Its empty state makes the next step clear without pretending the student has a score or report card.
+The Decisions route records accepted hours and hours kept free once a request has been priced. This state shows one declined request without turning the history into a score or report card.
 
 ## What makes Pikul different
 
