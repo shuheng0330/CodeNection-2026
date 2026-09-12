@@ -5,11 +5,11 @@ import type { BandKey } from "@/lib/engine/types";
 import { CARRY_LABEL, TODAY } from "@/lib/copy";
 
 const TONE: Record<BandKey, string> = {
-  light: "bg-sage",
-  usual: "bg-sage",
-  busy: "bg-ember",
-  heavy: "bg-amber",
-  toomuch: "bg-rust",
+  light: "bg-sage-700",
+  usual: "bg-sage-700",
+  busy: "bg-ember-700",
+  heavy: "bg-amber-700",
+  toomuch: "bg-rust-700",
 };
 
 /**
@@ -40,15 +40,15 @@ export function CarryBar({ ratio, band }: { ratio: number; band: BandKey }) {
       {/* The hairline is not decoration. On /compare the highlighted card is
           clay-tinted and the track's own warm fill vanishes into it, leaving
           the band and marker floating on nothing. */}
-      <div className="relative h-12 w-full rounded-full border border-hairline bg-raised">
+      <div className="relative h-12 w-full rounded-full border border-clay-600/30 bg-raised">
         {/* the comfortable band */}
         <div
-          className="absolute inset-y-0 rounded-full bg-clay-100"
+          className="absolute inset-y-0 rounded-full bg-clay-500/35 ring-1 ring-inset ring-clay-600/35"
           style={{ left: `${usualFrom}%`, width: `${usualTo - usualFrom}%` }}
         />
         {/* where you are */}
         <motion.div
-          className={`absolute top-1/2 h-9 w-2.5 -translate-y-1/2 rounded-full ${TONE[band]}`}
+          className={`absolute top-1/2 h-9 w-2.5 -translate-y-1/2 rounded-full ring-2 ring-surface ${TONE[band]}`}
           initial={false}
           animate={{ left: `calc(${pos * 100}% - 5px)`, opacity: 1 }}
           transition={

@@ -270,7 +270,7 @@ function DayButton({
                 ? "bg-dusk"
                 : emphasized
                   ? "bg-clay-600"
-                  : "bg-clay-500/60"
+            : "bg-clay-500"
           }`}
           style={{ height: `${barHeight}%` }}
         />
